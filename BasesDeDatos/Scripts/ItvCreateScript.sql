@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS Estacion
 (
-    id        TEXT PRIMARY KEY AUTOINCREMENT,
+    id        INTEGER PRIMARY KEY AUTOINCREMENT,
     nombre    TEXT NOT NULL,
     direccion TEXT NOT NULL,
     correo    TEXT NOT NULL,
@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS Trabajador
     fecha_contratacion TEXT NOT NULL,
     especialidad       TEXT NOT NULL,
     id_estacion        INT REFERENCES Estacion (id)
+        ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS Propietario
