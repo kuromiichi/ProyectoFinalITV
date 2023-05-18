@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+  <link rel="stylesheet" type="text/css" href="FormularioITV.css">
+<head>
+  <title>Formulario de Registro</title>
+</head>
+<body>
+  <div id="encabezado_container">
+    <button id="inicio" onclick="window.location.href='FormularioHome.html'">Volver a Inicio</button>
+    <a class="encabezado" onclick="alternarDatosContacto()">CONTACTO</a>
+    <img id="logo" src="ITV-removebg-preview.png" class="encabezado" />
+    <a id="QuienesSomos" class="encabezado" onclick="alternarDatosQuienesSomos()">QUIENES SOMOS</a>
+
+  </div>
+  <div id="ventanaEmergente">
+    <h4>Datos de contacto:</h4>
+    <p>Teléfono: 678654321</p>
+    <p>Correo: itv@example.com</p>
+  </div>
+
+  <div id="ventanaEmergente2">
+    <h4>Información de Quienes Somos:</h4>
+    <p>¿Quienes somos?</p>
+    <p id="QuienesSomosInfo">Adrián, Ángel y Emma son tres estudiantes apasionados 
+      por la seguridad vehicular y la importancia 
+      de las Inspecciones Técnicas de Vehículos (ITV).
+      Decidieron unirse y crear su propia empresa de ITV, 
+      con el objetivo de brindar un servicio confiable 
+      y de calidad a sus clientes.</p>
+  </div>
+
+
+  <script src="Script.js"></script>
+  <hr />
+  <div>
+    <img id="coche" src="N-Audi-A6.png" alt="Audi A6" style="float: right;">
+    <p class="right-message">¡GRACIAS POR RESERVAR!</p>
+
+    <table border="1">
+        <tr>
+          <th rowspan="13">Datos del Formulario</th>
+        </tr>
+        <tr>
+          <td>DNI</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>Nombre</td>
+          <td>Cristiano</td>
+        </tr>
+        <tr>
+          <td>Apellidos</td>
+          <td>Ronaldo</td>
+        </tr>
+        <tr>
+          <td>Email</td>
+          <td>cristianoronaldo@gmail.commmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm</td>
+        </tr>
+        <tr>
+          <td>Teléfono</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>Tipo de Vehículo</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>Marca</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>Modelo</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>Matrícula</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>Tipo de Motor</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>Fecha de última revisión</td>
+          <td></td>
+        </tr>
+        <tr>
+        <td>Fecha de revision</td>
+        <td></td>
+        </tr>    
+      </table>
+    </div>
+    <p>*Si los datos son incorrectos vuelve al formulario*</p>
+    <button class="botones"  onclick="window.location.href='Formulario.html'">Volver al formulario</button>
+  <button class="botones" onclick="enviarReserva()">Enviar reserva</button>
+  </div>
+</body>
+</html>
