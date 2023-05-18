@@ -1,3 +1,5 @@
+USE ItvDam;
+
 INSERT INTO Estacion (nombre, direccion, correo, telefono)
 VALUES ('ITV DAM', 'Paseo de la Ermita 15', 'itvdam@itvdam.org', '+34822659855');
 

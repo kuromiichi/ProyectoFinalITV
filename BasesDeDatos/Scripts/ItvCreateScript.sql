@@ -1,65 +1,68 @@
+CREATE DATABASE ItvDam;
+
+USE ItvDam;
+
 CREATE TABLE IF NOT EXISTS Estacion
 (
-    id        INTEGER PRIMARY KEY AUTOINCREMENT,
-    nombre    TEXT NOT NULL,
-    direccion TEXT NOT NULL,
-    correo    TEXT NOT NULL,
-    telefono  TEXT NOT NULL
+    id        INTEGER PRIMARY KEY AUTO_INCREMENT,
+    nombre    VARCHAR(50)  NOT NULL,
+    direccion VARCHAR(100) NOT NULL,
+    correo    VARCHAR(100) NOT NULL,
+    telefono  VARCHAR(20)  NOT NULL
 );
+
 
 CREATE TABLE IF NOT EXISTS Trabajador
 (
-    usuario            TEXT PRIMARY KEY,
-    contrasenya        TEXT NOT NULL,
-    nombre             TEXT NOT NULL,
-    correo             TEXT NOT NULL,
-    telefono           TEXT NOT NULL,
-    salario            REAL NOT NULL,
-    fecha_contratacion TEXT NOT NULL,
-    especialidad       TEXT NOT NULL,
-    id_estacion        INT REFERENCES Estacion (id)
-        ON DELETE SET NULL
+    usuario            VARCHAR(50) PRIMARY KEY,
+    contrasenya        VARCHAR(50)  NOT NULL,
+    nombre             VARCHAR(100) NOT NULL,
+    correo             VARCHAR(100) NOT NULL,
+    telefono           VARCHAR(20)  NOT NULL,
+    salario            REAL         NOT NULL,
+    fecha_contratacion VARCHAR(10)  NOT NULL,
+    especialidad       VARCHAR(20)  NOT NULL,
+    id_estacion        INT          REFERENCES Estacion (id) ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS Propietario
 (
-    dni       TEXT PRIMARY KEY,
-    nombre    TEXT NOT NULL,
-    apellidos TEXT NOT NULL,
-    correo    TEXT NOT NULL,
-    telefono  TEXT NOT NULL
+    dni       VARCHAR(9) PRIMARY KEY,
+    nombre    VARCHAR(50)  NOT NULL,
+    apellidos VARCHAR(100) NOT NULL,
+    correo    VARCHAR(100) NOT NULL,
+    telefono  VARCHAR(20)  NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS Vehiculo
 (
-    matricula           TEXT PRIMARY KEY,
-    marca               TEXT NOT NULL,
-    modelo              TEXT NOT NULL,
-    fecha_matriculacion TEXT NOT NULL,
-    fecha_revision      TEXT NOT NULL,
-    tipo_motor          TEXT NOT NULL,
-    tipo_vehiculo       TEXT NOT NULL,
-    dni_propietario     TEXT REFERENCES Propietario (dni)
+    matricula           VARCHAR(15) PRIMARY KEY,
+    marca               VARCHAR(30) NOT NULL,
+    modelo              VARCHAR(50) NOT NULL,
+    fecha_matriculacion VARCHAR(10) NOT NULL,
+    fecha_revision      VARCHAR(10) NOT NULL,
+    tipo_motor          VARCHAR(20) NOT NULL,
+    tipo_vehiculo       VARCHAR(20) NOT NULL,
+    dni_propietario     VARCHAR(9) REFERENCES Propietario (dni)
 );
 
 CREATE TABLE IF NOT EXISTS Informe
 (
-    id            INTEGER PRIMARY KEY AUTOINCREMENT,
-    frenado       REAL    NOT NULL,
-    contaminacion REAL    NOT NULL,
-    fecha_informe TEXT    NOT NULL,
-    -- Campos boolean (0 o 1)
-    interior      INTEGER NOT NULL,
-    luces         INTEGER NOT NULL,
-    is_apto       INTEGER NOT NULL
+    id            INTEGER PRIMARY KEY AUTO_INCREMENT,
+    frenado       REAL        NOT NULL,
+    contaminacion REAL        NOT NULL,
+    fecha_informe VARCHAR(10) NOT NULL,
+    interior      INTEGER     NOT NULL,
+    luces         INTEGER     NOT NULL,
+    is_apto       INTEGER     NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS Cita
 (
-    id                 INTEGER PRIMARY KEY AUTOINCREMENT,
-    estado             TEXT NOT NULL,
-    fecha              TEXT NOT NULL,
+    id                 INTEGER PRIMARY KEY AUTO_INCREMENT,
+    estado             VARCHAR(10) NOT NULL,
+    fecha              VARCHAR(10) NOT NULL,
     id_informe         INTEGER REFERENCES Informe (id),
-    usuario_trabajador TEXT REFERENCES Trabajador (usuario),
-    matricula_vehiculo TEXT REFERENCES Vehiculo (matricula)
+    usuario_trabajador VARCHAR(50) REFERENCES Trabajador (usuario),
+    matricula_vehiculo VARCHAR(15) REFERENCES Vehiculo (matricula)
 );
