@@ -1,0 +1,43 @@
+CREATE TABLE IF NOT EXISTS TrabajadorTable
+(
+    usuario            TEXT     PRIMARY KEY,
+    contrasenya        TEXT     NOT NULL,
+    nombre             TEXT     NOT NULL,
+    correo             TEXT     NOT NULL,
+    telefono           TEXT     NOT NULL,
+    salario            REAL     NOT NULL,
+    fecha_contratacion TEXT     NOT NULL,
+    especialidad       TEXT     NOT NULL,
+    id_estacion        INTEGER  REFERENCES EstacionTable (id) ON DELETE SET NULL
+);
+
+insertAll:
+INSERT INTO TrabajadorTable (usuario, contrasenya, nombre, correo, telefono, salario, fecha_contratacion, especialidad,
+                        id_estacion)
+VALUES ('j_perez', 'jU5#r3s3g', 'Juan Pérez', 'juan.perez@itvdam.org', '+34912345678', 1650.0, '2022-01-15',
+        'ADMINISTRACION', 1),
+       ('m_lopez', 'M@r14L0p$', 'María López', 'maria.lopez@itvdam.org', '+34911234567', 1800.0, '2021-09-20',
+        'ELECTRICIDAD', 1),
+       ('d_garcia', 'D4v1dG@rc14', 'David García', 'david.garcia@itvdam.org', '+34910987654', 1700.0, '2023-02-10',
+        'MOTOR', 1),
+       ('a_rodriguez', 'Alic14R0dr1', 'Alicia Rodríguez', 'alicia.rodriguez@itvdam.org', '+34913456789', 1600.0,
+        '2022-11-05', 'MECANICA', 1),
+       ('l_hernandez', 'L@ur4H3rn', 'Laura Hernández', 'laura.hernandez@itvdam.org', '+34914567890', 1750.0,
+        '2021-12-30', 'INTERIOR', 1),
+       ('p_martinez', 'P3dr0M@rt', 'Pedro Martínez', 'pedro.martinez@itvdam.org', '+34915678901', 1650.0, '2023-03-18',
+        'ADMINISTRACION', 1),
+       ('s_gomez', 'Sof14G0m$', 'Sofía Gómez', 'sofia.gomez@itvdam.org', '+34916789012', 1800.0, '2022-07-22',
+        'ELECTRICIDAD', 1),
+       ('j_sanchez', 'Ju4nS@nch3z', 'Juan Sánchez', 'juan.sanchez@itvdam.org', '+34917890123', 1700.0, '2022-04-02',
+        'MOTOR', 1),
+       ('c_romero', 'C4rm3nR0m', 'Carmen Romero', 'carmen.romero@itvdam.org', '+34918901234', 1600.0, '2023-01-12',
+        'MECANICA', 1),
+       ('r_lopez', 'R0b3rtL0p!', 'Roberto López', 'roberto.lopez@itvdam.org', '+34919012345', 1750.0, '2022-08-27',
+        'INTERIOR', 1);
+
+deleteAll:
+DELETE FROM TrabajadorTable;
+
+-- Obtener todo
+selectAll:
+SELECT * FROM TrabajadorTable;
