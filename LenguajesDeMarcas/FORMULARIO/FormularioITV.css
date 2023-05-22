@@ -6,8 +6,12 @@
   }
   #QuienesSomos {
     position: relative;
-    left: 5%
+    margin-left: 5%
   }
+  #Contacto {
+    position: relative;
+  }
+ 
   
   .encabezado {
     border-style: dashed;
@@ -21,7 +25,7 @@
   }
 
   #encabezado_container {
-    background-color: whitesmoke;
+    background-color: white;
     position: relative;
   }
 
@@ -89,46 +93,16 @@
     margin-right: 2%;
   }
 
-  #menu_desplegable {
-    margin-top: 5%
-  }
-  #cookie-message {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background-color: #f8f8f8;
-    padding: 10px;
-    text-align: center;
-    font-size: 14px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-  }
-
-  #cookie-message button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 5px 10px;
-    border: none;
-    cursor: pointer;
-    font-size: 14px;
-  }
+  
 
   #QuienesSomosInfo {
     max-width: 325px; /* Define el ancho máximo del párrafo */
     margin: 0 auto; /* Centra el párrafo horizontalmente */
     text-align: justify; /* Justifica el texto dentro del párrafo */
   }
-  .minilogo {
-    width: 50px; /* Ajusta el ancho de las imágenes*/
-    height: 50px; /* Ajusta la altura de las imágenes*/
-    margin: 15px; /* Ajusta el margen entre las imágenes*/
-  }
   
-  #imagenes_container {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px; /* Ajusta el margen superior del contenedor según tus necesidades */
-  }
+  
+  
 
  
 
@@ -144,6 +118,7 @@
       width: 50%;
      
   }
+  
 
   .botones {
     margin-left: 17%
@@ -159,4 +134,90 @@
     white-space: nowrap;
     text-overflow: ellipsis;
   }
+  .imagenes_container{
+    margin-top:3%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    }
+  #texto_contenedor {
+    text-align: center;
+    margin-top: 10px;
+    background-color: white;
+    padding: 10px;
+  }
+ #cuerpo_container{
+    background-image: url('Mecanicos-certificados-en-nuestras-marcas.jpg');
+    background-size: cover;
+    background-position: center;
+    }
+
+  #MasInformacion {
+    margin-top: 5%;
+    color: white;
+  text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black;
+  text-align: center;
+  }
+
+#reserva {
+  color: white;
+  text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black;
+}
+
+#texto {
+  color: white;
+  text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black;
+}
+#atras {
+  position: absolute;
+  top: 10px;
+  left: 50px;
+}
+#input_cita {
+  width: 300px; /* Anchura del campo de entrada */
+  height: 40px; /* Altura del campo de entrada */
+  font-size: 16px; /* Tamaño de fuente del campo de entrada */
+}
+
+#inicio {
+  width: 200px; /* Anchura del botón */
+  height: 40px; /* Altura del botón */
+  font-size: 18px; /* Tamaño de fuente del botón */
+  margin-bottom: 15%;
+}
+#Informacion_container {
+  background-color: #192A56; /* Fondo azul oscuro */
+  padding: 20px; /* Añade un espacio de relleno alrededor del contenido */
+ /* Color de texto blanco para mayor contraste */
+}
+
+
+.container {
+  text-align: center;
+}
+
+.enlaces-horizontal {
+  display: inline-flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.enlaces-horizontal a {
+  margin: 0 10px;
+}
+
+.direccion {
+  text-align: center;
+}
+
+#BannerInferior{
+  background-color: white;
+}
+
+#logo_abajo{
+  width: 10%;
+  display: block;
+
+}
   
