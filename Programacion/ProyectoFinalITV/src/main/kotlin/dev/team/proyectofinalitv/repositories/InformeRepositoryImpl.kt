@@ -3,7 +3,6 @@ package dev.team.proyectofinalitv.repositories
 import dev.team.proyectofinalitv.models.Informe
 import dev.team.proyectofinalitv.services.database.DataBaseManager
 import mu.KotlinLogging
-import java.sql.Statement
 
 class InformeRepositoryImpl(private val databaseManager: DataBaseManager) : InformeRepository {
 
@@ -22,7 +21,7 @@ class InformeRepositoryImpl(private val databaseManager: DataBaseManager) : Info
         // Seleccionamos la base de datos a la que realizar las consultas
         databaseManager.selectDataBase()
 
-        val statement = databaseManager.connection?.createStatement()
+        val statement = databaseManager.createStatement()
 
         val sql =
         """
@@ -31,7 +30,7 @@ class InformeRepositoryImpl(private val databaseManager: DataBaseManager) : Info
         WHERE id = ?
         """
 
-        val preparedStatement = databaseManager.connection?.prepareStatement(sql)
+        val preparedStatement = databaseManager.prepareStatement(sql)
         preparedStatement?.setDouble(1, informe.frenado)
         preparedStatement?.setDouble(2, informe.contaminacion)
         preparedStatement?.setString(3, informe.fechaInforme.toString())
@@ -62,7 +61,7 @@ class InformeRepositoryImpl(private val databaseManager: DataBaseManager) : Info
         // Seleccionamos la base de datos a la que realizar las consultas
         databaseManager.selectDataBase()
 
-        val statement = databaseManager.connection?.createStatement()
+        val statement = databaseManager.createStatement()
 
         val sql =
             """
@@ -70,7 +69,7 @@ class InformeRepositoryImpl(private val databaseManager: DataBaseManager) : Info
         VALUES (?, ?, ?, ?, ?, ?)
         """
 
-        val preparedStatement = databaseManager.connection?.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
+        val preparedStatement = databaseManager.prepareStatementReturnGeneratedKey(sql)
         preparedStatement?.setDouble(1, informe.frenado)
         preparedStatement?.setDouble(2, informe.contaminacion)
         preparedStatement?.setString(3, informe.fechaInforme.toString())

@@ -17,11 +17,14 @@ module dev.team.proyectofinalitv {
     requires kotlin.result.jvm;
     requires java.sql;
 
-    // Root
+    // MariaDb
+    requires org.mariadb.jdbc;
+
+    // Root to JavaFX
     opens dev.team.proyectofinalitv to javafx.fxml;
     exports dev.team.proyectofinalitv;
 
-    // Controller
+    // Controller to JavaFX
     opens dev.team.proyectofinalitv.controllers to javafx.fxml;
     exports dev.team.proyectofinalitv.controllers;
 }

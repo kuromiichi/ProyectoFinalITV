@@ -2,7 +2,7 @@ package dev.team.proyectofinalitv.di
 
 import dev.team.proyectofinalitv.config.AppConfig
 import dev.team.proyectofinalitv.repositories.*
-import dev.team.proyectofinalitv.services.database.DataBaseManager
+import dev.team.proyectofinalitv.services.database.DataBaseManagerImpl
 import dev.team.proyectofinalitv.viewmodels.CitaViewModel
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -11,7 +11,7 @@ val ModuleKoin = module {
     single { AppConfig() }
 
     // AppConfig()
-    single { DataBaseManager(get()) }
+    single { DataBaseManagerImpl(get()) }
 
     // DataBaseManager()
     single<PropietarioRepository>(named("PropietarioRepository")) { PropietarioRepositoryImpl(get()) }

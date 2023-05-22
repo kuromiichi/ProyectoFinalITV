@@ -21,7 +21,7 @@ class PropietarioRepositoryImpl(private val databaseManager: DataBaseManager) : 
         // Seleccionamos la base de datos a la que realizar las consultas
         databaseManager.selectDataBase()
 
-        val statement = databaseManager.connection?.createStatement()
+        val statement = databaseManager.createStatement()
 
         val sql =
         """
@@ -30,7 +30,7 @@ class PropietarioRepositoryImpl(private val databaseManager: DataBaseManager) : 
         WHERE dni = ?
         """
 
-        val preparedStatement = databaseManager.connection?.prepareStatement(sql)
+        val preparedStatement = databaseManager.prepareStatement(sql)
         preparedStatement?.setString(1, propietario.nombre)
         preparedStatement?.setString(2, propietario.apellidos)
         preparedStatement?.setString(3, propietario.correo)
@@ -59,7 +59,7 @@ class PropietarioRepositoryImpl(private val databaseManager: DataBaseManager) : 
         // Seleccionamos la base de datos a la que realizar las consultas
         databaseManager.selectDataBase()
 
-        val statement = databaseManager.connection?.createStatement()
+        val statement = databaseManager.createStatement()
 
         val sql =
             """
@@ -67,7 +67,7 @@ class PropietarioRepositoryImpl(private val databaseManager: DataBaseManager) : 
         VALUES (?, ?, ?, ?, ?)
         """
 
-        val preparedStatement = databaseManager.connection?.prepareStatement(sql)
+        val preparedStatement = databaseManager.prepareStatement(sql)
         preparedStatement?.setString(1, propietario.dni)
         preparedStatement?.setString(2, propietario.nombre)
         preparedStatement?.setString(3, propietario.apellidos)
