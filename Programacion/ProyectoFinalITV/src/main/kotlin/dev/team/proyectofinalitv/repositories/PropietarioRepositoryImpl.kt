@@ -7,13 +7,6 @@ import mu.KotlinLogging
 class PropietarioRepositoryImpl(private val databaseManager: DataBaseManager) : PropietarioRepository {
 
     private val logger = KotlinLogging.logger {}
-    override fun findAll(): List<Propietario> {
-        TODO("Not yet implemented")
-    }
-
-    override fun deleteById(id: Long): Boolean {
-        TODO("Not yet implemented")
-    }
 
     override fun update(propietario: Propietario): Propietario {
         TODO("Not yet implemented")
@@ -56,7 +49,4 @@ class PropietarioRepositoryImpl(private val databaseManager: DataBaseManager) : 
         return propietario
     }
 
-    override fun findById(id: Long): Propietario? {
-        TODO("Not yet implemented")
-    }
 }

@@ -8,14 +8,6 @@ class VehiculoRepositoryImpl(private val databaseManager: DataBaseManager) : Veh
 
     private val logger = KotlinLogging.logger {}
 
-    override fun findAll(): List<Vehiculo> {
-        TODO("Not yet implemented")
-    }
-
-    override fun deleteById(id: Long): Boolean {
-        TODO("Not yet implemented")
-    }
-
     override fun update(vehiculo: Vehiculo): Vehiculo {
         TODO("Not yet implemented")
     }
@@ -58,9 +50,5 @@ class VehiculoRepositoryImpl(private val databaseManager: DataBaseManager) : Veh
         databaseManager.closeConnection()
 
         return vehiculo
-    }
-
-    override fun findById(id: Long): Vehiculo? {
-        TODO("Not yet implemented")
     }
 }

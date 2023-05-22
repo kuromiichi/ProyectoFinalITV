@@ -9,13 +9,6 @@ class InformeRepositoryImpl(private val databaseManager: DataBaseManager) : Info
 
     private val logger = KotlinLogging.logger {}
 
-    override fun findAll(): List<Informe> {
-        TODO("Not yet implemented")
-    }
-
-    override fun deleteById(id: Long): Boolean {
-        TODO("Not yet implemented")
-    }
 
     override fun update(informe: Informe): Informe {
         TODO("Not yet implemented")
@@ -65,10 +58,6 @@ class InformeRepositoryImpl(private val databaseManager: DataBaseManager) : Info
         databaseManager.closeConnection()
 
         return informe.copy(id = idInforme)
-    }
-
-    override fun findById(id: Long): Informe? {
-        TODO("Not yet implemented")
     }
 
 }
