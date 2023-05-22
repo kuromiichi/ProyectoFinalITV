@@ -6,11 +6,6 @@ module dev.team.proyectofinalitv {
     requires javafx.controls;
     requires javafx.fxml;
 
-    // SqlDeLight
-    requires runtime.jvm;
-    requires sqlite.driver;
-    requires java.sql;
-
     // Logger
     requires io.github.microutils.kotlinlogging;
     requires koin.logger.slf4j;
@@ -20,6 +15,7 @@ module dev.team.proyectofinalitv {
     requires koin.core.jvm;
     requires com.google.gson;
     requires kotlin.result.jvm;
+    requires java.sql;
 
     // Root
     opens dev.team.proyectofinalitv to javafx.fxml;

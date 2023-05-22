@@ -4,9 +4,10 @@ import java.io.File
 import java.io.FileInputStream
 import java.util.*
 
-private val logger = mu.KotlinLogging.logger {}
 
 class AppConfig {
+
+    private val logger = mu.KotlinLogging.logger {}
 
     // Constantes de ruta
     private val CONFIG_FILE = "application.properties"
@@ -15,14 +16,29 @@ class AppConfig {
     private val RESOURCE_PATH_MAIN =
         "$APP_PATH${File.separator}src${File.separator}main${File.separator}resources${File.separator}"
 
-    private var _dbUrlConection: String = "" // URL donde nos conectaremos a la base de datos
-    fun getUrlDbConection(): String {
-        return _dbUrlConection
+    private var _urlConnectionSb: String = "" // URL donde nos conectaremos a la base de datos
+    fun getUrlConnectionDb(): String {
+        return _urlConnectionSb
     }
 
-    private var _deleteDb: Boolean = false // Si permitimos borrar las tablas
-    fun getDeleteDb(): Boolean {
-        return _deleteDb
+    private var _nameDb: String = ""
+    fun getNameDb(): String {
+        return _nameDb
+    }
+
+    private var _passDb: String = ""
+    fun getPassDb(): String {
+        return _passDb
+    }
+
+    private var _userDb: String = ""
+    fun getUserDb(): String {
+        return _userDb
+    }
+
+    private var _defaultDb: Boolean = false // Si permitimos reiniciar por defecto la base de datos
+    fun getDefaultDb(): Boolean {
+        return _defaultDb
     }
 
     init {
@@ -33,9 +49,11 @@ class AppConfig {
     private fun loadProperties() {
         logger.debug { "Cargando properties (configuración)" }
 
-        _dbUrlConection = readProperty("db.url.connection", "jdbc:sqlite:database.db")
-
-        _deleteDb = readProperty("db.delete", "false").toBoolean()
+        _urlConnectionSb = readProperty("db.url.connection", "jdbc:mariadb://localhost:3306")
+        _nameDb = readProperty("db.name", "ItvDam")
+        _userDb = readProperty("db.user", "root")
+        _passDb = readProperty("db.pass", "1234")
+        _defaultDb = readProperty("db.default", "false").toBoolean()
     }
 
     private fun readProperty(propertie: String, defaultValuePropertie: String): String {
