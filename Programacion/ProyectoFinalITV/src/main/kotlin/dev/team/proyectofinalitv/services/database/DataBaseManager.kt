@@ -289,18 +289,18 @@ class DataBaseManager(private val appConfig: AppConfig) {
 
         val insertCita =
             """
-            INSERT INTO Cita (estado, fecha, id_informe, usuario_trabajador, matricula_vehiculo)
-            VALUES (0, '2023-04-20', 1, 'j_perez', '5794-RGK'),
-                   (1, '2023-04-22', 2, 'm_lopez', '1267-BTK'),
-                   (0, '2023-04-25', 3, 'd_garcia', '2803-HNS'),
-                   (1, '2023-04-28', 4, 'a_rodriguez', '4578-FLS'),
-                   (0, '2023-05-02', 5, 'l_hernandez', '8026-QJK'),
-                   (1, '2023-05-05', 6, 'p_martinez', '2354-DHP'),
-                   (0, '2023-05-08', 7, 's_gomez', '6908-RSV'),
-                   (1, '2023-05-10', 8, 'j_sanchez', '1482-CKM'),
-                   (0, '2023-05-12', 9, 'c_romero', '3761-PZX'),
-                   (1, '2023-05-15', 10, 'r_lopez', '5139-TBS');
-            """
+INSERT INTO Cita (estado, fecha_hora, id_informe, usuario_trabajador, matricula_vehiculo)
+            VALUES ('No apto', '2023-04-20T09:00:00', 1, 'j_perez', '5794-RGK'),
+                   ('Apto', '2023-04-22T13:30:00', 2, 'm_lopez', '1267-BTK'),
+                   ('No apto', '2023-04-25T10:30:00', 3, 'd_garcia', '2803-HNS'),
+                   ('Apto', '2023-04-28T15:30:00', 4, 'a_rodriguez', '4578-FLS'),
+                   ('No apto', '2023-05-02T11:00:00', 5, 'l_hernandez', '8026-QJK'),
+                   ('Apto', '2023-05-05T14:30:00', 6, 'p_martinez', '2354-DHP'),
+                   ('No apto', '2023-05-08T09:30:00', 7, 's_gomez', '6908-RSV'),
+                   ('Apto', '2023-05-10T16:00:00', 8, 'j_sanchez', '1482-CKM'),
+                   ('No apto', '2023-05-12T12:30:00', 9, 'c_romero', '3761-PZX'),
+                   ('Apto', '2023-05-15T14:00:00', 10, 'r_lopez', '5139-TBS');
+           """
         statement?.execute(insertCita)
     }
 }

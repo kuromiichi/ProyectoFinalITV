@@ -1,9 +1,10 @@
 package dev.team.proyectofinalitv.repositories
 
-import dev.team.proyectofinalitv.models.Cite
+import dev.team.proyectofinalitv.models.Cita
 import dev.team.proyectofinalitv.services.database.DataBaseManager
 import mu.KotlinLogging
 import java.sql.Statement
+import java.time.LocalDateTime
 
 class CitaRepositoryImpl(private val databaseManager: DataBaseManager) : CitaRepository {
 
@@ -13,10 +14,10 @@ class CitaRepositoryImpl(private val databaseManager: DataBaseManager) : CitaRep
      * Busca todas las citas que se encuentren en la base de datos
      * @return la lista de todas las citas
      */
-    override fun findAll(): List<Cite> {
+    override fun findAll(): List<Cita> {
         logger.debug { "Buscando todas las citas" }
 
-        val cites = mutableListOf<Cite>()
+        val citas = mutableListOf<Cita>()
 
         databaseManager.openConnection()
 
@@ -30,21 +31,21 @@ class CitaRepositoryImpl(private val databaseManager: DataBaseManager) : CitaRep
 
         // Recorremos los resultados hasta que nos de: 'false'
         while (result?.next() == true) {
-            val cite = Cite(
+            val cita = Cita(
                 id = result.getLong("id"),
-                estado = result.getBoolean("estado"),
-                fecha = result.getDate("fecha").toLocalDate(),
+                estado = result.getString("estado"),
+                fecha_hora = LocalDateTime.parse(result.getString("fecha_hora")),
                 id_informe = result.getLong("id_informe"),
                 usuario_trabajador = result.getString("usuario_trabajador"),
                 matricula_vehiculo = result.getString("matricula_vehiculo")
             )
-            cites.add(cite)
+            citas.add(cita)
         }
 
         statement?.close()
         databaseManager.closeConnection()
 
-        return cites
+        return citas
     }
 
     /**
@@ -77,8 +78,8 @@ class CitaRepositoryImpl(private val databaseManager: DataBaseManager) : CitaRep
      * @param la cita que actualizaremos
      * @return la nueva cita actualizada
      */
-    override fun update(cite: Cite): Cite {
-        logger.debug { "Actualizando cita con id: ${cite.id}" }
+    override fun update(cita: Cita): Cita {
+        logger.debug { "Actualizando cita con id: ${cita.id}" }
 
         databaseManager.openConnection()
 
@@ -95,12 +96,12 @@ class CitaRepositoryImpl(private val databaseManager: DataBaseManager) : CitaRep
         """
 
         val preparedStatement = databaseManager.connection?.prepareStatement(sql)
-        preparedStatement?.setBoolean(1, cite.estado)
-        preparedStatement?.setString(2, cite.fecha.toString())
-        preparedStatement?.setLong(3, cite.id_informe)
-        preparedStatement?.setString(4, cite.usuario_trabajador)
-        preparedStatement?.setString(5, cite.matricula_vehiculo)
-        preparedStatement?.setLong(6, cite.id)
+        preparedStatement?.setString(1, cita.estado)
+        preparedStatement?.setString(2, cita.fecha_hora.toString())
+        preparedStatement?.setLong(3, cita.id_informe)
+        preparedStatement?.setString(4, cita.usuario_trabajador)
+        preparedStatement?.setString(5, cita.matricula_vehiculo)
+        preparedStatement?.setLong(6, cita.id)
 
         preparedStatement?.executeUpdate()
 
@@ -108,7 +109,7 @@ class CitaRepositoryImpl(private val databaseManager: DataBaseManager) : CitaRep
         statement?.close()
         databaseManager.closeConnection()
 
-        return cite
+        return cita
     }
 
     /**
@@ -116,8 +117,8 @@ class CitaRepositoryImpl(private val databaseManager: DataBaseManager) : CitaRep
      * @param la cita que guardaremos
      * @return la nueva cita guardada
      */
-    override fun save(cite: Cite): Cite {
-        logger.debug { "Creando cita con id: ${cite.id}" }
+    override fun save(cita: Cita): Cita {
+        logger.debug { "Creando cita con id: ${cita.id}" }
 
         databaseManager.openConnection()
 
@@ -133,11 +134,11 @@ class CitaRepositoryImpl(private val databaseManager: DataBaseManager) : CitaRep
             """
 
         val preparedStatement = databaseManager.connection?.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
-        preparedStatement?.setBoolean(1, cite.estado)
-        preparedStatement?.setString(2, cite.fecha.toString())
-        preparedStatement?.setLong(3, cite.id_informe)
-        preparedStatement?.setString(4, cite.usuario_trabajador)
-        preparedStatement?.setString(5, cite.matricula_vehiculo)
+        preparedStatement?.setString(1, cita.estado)
+        preparedStatement?.setString(2, cita.fecha_hora.toString())
+        preparedStatement?.setLong(3, cita.id_informe)
+        preparedStatement?.setString(4, cita.usuario_trabajador)
+        preparedStatement?.setString(5, cita.matricula_vehiculo)
 
         preparedStatement?.executeUpdate()
 
@@ -153,7 +154,7 @@ class CitaRepositoryImpl(private val databaseManager: DataBaseManager) : CitaRep
         statement?.close()
         databaseManager.closeConnection()
 
-        return cite.copy(id = idCite)
+        return cita.copy(id = idCite)
     }
 
     /**
@@ -161,10 +162,10 @@ class CitaRepositoryImpl(private val databaseManager: DataBaseManager) : CitaRep
      * @param el id por el que se buscará
      * @return la cita encontrada o null si no la encuentra
      */
-    override fun findById(id: Long): Cite? {
+    override fun findById(id: Long): Cita? {
         logger.debug { "Buscando cita con id: $id" }
 
-        var cite: Cite? = null
+        var cita: Cita? = null
 
         databaseManager.openConnection()
 
@@ -178,10 +179,10 @@ class CitaRepositoryImpl(private val databaseManager: DataBaseManager) : CitaRep
 
         // Verificamos si se encontró una cita con el ID proporcionado
         if (result?.next() == true) {
-            cite = Cite(
+            cita = Cita(
                 id = result.getLong("id"),
-                estado = result.getBoolean("estado"),
-                fecha = result.getDate("fecha").toLocalDate(),
+                estado = result.getString("estado"),
+                fecha_hora = LocalDateTime.parse(result.getString("fecha_hora")),
                 id_informe = result.getLong("id_informe"),
                 usuario_trabajador = result.getString("usuario_trabajador"),
                 matricula_vehiculo = result.getString("matricula_vehiculo")
@@ -191,7 +192,7 @@ class CitaRepositoryImpl(private val databaseManager: DataBaseManager) : CitaRep
         statement?.close()
         databaseManager.closeConnection()
 
-        return cite
+        return cita
     }
 
     /**
@@ -199,9 +200,9 @@ class CitaRepositoryImpl(private val databaseManager: DataBaseManager) : CitaRep
      * @param la matrícula por la que se buscará
      * @return la cita encontrada o null si no la encuentra
      */
-    override fun findByMatricula(matricula: String): Cite? {
+    override fun findByMatricula(matricula: String): Cita? {
 
-        var cite: Cite? = null
+        var cita: Cita? = null
 
         databaseManager.openConnection()
 
@@ -218,10 +219,10 @@ class CitaRepositoryImpl(private val databaseManager: DataBaseManager) : CitaRep
 
         // Recorremos los resultados hasta que nos de: 'false'
         while (result?.next() == true) {
-            cite = Cite(
+            cita = Cita(
                 id = result.getLong("id"),
-                estado = result.getBoolean("estado"),
-                fecha = result.getDate("fecha").toLocalDate(),
+                estado = result.getString("estado"),
+                fecha_hora = LocalDateTime.parse(result.getString("fecha_hora")),
                 id_informe = result.getLong("id_informe"),
                 usuario_trabajador = result.getString("usuario_trabajador"),
                 matricula_vehiculo = result.getString("matricula_vehiculo")
@@ -231,6 +232,6 @@ class CitaRepositoryImpl(private val databaseManager: DataBaseManager) : CitaRep
         statement?.close()
         databaseManager.closeConnection()
 
-        return cite
+        return cita
     }
 }

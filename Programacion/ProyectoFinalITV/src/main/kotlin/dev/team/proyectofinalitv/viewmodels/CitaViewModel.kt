@@ -1,6 +1,6 @@
 package dev.team.proyectofinalitv.viewmodels
 
-import dev.team.proyectofinalitv.models.Cite
+import dev.team.proyectofinalitv.models.Cita
 import dev.team.proyectofinalitv.models.Informe
 import dev.team.proyectofinalitv.models.Propietario
 import dev.team.proyectofinalitv.models.Vehiculo
@@ -19,7 +19,6 @@ class CitaViewModel(
 ) {
 
     fun saveCita() {
-        // SOLO UN PROPEITARIO PUEDE TENER UN VEHICULO, si queremos que peuda tener más deberíamos hacer tabla intermedia! Propietario-Vehiculo
         // ============== Para guardar una cita, DEBEMOS EN ESTE ORDEN: =============
         // 1. Propietario
         // Debemos crear trigger para que no nos deje crear un nuevo propietario con esta dni!
@@ -37,8 +36,8 @@ class CitaViewModel(
             matricula = "123ABCD",
             marca = "Toyota",
             modelo = "Corolla",
-            fechaMatriculacion = LocalDateTime.now(),
-            fechaRevision = LocalDateTime.now(),
+            fechaMatriculacion = LocalDate.now(),
+            fechaRevision = LocalDate.now(),
             tipoMotor = "Gasolina",
             tipoVehiculo = "Automóvil",
             dniPropietario = propietario.dni
@@ -58,10 +57,10 @@ class CitaViewModel(
         informeRepository.save(informe)
         // EL USER NO HACE FALTA PORQUE SELECCIONAMOS DE LOS QUE TENGAMOS
         // Arrastramos la clave de la matricula y el id del informe, a la cita, si todo es correcto se genera
-        val cita = Cite(
+        val cita = Cita(
             id = 1,
-            estado = false,
-            fecha = LocalDate.now(),
+            estado = "No apto",
+            fecha_hora = LocalDateTime.now(),
             id_informe = informe.id,
             usuario_trabajador = "p_martinez",
             matricula_vehiculo = vehiculo.matricula

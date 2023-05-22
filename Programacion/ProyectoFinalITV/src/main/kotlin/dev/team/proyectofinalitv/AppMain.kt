@@ -20,7 +20,7 @@ class AppMain : Application() {
 
         // A partir de aquí son pruebas
         val cont = ProbandoCosillasController()
-        //cont.onSaveCita()
+        cont.onSaveCita()
         
         val configApp = AppConfig()
         val db = DataBaseManager(configApp)
