@@ -4,7 +4,7 @@ import dev.team.proyectofinalitv.models.Vehiculo
 import java.util.*
 
 fun parseTipoMotor(tipoMotorString: String): Vehiculo.TipoMotor {
-    return when (tipoMotorString.lowercase(Locale.getDefault())) {
+    return when (tipoMotorString.toLowerCase()) {
         "gasolina" -> Vehiculo.TipoMotor.GASOLINA
         "diesel" -> Vehiculo.TipoMotor.DIESEL
         "hibrido" -> Vehiculo.TipoMotor.HIBRIDO
@@ -14,7 +14,7 @@ fun parseTipoMotor(tipoMotorString: String): Vehiculo.TipoMotor {
 }
 
 fun parseTipoVehiculo(tipoVehiculoString: String): Vehiculo.TipoVehiculo {
-    return when (tipoVehiculoString.lowercase(Locale.getDefault())) {
+    return when (tipoVehiculoString.toLowerCase()) {
         "turismo" -> Vehiculo.TipoVehiculo.TURISMO
         "furgoneta" -> Vehiculo.TipoVehiculo.FURGONETA
         "camion" -> Vehiculo.TipoVehiculo.CAMION

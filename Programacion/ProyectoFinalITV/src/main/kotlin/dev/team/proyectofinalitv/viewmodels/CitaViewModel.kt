@@ -41,7 +41,7 @@ class CitaViewModel(
             fechaMatriculacion = LocalDate.now(),
             fechaRevision = LocalDate.now(),
             tipoMotor = parseTipoMotor("Gasolina"),
-            tipoVehiculo = parseTipoVehiculo("Automóvil"),
+            tipoVehiculo = parseTipoVehiculo("Camion"),
             dniPropietario = propietario.dni
         )
         vehiculoRepository.save(vehiculo)
@@ -51,7 +51,7 @@ class CitaViewModel(
             id = 1,
             frenado = 4.5,
             contaminacion = 3.2,
-            fechaInforme = LocalDateTime.now(),
+            fechaInforme = LocalDate.now(),
             interior = true,
             luces = true,
             isApto = false

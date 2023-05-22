@@ -21,8 +21,6 @@ class PropietarioRepositoryImpl(private val databaseManager: DataBaseManager) : 
         // Seleccionamos la base de datos a la que realizar las consultas
         databaseManager.selectDataBase()
 
-        val statement = databaseManager.createStatement()
-
         val sql =
         """
         UPDATE Propietario
@@ -40,7 +38,6 @@ class PropietarioRepositoryImpl(private val databaseManager: DataBaseManager) : 
         preparedStatement?.executeUpdate()
 
         preparedStatement?.close()
-        statement?.close()
         databaseManager.closeConnection()
 
         return propietario
@@ -59,8 +56,6 @@ class PropietarioRepositoryImpl(private val databaseManager: DataBaseManager) : 
         // Seleccionamos la base de datos a la que realizar las consultas
         databaseManager.selectDataBase()
 
-        val statement = databaseManager.createStatement()
-
         val sql =
             """
         INSERT INTO Propietario (dni, nombre, apellidos, correo, telefono)
@@ -77,7 +72,6 @@ class PropietarioRepositoryImpl(private val databaseManager: DataBaseManager) : 
         preparedStatement?.executeUpdate()
 
         preparedStatement?.close()
-        statement?.close()
         databaseManager.closeConnection()
 
         return propietario

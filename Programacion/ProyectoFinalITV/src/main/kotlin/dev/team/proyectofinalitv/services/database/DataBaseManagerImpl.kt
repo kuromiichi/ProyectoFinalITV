@@ -214,7 +214,7 @@ class DataBaseManagerImpl(private val appConfig: AppConfig): DataBaseManager {
         (
             id                 INTEGER PRIMARY KEY AUTO_INCREMENT,
             estado             VARCHAR(10) NOT NULL,
-            fecha_hora         VARCHAR(19) NOT NULL,
+            fecha_hora         VARCHAR(30) NOT NULL,
             id_informe         INTEGER REFERENCES Informe (id),
             usuario_trabajador VARCHAR(50) REFERENCES Trabajador (usuario),
             matricula_vehiculo VARCHAR(15) REFERENCES Vehiculo (matricula)

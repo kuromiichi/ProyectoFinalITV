@@ -21,8 +21,6 @@ class InformeRepositoryImpl(private val databaseManager: DataBaseManager) : Info
         // Seleccionamos la base de datos a la que realizar las consultas
         databaseManager.selectDataBase()
 
-        val statement = databaseManager.createStatement()
-
         val sql =
         """
         UPDATE Informe
@@ -42,7 +40,6 @@ class InformeRepositoryImpl(private val databaseManager: DataBaseManager) : Info
         preparedStatement?.executeUpdate()
 
         preparedStatement?.close()
-        statement?.close()
         databaseManager.closeConnection()
 
         return informe
@@ -61,8 +58,6 @@ class InformeRepositoryImpl(private val databaseManager: DataBaseManager) : Info
         // Seleccionamos la base de datos a la que realizar las consultas
         databaseManager.selectDataBase()
 
-        val statement = databaseManager.createStatement()
-
         val sql =
             """
         INSERT INTO Informe (frenado, contaminacion, fecha_informe, interior, luces, is_apto)
@@ -80,6 +75,7 @@ class InformeRepositoryImpl(private val databaseManager: DataBaseManager) : Info
         preparedStatement?.executeUpdate()
 
         // Obtenemos el ID auto-generado para el nuevo informe
+        val statement = databaseManager.createStatement()
         var idInforme = 0L
         val generatedKeys = statement?.generatedKeys
         if (generatedKeys?.next() == true) {
