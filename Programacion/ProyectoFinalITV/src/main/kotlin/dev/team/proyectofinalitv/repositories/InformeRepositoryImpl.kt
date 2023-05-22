@@ -9,9 +9,44 @@ class InformeRepositoryImpl(private val databaseManager: DataBaseManager) : Info
 
     private val logger = KotlinLogging.logger {}
 
-
+    /**
+     * Actualiza un informe de la base de datos
+     * @param el informe que actualizaremos
+     * @return el nuevo informe actualizado
+     */
     override fun update(informe: Informe): Informe {
-        TODO("Not yet implemented")
+        logger.debug { "Actualizando informe con id: ${informe.id}" }
+
+        databaseManager.openConnection()
+
+        // Seleccionamos la base de datos a la que realizar las consultas
+        databaseManager.selectDataBase()
+
+        val statement = databaseManager.connection?.createStatement()
+
+        val sql =
+        """
+        UPDATE Informe
+        SET frenado = ?, contaminacion = ?, fecha_informe = ?, interior = ?, luces = ?, is_apto = ?
+        WHERE id = ?
+        """
+
+        val preparedStatement = databaseManager.connection?.prepareStatement(sql)
+        preparedStatement?.setDouble(1, informe.frenado)
+        preparedStatement?.setDouble(2, informe.contaminacion)
+        preparedStatement?.setString(3, informe.fechaInforme.toString())
+        preparedStatement?.setBoolean(4, informe.interior)
+        preparedStatement?.setBoolean(5, informe.luces)
+        preparedStatement?.setBoolean(6, informe.isApto)
+        preparedStatement?.setLong(7, informe.id)
+
+        preparedStatement?.executeUpdate()
+
+        preparedStatement?.close()
+        statement?.close()
+        databaseManager.closeConnection()
+
+        return informe
     }
 
     /**
