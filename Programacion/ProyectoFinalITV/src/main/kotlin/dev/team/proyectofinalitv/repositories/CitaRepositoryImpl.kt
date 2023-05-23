@@ -3,7 +3,6 @@ package dev.team.proyectofinalitv.repositories
 import dev.team.proyectofinalitv.models.Cita
 import dev.team.proyectofinalitv.services.database.DataBaseManager
 import mu.KotlinLogging
-import java.sql.Statement
 import java.time.LocalDateTime
 
 class CitaRepositoryImpl(private val databaseManager: DataBaseManager) : CitaRepository {
@@ -24,7 +23,7 @@ class CitaRepositoryImpl(private val databaseManager: DataBaseManager) : CitaRep
         // Seleccionamos la base de datos a la que realizar las consultas
         databaseManager.selectDataBase()
 
-        val statement = databaseManager.connection?.createStatement()
+        val statement = databaseManager.createStatement()
 
         val sql = "SELECT * FROM Cita"
         val result = statement?.executeQuery(sql)
@@ -61,7 +60,7 @@ class CitaRepositoryImpl(private val databaseManager: DataBaseManager) : CitaRep
         // Seleccionamos la base de datos a la que realizar las consultas
         databaseManager.selectDataBase()
 
-        val statement = databaseManager.connection?.createStatement()
+        val statement = databaseManager.createStatement()
 
         val sql = "DELETE FROM Cita WHERE id = $id"
         statement?.executeUpdate(sql)
@@ -86,8 +85,6 @@ class CitaRepositoryImpl(private val databaseManager: DataBaseManager) : CitaRep
         // Seleccionamos la base de datos a la que realizar las consultas
         databaseManager.selectDataBase()
 
-        val statement = databaseManager.connection?.createStatement()
-
         val sql =
             """
         UPDATE Cita
@@ -95,7 +92,7 @@ class CitaRepositoryImpl(private val databaseManager: DataBaseManager) : CitaRep
         WHERE id = ?
         """
 
-        val preparedStatement = databaseManager.connection?.prepareStatement(sql)
+        val preparedStatement = databaseManager.prepareStatement(sql)
         preparedStatement?.setString(1, cita.estado)
         preparedStatement?.setString(2, cita.fecha_hora.toString())
         preparedStatement?.setLong(3, cita.id_informe)
@@ -106,7 +103,6 @@ class CitaRepositoryImpl(private val databaseManager: DataBaseManager) : CitaRep
         preparedStatement?.executeUpdate()
 
         preparedStatement?.close()
-        statement?.close()
         databaseManager.closeConnection()
 
         return cita
@@ -125,15 +121,13 @@ class CitaRepositoryImpl(private val databaseManager: DataBaseManager) : CitaRep
         // Seleccionamos la base de datos a la que realizar las consultas
         databaseManager.selectDataBase()
 
-        val statement = databaseManager.connection?.createStatement()
-
         val sql =
             """
-            INSERT INTO Cita (estado, fecha, id_informe, usuario_trabajador, matricula_vehiculo)
+            INSERT INTO Cita (estado, fecha_hora, id_informe, usuario_trabajador, matricula_vehiculo)
             VALUES (?, ?, ?, ?, ?)
             """
 
-        val preparedStatement = databaseManager.connection?.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
+        val preparedStatement = databaseManager.prepareStatementReturnGeneratedKey(sql)
         preparedStatement?.setString(1, cita.estado)
         preparedStatement?.setString(2, cita.fecha_hora.toString())
         preparedStatement?.setLong(3, cita.id_informe)
@@ -143,6 +137,7 @@ class CitaRepositoryImpl(private val databaseManager: DataBaseManager) : CitaRep
         preparedStatement?.executeUpdate()
 
         // Obtenemos el ID auto-numérico para la nueva cita
+        val statement = databaseManager.createStatement()
         var idCite = 0L
         val generatedKeys = statement?.generatedKeys
         if (generatedKeys?.next() == true) {
@@ -172,7 +167,7 @@ class CitaRepositoryImpl(private val databaseManager: DataBaseManager) : CitaRep
         // Seleccionamos la base de datos a la que realizar las consultas
         databaseManager.selectDataBase()
 
-        val statement = databaseManager.connection?.createStatement()
+        val statement = databaseManager.createStatement()
 
         val sql = "SELECT * FROM Cita WHERE id = $id"
         val result = statement?.executeQuery(sql)
@@ -209,7 +204,7 @@ class CitaRepositoryImpl(private val databaseManager: DataBaseManager) : CitaRep
         // Seleccionamos la base de datos a la que realizar las consultas
         databaseManager.selectDataBase()
 
-        val statement = databaseManager.connection?.createStatement()
+        val statement = databaseManager.createStatement()
 
         val sql =
             """

@@ -8,7 +8,21 @@ data class Vehiculo(
     val modelo: String,
     val fechaMatriculacion: LocalDate,
     val fechaRevision: LocalDate,
-    val tipoMotor: String,
-    val tipoVehiculo: String,
-    val dniPropietario: String,
-)
+    val tipoMotor: TipoMotor,
+    val tipoVehiculo: TipoVehiculo,
+    val dniPropietario: String
+){
+    enum class TipoMotor {
+        GASOLINA,
+        DIESEL,
+        HIBRIDO,
+        ELECTRICO
+    }
+
+    enum class TipoVehiculo {
+        TURISMO,
+        FURGONETA,
+        CAMION,
+        MOTOCICLETA
+    }
+}

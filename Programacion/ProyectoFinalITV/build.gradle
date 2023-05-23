@@ -48,8 +48,12 @@ dependencies {
     // MariaDB Driver
     implementation("org.mariadb.jdbc:mariadb-java-client:3.0.7")
 
+    // Mockito (para poder mockear la database)
+    testImplementation("org.mockito.kotlin:mockito-kotlin:4.0.0")
+    //testImplementation ("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
+
     // Mockk
-    testImplementation("io.mockk:mockk:1.13.3")
+    //testImplementation("io.mockk:mockk:1.13.3")
 
     // Results
     implementation("com.michael-bull.kotlin-result:kotlin-result:1.1.17")

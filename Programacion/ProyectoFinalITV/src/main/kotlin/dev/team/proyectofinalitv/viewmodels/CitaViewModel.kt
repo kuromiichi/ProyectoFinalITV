@@ -1,5 +1,7 @@
 package dev.team.proyectofinalitv.viewmodels
 
+import dev.team.proyectofinalitv.mappers.parseTipoMotor
+import dev.team.proyectofinalitv.mappers.parseTipoVehiculo
 import dev.team.proyectofinalitv.models.Cita
 import dev.team.proyectofinalitv.models.Informe
 import dev.team.proyectofinalitv.models.Propietario
@@ -38,8 +40,8 @@ class CitaViewModel(
             modelo = "Corolla",
             fechaMatriculacion = LocalDate.now(),
             fechaRevision = LocalDate.now(),
-            tipoMotor = "Gasolina",
-            tipoVehiculo = "Automóvil",
+            tipoMotor = parseTipoMotor("Gasolina"),
+            tipoVehiculo = parseTipoVehiculo("Camion"),
             dniPropietario = propietario.dni
         )
         vehiculoRepository.save(vehiculo)
@@ -49,7 +51,7 @@ class CitaViewModel(
             id = 1,
             frenado = 4.5,
             contaminacion = 3.2,
-            fechaInforme = LocalDateTime.now(),
+            fechaInforme = LocalDate.now(),
             interior = true,
             luces = true,
             isApto = false

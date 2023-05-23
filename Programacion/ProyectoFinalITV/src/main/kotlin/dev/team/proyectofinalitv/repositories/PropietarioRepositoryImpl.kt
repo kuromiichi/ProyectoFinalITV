@@ -21,8 +21,6 @@ class PropietarioRepositoryImpl(private val databaseManager: DataBaseManager) : 
         // Seleccionamos la base de datos a la que realizar las consultas
         databaseManager.selectDataBase()
 
-        val statement = databaseManager.connection?.createStatement()
-
         val sql =
         """
         UPDATE Propietario
@@ -30,7 +28,7 @@ class PropietarioRepositoryImpl(private val databaseManager: DataBaseManager) : 
         WHERE dni = ?
         """
 
-        val preparedStatement = databaseManager.connection?.prepareStatement(sql)
+        val preparedStatement = databaseManager.prepareStatement(sql)
         preparedStatement?.setString(1, propietario.nombre)
         preparedStatement?.setString(2, propietario.apellidos)
         preparedStatement?.setString(3, propietario.correo)
@@ -40,7 +38,6 @@ class PropietarioRepositoryImpl(private val databaseManager: DataBaseManager) : 
         preparedStatement?.executeUpdate()
 
         preparedStatement?.close()
-        statement?.close()
         databaseManager.closeConnection()
 
         return propietario
@@ -59,15 +56,13 @@ class PropietarioRepositoryImpl(private val databaseManager: DataBaseManager) : 
         // Seleccionamos la base de datos a la que realizar las consultas
         databaseManager.selectDataBase()
 
-        val statement = databaseManager.connection?.createStatement()
-
         val sql =
             """
         INSERT INTO Propietario (dni, nombre, apellidos, correo, telefono)
         VALUES (?, ?, ?, ?, ?)
         """
 
-        val preparedStatement = databaseManager.connection?.prepareStatement(sql)
+        val preparedStatement = databaseManager.prepareStatement(sql)
         preparedStatement?.setString(1, propietario.dni)
         preparedStatement?.setString(2, propietario.nombre)
         preparedStatement?.setString(3, propietario.apellidos)
@@ -77,7 +72,6 @@ class PropietarioRepositoryImpl(private val databaseManager: DataBaseManager) : 
         preparedStatement?.executeUpdate()
 
         preparedStatement?.close()
-        statement?.close()
         databaseManager.closeConnection()
 
         return propietario

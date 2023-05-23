@@ -3,7 +3,6 @@ package dev.team.proyectofinalitv.repositories
 import dev.team.proyectofinalitv.models.Informe
 import dev.team.proyectofinalitv.services.database.DataBaseManager
 import mu.KotlinLogging
-import java.sql.Statement
 
 class InformeRepositoryImpl(private val databaseManager: DataBaseManager) : InformeRepository {
 
@@ -22,8 +21,6 @@ class InformeRepositoryImpl(private val databaseManager: DataBaseManager) : Info
         // Seleccionamos la base de datos a la que realizar las consultas
         databaseManager.selectDataBase()
 
-        val statement = databaseManager.connection?.createStatement()
-
         val sql =
         """
         UPDATE Informe
@@ -31,7 +28,7 @@ class InformeRepositoryImpl(private val databaseManager: DataBaseManager) : Info
         WHERE id = ?
         """
 
-        val preparedStatement = databaseManager.connection?.prepareStatement(sql)
+        val preparedStatement = databaseManager.prepareStatement(sql)
         preparedStatement?.setDouble(1, informe.frenado)
         preparedStatement?.setDouble(2, informe.contaminacion)
         preparedStatement?.setString(3, informe.fechaInforme.toString())
@@ -43,7 +40,6 @@ class InformeRepositoryImpl(private val databaseManager: DataBaseManager) : Info
         preparedStatement?.executeUpdate()
 
         preparedStatement?.close()
-        statement?.close()
         databaseManager.closeConnection()
 
         return informe
@@ -62,15 +58,13 @@ class InformeRepositoryImpl(private val databaseManager: DataBaseManager) : Info
         // Seleccionamos la base de datos a la que realizar las consultas
         databaseManager.selectDataBase()
 
-        val statement = databaseManager.connection?.createStatement()
-
         val sql =
             """
         INSERT INTO Informe (frenado, contaminacion, fecha_informe, interior, luces, is_apto)
         VALUES (?, ?, ?, ?, ?, ?)
         """
 
-        val preparedStatement = databaseManager.connection?.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
+        val preparedStatement = databaseManager.prepareStatementReturnGeneratedKey(sql)
         preparedStatement?.setDouble(1, informe.frenado)
         preparedStatement?.setDouble(2, informe.contaminacion)
         preparedStatement?.setString(3, informe.fechaInforme.toString())
@@ -81,6 +75,7 @@ class InformeRepositoryImpl(private val databaseManager: DataBaseManager) : Info
         preparedStatement?.executeUpdate()
 
         // Obtenemos el ID auto-generado para el nuevo informe
+        val statement = databaseManager.createStatement()
         var idInforme = 0L
         val generatedKeys = statement?.generatedKeys
         if (generatedKeys?.next() == true) {
