@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+  <link rel="stylesheet" type="text/css" href="FormularioITV.css">
+<head>
+  <title>Formulario de Registro</title>
+</head>
+<body>
+  <div id="encabezado_container">
+    <button id="home" onclick="window.location.href='FormularioHome.html'">
+      <img src="hogar.png" alt="Inicio" width="20">
+    </button>
+    <img id="Contacto" class="encabezado" src="llamada-telefonica.png" alt="CONTACTO" onclick="alternarDatosContacto() "style="width: 50px;">
+    <img id="logo" src="ITV-removebg-preview.png" class="encabezado" />
+    <img id="QuienesSomos" src="acerca-de.png"class="encabezado" onclick="alternarDatosQuienesSomos() "style="width: 50px">
+
+  </div>
+  <div id="ventanaEmergente">
+    <h4>Datos de contacto:</h4>
+    <p>Teléfono: 678654321</p>
+    <p>Correo: itv@example.com</p>
+  </div>
+
+  <div id="ventanaEmergente2">
+    <h4>Información de Quienes Somos:</h4>
+    <p>¿Quienes somos?</p>
+    <p id="QuienesSomosInfo">Adrián, Ángel y Emma son tres estudiantes apasionados 
+      por la seguridad vehicular y la importancia 
+      de las Inspecciones Técnicas de Vehículos (ITV).
+      Decidieron unirse y crear su propia empresa de ITV, 
+      con el objetivo de brindar un servicio confiable 
+      y de calidad a sus clientes.</p>
+  </div>
+
+
+  <script src="Script.js"></script>
+  <hr />
+
+  <form action="procesar.php" method="POST" onsubmit="return validarFormulario()">
+    <h1>Formulario para pedir cita:</h1>
+    <h3>Datos del Propietario</h3>
+    
+    <label for="DNI">DNI:</label>
+    <input type="text" id="DNI" name="DNI" required><br><br>
+  
+    <label for="nombre">Nombre:</label>
+    <input type="text" id="nombre" name="nombre" required><br><br>
+  
+    <label for="apellidos">Apellidos:</label>
+    <input type="text" id="apellidos" name="apellidos" required><br><br>
+  
+    <label for="correo">Correo electrónico:</label>
+    <input type="email" id="correo" name="correo" required><br><br>
+  
+    <label for="telefono">Teléfono:</label>
+    <input type="tel" id="telefono" name="telefono" required><br><br>
+  
+    <h3>Indique qué tipo de vehículo tiene:</h3>
+  
+    <label for="tipo_vehiculo">Tipo del vehículo:</label>
+    <select id="tipo_vehiculo" name="tipo_vehiculo" required>
+      <option value="">Seleccionar tipo</option>
+      <option value="Turismo">Turismo</option>
+      <option value="Motocicleta">Motocicleta</option>
+      <option value="Camión">Camión</option>
+      <option value="Furgoneta">Furgoneta</option>
+    </select><br><br>
+  
+    <button id="Continuar" type="submit">Continuar</button>
+  </form>
+</body>
+</html>
