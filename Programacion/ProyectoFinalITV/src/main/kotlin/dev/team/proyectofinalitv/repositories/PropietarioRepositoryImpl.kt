@@ -1,10 +1,11 @@
 package dev.team.proyectofinalitv.repositories
 
 import dev.team.proyectofinalitv.models.Propietario
-import dev.team.proyectofinalitv.services.database.DataBaseManager
+import dev.team.proyectofinalitv.repositories.base.SaveUpdateRepository
+import dev.team.proyectofinalitv.services.database.DatabaseManager
 import mu.KotlinLogging
 
-class PropietarioRepositoryImpl(private val databaseManager: DataBaseManager) : PropietarioRepository {
+class PropietarioRepositoryImpl(private val databaseManager: DatabaseManager) : SaveUpdateRepository<Propietario> {
 
     private val logger = KotlinLogging.logger {}
 
@@ -13,8 +14,8 @@ class PropietarioRepositoryImpl(private val databaseManager: DataBaseManager) : 
      * @param el propietario que actualizaremos
      * @return el nuevo propietario actualizado
      */
-    override fun update(propietario: Propietario): Propietario {
-        logger.debug { "Actualizando propietario con DNI: ${propietario.dni}" }
+    override fun update(item: Propietario): Propietario {
+        logger.debug { "Actualizando propietario con DNI: ${item.dni}" }
 
         databaseManager.openConnection()
 
@@ -29,18 +30,18 @@ class PropietarioRepositoryImpl(private val databaseManager: DataBaseManager) : 
         """
 
         val preparedStatement = databaseManager.prepareStatement(sql)
-        preparedStatement?.setString(1, propietario.nombre)
-        preparedStatement?.setString(2, propietario.apellidos)
-        preparedStatement?.setString(3, propietario.correo)
-        preparedStatement?.setString(4, propietario.telefono)
-        preparedStatement?.setString(5, propietario.dni)
+        preparedStatement?.setString(1, item.nombre)
+        preparedStatement?.setString(2, item.apellidos)
+        preparedStatement?.setString(3, item.correo)
+        preparedStatement?.setString(4, item.telefono)
+        preparedStatement?.setString(5, item.dni)
 
         preparedStatement?.executeUpdate()
 
         preparedStatement?.close()
         databaseManager.closeConnection()
 
-        return propietario
+        return item
     }
 
     /**
@@ -48,8 +49,8 @@ class PropietarioRepositoryImpl(private val databaseManager: DataBaseManager) : 
      * @param el propietario que guardaremos
      * @return el nuevo propietario guardado
      */
-    override fun save(propietario: Propietario): Propietario {
-        logger.debug { "Creando propietario con DNI: ${propietario.dni}" }
+    override fun save(item: Propietario): Propietario {
+        logger.debug { "Creando propietario con DNI: ${item.dni}" }
 
         databaseManager.openConnection()
 
@@ -63,18 +64,18 @@ class PropietarioRepositoryImpl(private val databaseManager: DataBaseManager) : 
         """
 
         val preparedStatement = databaseManager.prepareStatement(sql)
-        preparedStatement?.setString(1, propietario.dni)
-        preparedStatement?.setString(2, propietario.nombre)
-        preparedStatement?.setString(3, propietario.apellidos)
-        preparedStatement?.setString(4, propietario.correo)
-        preparedStatement?.setString(5, propietario.telefono)
+        preparedStatement?.setString(1, item.dni)
+        preparedStatement?.setString(2, item.nombre)
+        preparedStatement?.setString(3, item.apellidos)
+        preparedStatement?.setString(4, item.correo)
+        preparedStatement?.setString(5, item.telefono)
 
         preparedStatement?.executeUpdate()
 
         preparedStatement?.close()
         databaseManager.closeConnection()
 
-        return propietario
+        return item
     }
 
 }

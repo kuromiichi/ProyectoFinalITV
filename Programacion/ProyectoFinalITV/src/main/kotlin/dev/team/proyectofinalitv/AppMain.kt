@@ -4,7 +4,7 @@ import dev.team.proyectofinalitv.config.AppConfig
 import dev.team.proyectofinalitv.controllers.ProbandoCosillasController
 import dev.team.proyectofinalitv.di.ModuleKoin
 import dev.team.proyectofinalitv.repositories.CitaRepositoryImpl
-import dev.team.proyectofinalitv.services.database.DataBaseManagerImpl
+import dev.team.proyectofinalitv.services.database.DatabaseManagerImpl
 import javafx.application.Application
 import javafx.stage.Stage
 import org.koin.core.context.startKoin
@@ -23,7 +23,7 @@ class AppMain : Application() {
         cont.onSaveCita()
         
         val configApp = AppConfig()
-        val db = DataBaseManagerImpl(configApp)
+        val db = DatabaseManagerImpl(configApp)
 
         val repoCita = CitaRepositoryImpl(db)
 

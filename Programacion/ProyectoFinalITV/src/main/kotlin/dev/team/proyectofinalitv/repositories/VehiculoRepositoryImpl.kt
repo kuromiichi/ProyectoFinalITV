@@ -1,10 +1,11 @@
 package dev.team.proyectofinalitv.repositories
 
 import dev.team.proyectofinalitv.models.Vehiculo
-import dev.team.proyectofinalitv.services.database.DataBaseManager
+import dev.team.proyectofinalitv.repositories.base.SaveUpdateRepository
+import dev.team.proyectofinalitv.services.database.DatabaseManager
 import mu.KotlinLogging
 
-class VehiculoRepositoryImpl(private val databaseManager: DataBaseManager) : VehiculoRepository {
+class VehiculoRepositoryImpl(private val databaseManager: DatabaseManager) : SaveUpdateRepository<Vehiculo> {
 
     private val logger = KotlinLogging.logger {}
 
@@ -13,8 +14,8 @@ class VehiculoRepositoryImpl(private val databaseManager: DataBaseManager) : Veh
      * @param el vehículo que actualizaremos
      * @return el nuevo vehículo actualizado
      */
-    override fun update(vehiculo: Vehiculo): Vehiculo {
-        logger.debug { "Actualizando vehiculo con matricula: ${vehiculo.matricula}" }
+    override fun update(item: Vehiculo): Vehiculo {
+        logger.debug { "Actualizando vehiculo con matricula: ${item.matricula}" }
 
         databaseManager.openConnection()
 
@@ -29,14 +30,14 @@ class VehiculoRepositoryImpl(private val databaseManager: DataBaseManager) : Veh
         """
 
         val preparedStatement = databaseManager.prepareStatement(sql)
-        preparedStatement?.setString(1, vehiculo.marca)
-        preparedStatement?.setString(2, vehiculo.modelo)
-        preparedStatement?.setString(3, vehiculo.fechaMatriculacion.toString())
-        preparedStatement?.setString(4, vehiculo.fechaRevision.toString())
-        preparedStatement?.setString(5, vehiculo.tipoMotor.toString())
-        preparedStatement?.setString(6, vehiculo.tipoVehiculo.toString())
-        preparedStatement?.setString(7, vehiculo.dniPropietario)
-        preparedStatement?.setString(8, vehiculo.matricula)
+        preparedStatement?.setString(1, item.marca)
+        preparedStatement?.setString(2, item.modelo)
+        preparedStatement?.setString(3, item.fechaMatriculacion.toString())
+        preparedStatement?.setString(4, item.fechaRevision.toString())
+        preparedStatement?.setString(5, item.tipoMotor.toString())
+        preparedStatement?.setString(6, item.tipoVehiculo.toString())
+        preparedStatement?.setString(7, item.dniPropietario)
+        preparedStatement?.setString(8, item.matricula)
 
 
         preparedStatement?.executeUpdate()
@@ -44,7 +45,7 @@ class VehiculoRepositoryImpl(private val databaseManager: DataBaseManager) : Veh
         preparedStatement?.close()
         databaseManager.closeConnection()
 
-        return vehiculo
+        return item
     }
 
     /**
@@ -52,8 +53,8 @@ class VehiculoRepositoryImpl(private val databaseManager: DataBaseManager) : Veh
      * @param el vehículo que guardaremos
      * @return el nuevo vehículo guardado
      */
-    override fun save(vehiculo: Vehiculo): Vehiculo {
-        logger.debug { "Creando vehículo con matrícula: ${vehiculo.matricula}" }
+    override fun save(item: Vehiculo): Vehiculo {
+        logger.debug { "Creando vehículo con matrícula: ${item.matricula}" }
 
         databaseManager.openConnection()
 
@@ -67,20 +68,20 @@ class VehiculoRepositoryImpl(private val databaseManager: DataBaseManager) : Veh
         """
 
         val preparedStatement = databaseManager.prepareStatement(sql)
-        preparedStatement?.setString(1, vehiculo.matricula)
-        preparedStatement?.setString(2, vehiculo.marca)
-        preparedStatement?.setString(3, vehiculo.modelo)
-        preparedStatement?.setString(4, vehiculo.fechaMatriculacion.toString())
-        preparedStatement?.setString(5, vehiculo.fechaRevision.toString())
-        preparedStatement?.setString(6, vehiculo.tipoMotor.toString())
-        preparedStatement?.setString(7, vehiculo.tipoVehiculo.toString())
-        preparedStatement?.setString(8, vehiculo.dniPropietario)
+        preparedStatement?.setString(1, item.matricula)
+        preparedStatement?.setString(2, item.marca)
+        preparedStatement?.setString(3, item.modelo)
+        preparedStatement?.setString(4, item.fechaMatriculacion.toString())
+        preparedStatement?.setString(5, item.fechaRevision.toString())
+        preparedStatement?.setString(6, item.tipoMotor.toString())
+        preparedStatement?.setString(7, item.tipoVehiculo.toString())
+        preparedStatement?.setString(8, item.dniPropietario)
 
         preparedStatement?.executeUpdate()
 
         preparedStatement?.close()
         databaseManager.closeConnection()
 
-        return vehiculo
+        return item
     }
 }

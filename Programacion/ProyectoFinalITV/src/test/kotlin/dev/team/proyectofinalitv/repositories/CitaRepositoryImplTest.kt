@@ -1,8 +1,7 @@
 package dev.team.proyectofinalitv.repositories
 
 import dev.team.proyectofinalitv.models.Cita
-import dev.team.proyectofinalitv.models.Vehiculo
-import dev.team.proyectofinalitv.services.database.DataBaseManager
+import dev.team.proyectofinalitv.services.database.DatabaseManager
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
@@ -17,7 +16,7 @@ import java.time.LocalDateTime
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class CitaRepositoryImplTest {
 
-    private val mockDatabaseManager: DataBaseManager = mock()
+    private val mockDatabaseManager: DatabaseManager = mock()
 
     private val mockStatement: Statement = mock()
 

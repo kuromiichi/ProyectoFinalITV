@@ -1,11 +1,11 @@
 package dev.team.proyectofinalitv.services.database
 
 import java.sql.Connection
-import java.sql.PreparedStatement
-import java.sql.Statement
 
-interface DataBaseManager {
+interface DatabaseManager {
     fun createDatabase()
     fun dropDatabase()
-    fun Connection.selectDatabase()
+    fun selectDatabase(con: Connection)
+
+    val con: Connection
 }

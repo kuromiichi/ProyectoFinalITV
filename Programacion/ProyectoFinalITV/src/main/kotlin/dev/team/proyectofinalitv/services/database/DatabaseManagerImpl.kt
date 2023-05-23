@@ -5,11 +5,11 @@ import mu.KotlinLogging
 import java.sql.Connection
 import java.sql.DriverManager
 
-class DataBaseManagerImpl(private val appConfig: AppConfig) : DataBaseManager {
+class DatabaseManagerImpl(private val appConfig: AppConfig) : DatabaseManager {
 
     private val logger = KotlinLogging.logger { }
 
-    val con: Connection
+    override val con: Connection
         get() {
             logger.debug { "Creando conexión con la base de datos" }
             return DriverManager.getConnection(appConfig.urlConnection, appConfig.dbUser, appConfig.dbPassword)
@@ -69,9 +69,9 @@ class DataBaseManagerImpl(private val appConfig: AppConfig) : DataBaseManager {
     /**
      * Seleccionar la base de datos para saber donde realizar las consultas
      */
-    override fun Connection.selectDatabase() {
+    override fun selectDatabase(con: Connection) {
         logger.debug { "Seleccionando base de datos" }
-        this.catalog = appConfig.dbName
+        con.catalog = appConfig.dbName
     }
 
     // ============== SECCIÓN DML (en caso de querer tener por defecto inicial la BD) =================
@@ -81,7 +81,7 @@ class DataBaseManagerImpl(private val appConfig: AppConfig) : DataBaseManager {
      */
     private fun createTablesByDefault() {
         con.use { con ->
-            con.selectDatabase()
+            selectDatabase(con)
             
             // Estación
             val estacionCreate = """
@@ -186,7 +186,7 @@ class DataBaseManagerImpl(private val appConfig: AppConfig) : DataBaseManager {
      */
     private fun insertDataByDefault() {
         con.use { con ->
-            con.selectDatabase()
+            selectDatabase(con)
             // Estación
             val estacionInsert = """
                 INSERT INTO Estacion (nombre, direccion, correo, telefono)

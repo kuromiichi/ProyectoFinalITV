@@ -1,13 +1,16 @@
 package dev.team.proyectofinalitv.repositories
 
 import dev.team.proyectofinalitv.models.Cita
-import dev.team.proyectofinalitv.services.database.DataBaseManager
+import dev.team.proyectofinalitv.services.database.DatabaseManager
 import mu.KotlinLogging
+import java.sql.Statement
 import java.time.LocalDateTime
 
-class CitaRepositoryImpl(private val databaseManager: DataBaseManager) : CitaRepository {
+class CitaRepositoryImpl(private val databaseManager: DatabaseManager) : CitaRepository {
 
     private val logger = KotlinLogging.logger {}
+
+    private val con get() = databaseManager.con
 
     /**
      * Busca todas las citas que se encuentren en la base de datos
@@ -18,214 +21,181 @@ class CitaRepositoryImpl(private val databaseManager: DataBaseManager) : CitaRep
 
         val citas = mutableListOf<Cita>()
 
-        databaseManager.openConnection()
-
-        // Seleccionamos la base de datos a la que realizar las consultas
-        databaseManager.selectDataBase()
-
-        val statement = databaseManager.createStatement()
-
-        val sql = "SELECT * FROM Cita"
-        val result = statement?.executeQuery(sql)
-
-        // Recorremos los resultados hasta que nos de: 'false'
-        while (result?.next() == true) {
-            val cita = Cita(
-                id = result.getLong("id"),
-                estado = result.getString("estado"),
-                fecha_hora = LocalDateTime.parse(result.getString("fecha_hora")),
-                id_informe = result.getLong("id_informe"),
-                usuario_trabajador = result.getString("usuario_trabajador"),
-                matricula_vehiculo = result.getString("matricula_vehiculo")
-            )
-            citas.add(cita)
+        con.use { con ->
+            databaseManager.selectDatabase(con)
+            val findAllQuery = "SELECT * FROM Cita"
+            val findAllStmt = con.prepareStatement(findAllQuery)
+            findAllStmt.use { stmt ->
+                val findAllResultSet = stmt.executeQuery()
+                findAllResultSet.use { rs ->
+                    while (rs.next()) {
+                        citas.add(
+                            Cita(
+                                id = rs.getLong(1),
+                                estado = rs.getString(2),
+                                fechaHora = LocalDateTime.parse(rs.getString(3)),
+                                idInforme = rs.getLong(4),
+                                matriculaVehiculo = rs.getString(5),
+                                usuarioTrabajador = rs.getString(6)
+                            )
+                        )
+                    }
+                }
+            }
         }
-
-        statement?.close()
-        databaseManager.closeConnection()
 
         return citas
     }
 
     /**
      * Busca una cita por su id y la borra de la base de datos
-     * @param el id de la cita que buscaremos
-     * @return true si el statement no es nulo, es decir ha encontrado la cita, si no false
+     * @param id el id de la cita que buscaremos
+     * @return true si se ha encontrado la cita, false si no
      */
     override fun deleteById(id: Long): Boolean {
-        logger.debug { "Borrando la cita por id: $id" }
+        logger.debug { "Borrando la cita con id: $id" }
 
-        databaseManager.openConnection()
-
-        // Seleccionamos la base de datos a la que realizar las consultas
-        databaseManager.selectDataBase()
-
-        val statement = databaseManager.createStatement()
-
-        val sql = "DELETE FROM Cita WHERE id = $id"
-        statement?.executeUpdate(sql)
-
-        statement?.close()
-
-        databaseManager.closeConnection()
-
-        return statement != null
+        con.use { con ->
+            databaseManager.selectDatabase(con)
+            val deleteQuery = "DELETE FROM Cita WHERE id = ?"
+            val deleteStmt = con.prepareStatement(deleteQuery)
+            deleteStmt.use { stmt ->
+                stmt.setLong(1, id)
+                return stmt.executeUpdate() > 0
+            }
+        }
     }
 
     /**
      * Actualiza una cita de la base de datos
-     * @param la cita que actualizaremos
+     * @param item la cita que actualizaremos
      * @return la nueva cita actualizada
      */
-    override fun update(cita: Cita): Cita {
-        logger.debug { "Actualizando cita con id: ${cita.id}" }
+    override fun update(item: Cita): Cita {
+        logger.debug { "Actualizando cita con id: ${item.id}" }
 
-        databaseManager.openConnection()
+        con.use { con ->
+            databaseManager.selectDatabase(con)
+            val updateQuery = """
+                UPDATE Cita
+                SET estado = ?, fechaHora = ?, idInforme = ?, matricula_vehiculo = ?, usuario_trabajador = ?
+                WHERE id = ?
+            """.trimIndent()
+            val updateStmt = con.prepareStatement(updateQuery)
+            updateStmt.use { stmt ->
+                stmt.setString(1, item.estado)
+                stmt.setString(2, item.fechaHora.toString())
+                stmt.setLong(3, item.idInforme)
+                stmt.setString(4, item.matriculaVehiculo)
+                stmt.setString(5, item.usuarioTrabajador)
+                stmt.setLong(6, item.id)
 
-        // Seleccionamos la base de datos a la que realizar las consultas
-        databaseManager.selectDataBase()
+                stmt.executeUpdate()
+            }
+        }
 
-        val sql =
-            """
-        UPDATE Cita
-        SET estado = ?, fecha = ?, id_informe = ?, usuario_trabajador = ?, matricula_vehiculo = ?
-        WHERE id = ?
-        """
-
-        val preparedStatement = databaseManager.prepareStatement(sql)
-        preparedStatement?.setString(1, cita.estado)
-        preparedStatement?.setString(2, cita.fecha_hora.toString())
-        preparedStatement?.setLong(3, cita.id_informe)
-        preparedStatement?.setString(4, cita.usuario_trabajador)
-        preparedStatement?.setString(5, cita.matricula_vehiculo)
-        preparedStatement?.setLong(6, cita.id)
-
-        preparedStatement?.executeUpdate()
-
-        preparedStatement?.close()
-        databaseManager.closeConnection()
-
-        return cita
+        return item
     }
 
     /**
      * Guarda una cita en la base de datos
-     * @param la cita que guardaremos
+     * @param item la cita que guardaremos
      * @return la nueva cita guardada
      */
-    override fun save(cita: Cita): Cita {
-        logger.debug { "Creando cita con id: ${cita.id}" }
+    override fun save(item: Cita): Cita {
+        logger.debug { "Creando cita con id: ${item.id}" }
 
-        databaseManager.openConnection()
+        var id: Long
 
-        // Seleccionamos la base de datos a la que realizar las consultas
-        databaseManager.selectDataBase()
+        con.use { con ->
+            databaseManager.selectDatabase(con)
+            val saveQuery = """
+                INSERT INTO Cita
+                (estado, fechaHora, idInforme, usuarioTrabajador, matriculaVehiculo)
+                VALUES (?,?,?,?,?)
+            """.trimIndent()
+            val saveStmt = con.prepareStatement(saveQuery, Statement.RETURN_GENERATED_KEYS)
+            saveStmt.use { stmt ->
+                stmt.setString(1, item.estado)
+                stmt.setString(2, item.fechaHora.toString())
+                stmt.setLong(3, item.idInforme)
+                stmt.setString(4, item.usuarioTrabajador)
+                stmt.setString(5, item.matriculaVehiculo)
 
-        val sql =
-            """
-            INSERT INTO Cita (estado, fecha_hora, id_informe, usuario_trabajador, matricula_vehiculo)
-            VALUES (?, ?, ?, ?, ?)
-            """
-
-        val preparedStatement = databaseManager.prepareStatementReturnGeneratedKey(sql)
-        preparedStatement?.setString(1, cita.estado)
-        preparedStatement?.setString(2, cita.fecha_hora.toString())
-        preparedStatement?.setLong(3, cita.id_informe)
-        preparedStatement?.setString(4, cita.usuario_trabajador)
-        preparedStatement?.setString(5, cita.matricula_vehiculo)
-
-        preparedStatement?.executeUpdate()
-
-        // Obtenemos el ID auto-numérico para la nueva cita
-        val statement = databaseManager.createStatement()
-        var idCite = 0L
-        val generatedKeys = statement?.generatedKeys
-        if (generatedKeys?.next() == true) {
-            val generatedId = generatedKeys.getLong(1)
-            idCite = generatedId
+                stmt.executeUpdate()
+                val key = stmt.generatedKeys
+                id = if (key.next()) key.getLong(1) else 0L
+            }
         }
 
-        preparedStatement?.close()
-        statement?.close()
-        databaseManager.closeConnection()
-
-        return cita.copy(id = idCite)
+        return item.copy(id = id)
     }
 
     /**
      * Buscar una cita por su ID
-     * @param el id por el que se buscará
-     * @return la cita encontrada o null si no la encuentra
+     * @param id el id por el que se buscará
+     * @return la cita si se ha encontrado, null si no
      */
     override fun findById(id: Long): Cita? {
         logger.debug { "Buscando cita con id: $id" }
 
         var cita: Cita? = null
 
-        databaseManager.openConnection()
-
-        // Seleccionamos la base de datos a la que realizar las consultas
-        databaseManager.selectDataBase()
-
-        val statement = databaseManager.createStatement()
-
-        val sql = "SELECT * FROM Cita WHERE id = $id"
-        val result = statement?.executeQuery(sql)
-
-        // Verificamos si se encontró una cita con el ID proporcionado
-        if (result?.next() == true) {
-            cita = Cita(
-                id = result.getLong("id"),
-                estado = result.getString("estado"),
-                fecha_hora = LocalDateTime.parse(result.getString("fecha_hora")),
-                id_informe = result.getLong("id_informe"),
-                usuario_trabajador = result.getString("usuario_trabajador"),
-                matricula_vehiculo = result.getString("matricula_vehiculo")
-            )
+        con.use { con ->
+            databaseManager.selectDatabase(con)
+            val findQuery = "SELECT * FROM Cita WHERE id = ?"
+            val findStmt = con.prepareStatement(findQuery)
+            findStmt.use { stmt ->
+                stmt.setLong(1, id)
+                val findResultSet = stmt.executeQuery()
+                findResultSet.use { rs ->
+                    if (rs.next()) {
+                        cita = Cita(
+                            id = rs.getLong(1),
+                            estado = rs.getString(2),
+                            fechaHora = LocalDateTime.parse(rs.getString(3)),
+                            idInforme = rs.getLong(4),
+                            usuarioTrabajador = rs.getString(5),
+                            matriculaVehiculo = rs.getString(6)
+                        )
+                    }
+                }
+            }
         }
-
-        statement?.close()
-        databaseManager.closeConnection()
 
         return cita
     }
 
     /**
-     * Buscar una cita por la matrícula del coche que pasará al cita
-     * @param la matrícula por la que se buscará
-     * @return la cita encontrada o null si no la encuentra
+     * Buscar una cita por matrícula
+     * @param matricula la matrícula por la que se buscará
+     * @return la cita si se ha encontrado, null si no
      */
     override fun findByMatricula(matricula: String): Cita? {
 
         var cita: Cita? = null
 
-        databaseManager.openConnection()
-
-        // Seleccionamos la base de datos a la que realizar las consultas
-        databaseManager.selectDataBase()
-
-        val statement = databaseManager.createStatement()
-
-        val sql =
-            """
-            SELECT * FROM Cita WHERE matricula_vehiculo = '$matricula'
-            """
-        val result = statement?.executeQuery(sql)
-
-        // Recorremos los resultados hasta que nos de: 'false'
-        while (result?.next() == true) {
-            cita = Cita(
-                id = result.getLong("id"),
-                estado = result.getString("estado"),
-                fecha_hora = LocalDateTime.parse(result.getString("fecha_hora")),
-                id_informe = result.getLong("id_informe"),
-                usuario_trabajador = result.getString("usuario_trabajador"),
-                matricula_vehiculo = result.getString("matricula_vehiculo")
-            )
+        con.use { con ->
+            databaseManager.selectDatabase(con)
+            val findQuery = "SELECT * FROM Cita WHERE matricula_vehiculo = ?"
+            val findStmt = con.prepareStatement(findQuery)
+            findStmt.use { stmt ->
+                stmt.setString(1, matricula)
+                val findResultSet = stmt.executeQuery()
+                findResultSet.use { rs ->
+                    if (rs.next()) {
+                        cita = Cita(
+                            id = rs.getLong(1),
+                            estado = rs.getString(2),
+                            fechaHora = LocalDateTime.parse(rs.getString(3)),
+                            idInforme = rs.getLong(4),
+                            usuarioTrabajador = rs.getString(5),
+                            matriculaVehiculo = rs.getString(6)
+                        )
+                    }
+                }
+            }
         }
-
-        statement?.close()
-        databaseManager.closeConnection()
 
         return cita
     }

@@ -1,17 +1,14 @@
 package dev.team.proyectofinalitv.repositories
 
 import dev.team.proyectofinalitv.models.Vehiculo
-import dev.team.proyectofinalitv.services.database.DataBaseManager
+import dev.team.proyectofinalitv.services.database.DatabaseManager
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.TestInstance
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.kotlin.mock
-import org.mockito.kotlin.reset
-import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import java.sql.PreparedStatement
 import java.sql.Statement
@@ -20,7 +17,7 @@ import java.time.LocalDate
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class VehiculoRepositoryImplTest {
 
-    private val mockDatabaseManager: DataBaseManager = mock()
+    private val mockDatabaseManager: DatabaseManager = mock()
 
     private val mockStatement: Statement = mock()
 

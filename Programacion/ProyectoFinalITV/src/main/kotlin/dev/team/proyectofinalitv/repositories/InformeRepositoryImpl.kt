@@ -1,10 +1,11 @@
 package dev.team.proyectofinalitv.repositories
 
 import dev.team.proyectofinalitv.models.Informe
-import dev.team.proyectofinalitv.services.database.DataBaseManager
+import dev.team.proyectofinalitv.repositories.base.SaveUpdateRepository
+import dev.team.proyectofinalitv.services.database.DatabaseManager
 import mu.KotlinLogging
 
-class InformeRepositoryImpl(private val databaseManager: DataBaseManager) : InformeRepository {
+class InformeRepositoryImpl(private val databaseManager: DatabaseManager) : SaveUpdateRepository<Informe> {
 
     private val logger = KotlinLogging.logger {}
 
@@ -13,8 +14,8 @@ class InformeRepositoryImpl(private val databaseManager: DataBaseManager) : Info
      * @param el informe que actualizaremos
      * @return el nuevo informe actualizado
      */
-    override fun update(informe: Informe): Informe {
-        logger.debug { "Actualizando informe con id: ${informe.id}" }
+    override fun update(item: Informe): Informe {
+        logger.debug { "Actualizando informe con id: ${item.id}" }
 
         databaseManager.openConnection()
 
@@ -29,20 +30,20 @@ class InformeRepositoryImpl(private val databaseManager: DataBaseManager) : Info
         """
 
         val preparedStatement = databaseManager.prepareStatement(sql)
-        preparedStatement?.setDouble(1, informe.frenado)
-        preparedStatement?.setDouble(2, informe.contaminacion)
-        preparedStatement?.setString(3, informe.fechaInforme.toString())
-        preparedStatement?.setBoolean(4, informe.interior)
-        preparedStatement?.setBoolean(5, informe.luces)
-        preparedStatement?.setBoolean(6, informe.isApto)
-        preparedStatement?.setLong(7, informe.id)
+        preparedStatement?.setDouble(1, item.frenado)
+        preparedStatement?.setDouble(2, item.contaminacion)
+        preparedStatement?.setString(3, item.fechaInforme.toString())
+        preparedStatement?.setBoolean(4, item.interior)
+        preparedStatement?.setBoolean(5, item.luces)
+        preparedStatement?.setBoolean(6, item.isApto)
+        preparedStatement?.setLong(7, item.id)
 
         preparedStatement?.executeUpdate()
 
         preparedStatement?.close()
         databaseManager.closeConnection()
 
-        return informe
+        return item
     }
 
     /**
@@ -50,8 +51,8 @@ class InformeRepositoryImpl(private val databaseManager: DataBaseManager) : Info
      * @param el informe que guardaremos
      * @return el nuevo informe guardado
      */
-    override fun save(informe: Informe): Informe {
-        logger.debug { "Creando informe con ID: ${informe.id}" }
+    override fun save(item: Informe): Informe {
+        logger.debug { "Creando informe con ID: ${item.id}" }
 
         databaseManager.openConnection()
 
@@ -65,12 +66,12 @@ class InformeRepositoryImpl(private val databaseManager: DataBaseManager) : Info
         """
 
         val preparedStatement = databaseManager.prepareStatementReturnGeneratedKey(sql)
-        preparedStatement?.setDouble(1, informe.frenado)
-        preparedStatement?.setDouble(2, informe.contaminacion)
-        preparedStatement?.setString(3, informe.fechaInforme.toString())
-        preparedStatement?.setBoolean(4, informe.interior)
-        preparedStatement?.setBoolean(5, informe.luces)
-        preparedStatement?.setBoolean(6, informe.isApto)
+        preparedStatement?.setDouble(1, item.frenado)
+        preparedStatement?.setDouble(2, item.contaminacion)
+        preparedStatement?.setString(3, item.fechaInforme.toString())
+        preparedStatement?.setBoolean(4, item.interior)
+        preparedStatement?.setBoolean(5, item.luces)
+        preparedStatement?.setBoolean(6, item.isApto)
 
         preparedStatement?.executeUpdate()
 
@@ -87,7 +88,7 @@ class InformeRepositoryImpl(private val databaseManager: DataBaseManager) : Info
         statement?.close()
         databaseManager.closeConnection()
 
-        return informe.copy(id = idInforme)
+        return item.copy(id = idInforme)
     }
 
 }

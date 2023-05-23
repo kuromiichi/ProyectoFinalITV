@@ -7,9 +7,6 @@ import dev.team.proyectofinalitv.models.Informe
 import dev.team.proyectofinalitv.models.Propietario
 import dev.team.proyectofinalitv.models.Vehiculo
 import dev.team.proyectofinalitv.repositories.CitaRepository
-import dev.team.proyectofinalitv.repositories.InformeRepository
-import dev.team.proyectofinalitv.repositories.PropietarioRepository
-import dev.team.proyectofinalitv.repositories.VehiculoRepository
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -62,10 +59,10 @@ class CitaViewModel(
         val cita = Cita(
             id = 1,
             estado = "No apto",
-            fecha_hora = LocalDateTime.now(),
-            id_informe = informe.id,
-            usuario_trabajador = "p_martinez",
-            matricula_vehiculo = vehiculo.matricula
+            fechaHora = LocalDateTime.now(),
+            idInforme = informe.id,
+            usuarioTrabajador = "p_martinez",
+            matriculaVehiculo = vehiculo.matricula
         )
         println(citaRepository.save(cita))
         // ================================================
