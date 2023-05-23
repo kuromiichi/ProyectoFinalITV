@@ -107,16 +107,18 @@
  
 
   .right-message {
-    text-align: right;
+    text-align: left;
     font-family: "Verdana", sans-serif;
     font-size: 36px;
     color: BLACK;
-    margin-left:18%;
+    
   }
 
   #coche {
-      width: 50%;
-     
+    float: right;
+    margin-left: 10px;
+    max-width: 50%;
+    margin-top: 4%
   }
   
 
@@ -170,10 +172,15 @@
   text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black;
 }
 #atras {
-  position: absolute;
-  top: 10px;
-  left: 50px;
+  position: fixed;
+  top: 20px;
+  left: 60px;
+  padding: 10px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
 }
+
 #input_cita {
   width: 300px; /* Anchura del campo de entrada */
   height: 40px; /* Altura del campo de entrada */
@@ -220,4 +227,55 @@
   display: block;
 
 }
-  
+#home {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  padding: 10px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.window-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.window {
+  width: 600px;
+  height: 400px;
+  background-color: #f1f1f1;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 5%
+}
+
+.window-column {
+  flex: 1;
+  padding: 10px;
+}
+
+.window-column h2 {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.window-button-container {
+  text-align: left;
+  margin-top: 20px;
+}
+
+.window-button {
+  padding: 10px 20px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
