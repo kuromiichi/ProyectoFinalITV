@@ -6,7 +6,7 @@
 </head>
 <body>
   <div id="encabezado_container">
-    <button id="inicio" onclick="window.location.href='FormularioHome.html'">
+    <button id="home" onclick="window.location.href='FormularioHome.html'">
       <img src="hogar.png" alt="Inicio" width="20">
     </button>
     <img id="Contacto" class="encabezado" src="llamada-telefonica.png" alt="CONTACTO" onclick="alternarDatosContacto() "style="width: 50px;">
@@ -37,66 +37,37 @@
   <script src="Script.js"></script>
   <hr />
   <div>
-    <img id="coche" src="N-Audi-A6.png" alt="Audi A6" style="float: right;">
+    <img id="coche" src="N-Audi-A6.png" alt="Audi A6">
     <p class="right-message">¡GRACIAS POR RESERVAR!</p>
 
-    <table border="1">
-        <tr>
-          <th rowspan="13">Datos del Formulario</th>
-        </tr>
-        <tr>
-          <td>DNI</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>Nombre</td>
-          <td>Cristiano</td>
-        </tr>
-        <tr>
-          <td>Apellidos</td>
-          <td>Ronaldo</td>
-        </tr>
-        <tr>
-          <td>Email</td>
-          <td>cristianoronaldo@gmail.commmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm</td>
-        </tr>
-        <tr>
-          <td>Teléfono</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>Tipo de Vehículo</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>Marca</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>Modelo</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>Matrícula</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>Tipo de Motor</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>Fecha de última revisión</td>
-          <td></td>
-        </tr>
-        <tr>
-        <td>Fecha de revision</td>
-        <td></td>
-        </tr>    
-      </table>
+    <div class="window">
+      <div class="window-column">
+        <h2>Datos del Propietario</h2>
+        <p>DNI: [Aquí va el DNI]</p>
+        <p>Nombre: [Aquí va el nombre]</p>
+        <p>Apellidos: [Aquí van los apellidos]</p>
+        <p>Correo electrónico: [Aquí va el correo]</p>
+        <p>Teléfono: [Aquí va el teléfono]</p>
+      </div>
+      <div class="window-column">
+        <h2>Datos del Vehículo</h2>
+        <p>Tipo de vehículo: [Aquí va el tipo de vehículo]</p>
+        <p>Marca: [Aquí va la marca]</p>
+        <p>Modelo: [Aquí va el modelo]</p>
+        <p>Matrícula: [Aquí va la matrícula]</p>
+        <p>Tipo de motor: [Aquí va el tipo de motor]</p>
+        <p>Fecha de última revisión: [Aquí va la fecha de última revisión]</p>
+        <p>Fecha de revisión: [Aquí va la fecha de revisión]</p>
+      </div>
     </div>
-    <p>*Si los datos son incorrectos vuelve al formulario*</p>
-    <button class="botones"  onclick="window.location.href='Formulario.html'">Volver al formulario</button>
-  <button class="botones" onclick="enviarReserva()">Enviar reserva</button>
+    <p>*Si los datos son incorrectos vuelva al formulario y completelo de nuevo.</p>
+    
+    <div class="window-button-container">
+      <button class="window-button" onclick="volverAlFormulario()">Volver al formulario</button>
+      <button class="window-button" onclick="enviarReserva()">Enviar reserva</button>
+    </div>
+    
+
   </div>
 </body>
 </html>

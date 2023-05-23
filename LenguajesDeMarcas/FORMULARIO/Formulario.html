@@ -6,7 +6,7 @@
 </head>
 <body>
   <div id="encabezado_container">
-    <button id="inicio" onclick="window.location.href='FormularioHome.html'">
+    <button id="home" onclick="window.location.href='FormularioHome.html'">
       <img src="hogar.png" alt="Inicio" width="20">
     </button>
     <img id="Contacto" class="encabezado" src="llamada-telefonica.png" alt="CONTACTO" onclick="alternarDatosContacto() "style="width: 50px;">
@@ -35,37 +35,37 @@
   <script src="Script.js"></script>
   <hr />
 
-  <form action="procesar.php" method="POST">
+  <form action="procesar.php" method="POST" onsubmit="return validarFormulario()">
     <h1>Formulario para pedir cita:</h1>
     <h3>Datos del Propietario</h3>
-  <form action="procesar.php" method="POST">
+    
     <label for="DNI">DNI:</label>
     <input type="text" id="DNI" name="DNI" required><br><br>
-
+  
     <label for="nombre">Nombre:</label>
     <input type="text" id="nombre" name="nombre" required><br><br>
-    
+  
     <label for="apellidos">Apellidos:</label>
     <input type="text" id="apellidos" name="apellidos" required><br><br>
-    
+  
     <label for="correo">Correo electrónico:</label>
     <input type="email" id="correo" name="correo" required><br><br>
-    
+  
     <label for="telefono">Teléfono:</label>
     <input type="tel" id="telefono" name="telefono" required><br><br>
-    
-    <h3>Indique que tipo de vehículo tiene:</h3>
-    
+  
+    <h3>Indique qué tipo de vehículo tiene:</h3>
+  
     <label for="tipo_vehiculo">Tipo del vehículo:</label>
     <select id="tipo_vehiculo" name="tipo_vehiculo" required>
       <option value="">Seleccionar tipo</option>
-      <option value="Coche">Coche</option>
+      <option value="Turismo">Turismo</option>
       <option value="Motocicleta">Motocicleta</option>
       <option value="Camión">Camión</option>
-      <option value="Otros">Otros</option>
+      <option value="Furgoneta">Furgoneta</option>
     </select><br><br>
-    
-    <button id="inicio" onclick="window.location.href='Formulario2.html'">Continuar</button>
+  
+    <button id="Continuar" type="submit">Continuar</button>
   </form>
 </body>
 </html>
