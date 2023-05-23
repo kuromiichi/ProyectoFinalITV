@@ -6,7 +6,7 @@
 </head>
 <body>
   <div id="encabezado_container">
-    <button id="inicio" onclick="window.location.href='FormularioHome.html'">
+    <button id="home" onclick="window.location.href='FormularioHome.html'">
       <img src="hogar.png" alt="Inicio" width="20">
     </button>
     <button id="atras" onclick="window.location.href='Formulario.html'">
@@ -38,7 +38,7 @@
   <script src="Script.js"></script>
   <hr />
  
-  <form action="procesar.php" method="POST">
+  <form action="procesar.php" method="POST" onsubmit="return validarFormulario2()">
     <h1>Formulario para pedir cita:</h1>
     <h3>Datos del Vehiculo</h3>
   <form action="procesar.php" method="POST">
@@ -48,8 +48,9 @@
     <label for="Modelo">Modelo:</label>
     <input type="text" id="Modelo" name="Modelo" required><br><br>
     
-    <label for="Matricula">Matricula:</label>
+    <label for="Matricula">Matrícula:</label>
     <input type="text" id="Matricula" name="Matricula" required><br><br>
+
     
     <label for="tipo_vehiculo">Tipo del motor:</label>
     <select id="tipo_vehiculo" name="tipo_vehiculo" required>
@@ -61,12 +62,12 @@
     </select><br><br>
 
     <label for="FechaRevision">Fecha de revisión:</label>
-    <input type="date" id="FechaRevision" name="FechaRevision" min="2023-05-17" required><br><br>
+    <input type="date" id="FechaRevision" name="FechaRevision" required><br><br>
   
     <label for="FechaUltimaRevision">Fecha de última revisión:</label>
-    <input type="date" id="FechaUltimaRevision" name="FechaUltimaRevision" max="2023-05-17" required><br><br>
+    <input type="date" id="FechaUltimaRevision" name="FechaUltimaRevision"  required><br><br>
 
-    <button onclick="window.location.href='Formulario3.html'">Enviar</button>
+    <button type="submit">Enviar</button>
   </form>
  
 
