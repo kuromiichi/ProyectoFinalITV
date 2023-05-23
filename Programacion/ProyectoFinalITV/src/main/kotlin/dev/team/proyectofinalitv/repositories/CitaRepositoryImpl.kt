@@ -53,7 +53,7 @@ class CitaRepositoryImpl(private val databaseManager: DatabaseManager) : CitaRep
      * @return true si se ha encontrado la cita, false si no
      */
     override fun deleteById(id: Long): Boolean {
-        logger.debug { "Borrando la cita con id: $id" }
+        logger.debug { "Borrando la cita con ID: $id" }
 
         con.use { con ->
             databaseManager.selectDatabase(con)
@@ -67,12 +67,12 @@ class CitaRepositoryImpl(private val databaseManager: DatabaseManager) : CitaRep
     }
 
     /**
-     * Actualiza una cita de la base de datos
+     * Actualiza una cita en la base de datos
      * @param item la cita que actualizaremos
      * @return la nueva cita actualizada
      */
     override fun update(item: Cita): Cita {
-        logger.debug { "Actualizando cita con id: ${item.id}" }
+        logger.debug { "Actualizando cita con ID: ${item.id}" }
 
         con.use { con ->
             databaseManager.selectDatabase(con)
@@ -103,7 +103,7 @@ class CitaRepositoryImpl(private val databaseManager: DatabaseManager) : CitaRep
      * @return la nueva cita guardada
      */
     override fun save(item: Cita): Cita {
-        logger.debug { "Creando cita con id: ${item.id}" }
+        logger.debug { "Creando cita con ID: ${item.id}" }
 
         var id: Long
 
@@ -112,7 +112,7 @@ class CitaRepositoryImpl(private val databaseManager: DatabaseManager) : CitaRep
             val saveQuery = """
                 INSERT INTO Cita
                 (estado, fechaHora, idInforme, usuarioTrabajador, matriculaVehiculo)
-                VALUES (?,?,?,?,?)
+                VALUES (?, ?, ?, ?, ?)
             """.trimIndent()
             val saveStmt = con.prepareStatement(saveQuery, Statement.RETURN_GENERATED_KEYS)
             saveStmt.use { stmt ->
@@ -124,7 +124,7 @@ class CitaRepositoryImpl(private val databaseManager: DatabaseManager) : CitaRep
 
                 stmt.executeUpdate()
                 val key = stmt.generatedKeys
-                id = if (key.next()) key.getLong(1) else 0L
+                id = key.use { if (it.next()) it.getLong(1) else 0L }
             }
         }
 
@@ -137,7 +137,7 @@ class CitaRepositoryImpl(private val databaseManager: DatabaseManager) : CitaRep
      * @return la cita si se ha encontrado, null si no
      */
     override fun findById(id: Long): Cita? {
-        logger.debug { "Buscando cita con id: $id" }
+        logger.debug { "Buscando cita con ID: $id" }
 
         var cita: Cita? = null
 
@@ -172,6 +172,7 @@ class CitaRepositoryImpl(private val databaseManager: DatabaseManager) : CitaRep
      * @return la cita si se ha encontrado, null si no
      */
     override fun findByMatricula(matricula: String): Cita? {
+        logger.debug { "Buscando cita con matrícula: $matricula" }
 
         var cita: Cita? = null
 
