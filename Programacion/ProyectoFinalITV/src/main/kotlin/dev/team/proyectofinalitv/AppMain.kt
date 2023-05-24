@@ -2,7 +2,7 @@ package dev.team.proyectofinalitv
 
 import dev.team.proyectofinalitv.config.AppConfig
 import dev.team.proyectofinalitv.controllers.ProbandoCosillasController
-import dev.team.proyectofinalitv.di.ModuleKoin
+import dev.team.proyectofinalitv.di.koinModule
 import dev.team.proyectofinalitv.repositories.CitaRepositoryImpl
 import dev.team.proyectofinalitv.services.database.DatabaseManagerImpl
 import javafx.application.Application
@@ -15,13 +15,13 @@ class AppMain : Application() {
         // Dependencias resueltas con Koin
         startKoin {
             printLogger()
-            modules(ModuleKoin)
+            modules(koinModule)
         }
 
         // A partir de aquí son pruebas
         val cont = ProbandoCosillasController()
         cont.onSaveCita()
-        
+
         val configApp = AppConfig()
         val db = DatabaseManagerImpl(configApp)
 

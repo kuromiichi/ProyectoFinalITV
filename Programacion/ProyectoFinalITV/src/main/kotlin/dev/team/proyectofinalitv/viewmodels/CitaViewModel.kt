@@ -6,15 +6,15 @@ import dev.team.proyectofinalitv.models.Cita
 import dev.team.proyectofinalitv.models.Informe
 import dev.team.proyectofinalitv.models.Propietario
 import dev.team.proyectofinalitv.models.Vehiculo
-import dev.team.proyectofinalitv.repositories.CitaRepository
+import dev.team.proyectofinalitv.repositories.*
 import java.time.LocalDate
 import java.time.LocalDateTime
 
 class CitaViewModel(
-    private val propietarioRepository: PropietarioRepository,
-    private val vehiculoRepository: VehiculoRepository,
-    private val informeRepository: InformeRepository,
-    private val citaRepository: CitaRepository,
+    private val propietarioRepository: PropietarioRepositoryImpl,
+    private val vehiculoRepository: VehiculoRepositoryImpl,
+    private val informeRepository: InformeRepositoryImpl,
+    private val citaRepository: CitaRepositoryImpl,
 ) {
 
     fun saveCita() {

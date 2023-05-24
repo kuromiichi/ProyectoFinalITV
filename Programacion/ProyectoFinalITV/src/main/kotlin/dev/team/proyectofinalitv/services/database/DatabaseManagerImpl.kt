@@ -82,7 +82,7 @@ class DatabaseManagerImpl(private val appConfig: AppConfig) : DatabaseManager {
     private fun createTablesByDefault() {
         con.use { con ->
             selectDatabase(con)
-            
+
             // Estación
             val estacionCreate = """
                 CREATE TABLE IF NOT EXISTS Estacion
@@ -109,6 +109,7 @@ class DatabaseManagerImpl(private val appConfig: AppConfig) : DatabaseManager {
                     salario            DECIMAL(6, 2) NOT NULL,
                     fecha_contratacion VARCHAR(10)   NOT NULL,
                     especialidad       VARCHAR(20)   NOT NULL,
+                    is_responsable     INTEGER       NOT NULL,
                     id_estacion        INT           REFERENCES Estacion (id) ON DELETE SET NULL
                 );
                 
@@ -194,35 +195,36 @@ class DatabaseManagerImpl(private val appConfig: AppConfig) : DatabaseManager {
             """.trimIndent()
             val estacionStmt = con.prepareStatement(estacionInsert)
             estacionStmt.use { it.executeUpdate() }
-            
+
             // Trabajador
             val trabajadorInsert = """
-                INSERT INTO Trabajador (usuario, contrasenya, nombre, correo, telefono, salario, fecha_contratacion, especialidad,
-                            id_estacion)
-                VALUES ('j_perez', 'jU5#r3s3g', 'Juan Pérez', 'juan.perez@itvdam.org', '+34912345678', 1650.0, '2022-01-15',
-                        'ADMINISTRACION', 1),
-                       ('m_lopez', 'M@r14L0p${'$'}', 'María López', 'maria.lopez@itvdam.org', '+34911234567', 1800.0, '2021-09-20',
-                        'ELECTRICIDAD', 1),
-                       ('d_garcia', 'D4v1dG@rc14', 'David García', 'david.garcia@itvdam.org', '+34910987654', 1700.0, '2023-02-10',
-                        'MOTOR', 1),
-                       ('a_rodriguez', 'Alic14R0dr1', 'Alicia Rodríguez', 'alicia.rodriguez@itvdam.org', '+34913456789', 1600.0,
-                        '2022-11-05', 'MECANICA', 1),
-                       ('l_hernandez', 'L@ur4H3rn', 'Laura Hernández', 'laura.hernandez@itvdam.org', '+34914567890', 1750.0,
-                        '2021-12-30', 'INTERIOR', 1),
-                       ('p_martinez', 'P3dr0M@rt', 'Pedro Martínez', 'pedro.martinez@itvdam.org', '+34915678901', 1650.0, '2023-03-18',
-                        'ADMINISTRACION', 1),
-                       ('s_gomez', 'Sof14G0m${'$'}', 'Sofía Gómez', 'sofia.gomez@itvdam.org', '+34916789012', 1800.0, '2022-07-22',
-                        'ELECTRICIDAD', 1),
-                       ('j_sanchez', 'Ju4nS@nch3z', 'Juan Sánchez', 'juan.sanchez@itvdam.org', '+34917890123', 1700.0, '2022-04-02',
-                        'MOTOR', 1),
-                       ('c_romero', 'C4rm3nR0m', 'Carmen Romero', 'carmen.romero@itvdam.org', '+34918901234', 1600.0, '2023-01-12',
-                        'MECANICA', 1),
-                       ('r_lopez', 'R0b3rtL0p!', 'Roberto López', 'roberto.lopez@itvdam.org', '+34919012345', 1750.0, '2022-08-27',
-                        'INTERIOR', 1);
+                INSERT INTO Trabajador (usuario, contrasenya, nombre, correo, telefono, salario, fecha_contratacion,
+                especialidad, is_responsable, id_estacion)
+                VALUES 
+                    ('j_perez', 'jU5#r3s3g', 'Juan Pérez', 'juan.perez@itvdam.org', '+34912345678', 1650.0, 
+                    '2022-01-15', 'ADMINISTRACION', 0, 1),
+                    ('m_lopez', 'M@r14L0p${'$'}', 'María López', 'maria.lopez@itvdam.org', '+34911234567', 1800.0,
+                    '2021-09-20', 'ELECTRICIDAD', 0, 1),
+                    ('d_garcia', 'D4v1dG@rc14', 'David García', 'david.garcia@itvdam.org', '+34910987654', 1700.0, 
+                    '2023-02-10', 'MOTOR', 0, 1),
+                    ('a_rodriguez', 'Alic14R0dr1', 'Alicia Rodríguez', 'alicia.rodriguez@itvdam.org', '+34913456789',
+                    1600.0, '2022-11-05', 'MECANICA', 0, 1),
+                    ('l_hernandez', 'L@ur4H3rn', 'Laura Hernández', 'laura.hernandez@itvdam.org', '+34914567890',
+                    1750.0, '2021-12-30', 'INTERIOR', 0, 1),
+                    ('p_martinez', 'P3dr0M@rt', 'Pedro Martínez', 'pedro.martinez@itvdam.org', '+34915678901', 1650.0, 
+                    '2023-03-18', 'ADMINISTRACION', 0, 1),
+                    ('s_gomez', 'Sof14G0m${'$'}', 'Sofía Gómez', 'sofia.gomez@itvdam.org', '+34916789012', 1800.0, 
+                    '2022-07-22', 'ELECTRICIDAD', 0, 1),
+                    ('j_sanchez', 'Ju4nS@nch3z', 'Juan Sánchez', 'juan.sanchez@itvdam.org', '+34917890123', 1700.0, 
+                    '2022-04-02', 'MOTOR', 0, 1),
+                    ('c_romero', 'C4rm3nR0m', 'Carmen Romero', 'carmen.romero@itvdam.org', '+34918901234', 1600.0, 
+                    '2023-01-12', 'MECANICA', 0, 1),
+                    ('r_lopez', 'R0b3rtL0p!', 'Roberto López', 'roberto.lopez@itvdam.org', '+34919012345', 1750.0, 
+                    '2022-08-27', 'INTERIOR', 1, 1);            
             """.trimIndent()
             val trabajadorStmt = con.prepareStatement(trabajadorInsert)
             trabajadorStmt.use { it.executeUpdate() }
-            
+
             // Propietario
             val propietarioInsert = """
                 INSERT INTO Propietario (dni, nombre, apellidos, correo, telefono)
@@ -239,7 +241,7 @@ class DatabaseManagerImpl(private val appConfig: AppConfig) : DatabaseManager {
             """.trimIndent()
             val propietarioStmt = con.prepareStatement(propietarioInsert)
             propietarioStmt.use { it.executeUpdate() }
-            
+
             // Vehiculo
             val vehiculoInsert = """
                 INSERT INTO Vehiculo (matricula, marca, modelo, fecha_matriculacion, fecha_revision, tipo_motor, tipo_vehiculo,
@@ -257,7 +259,7 @@ class DatabaseManagerImpl(private val appConfig: AppConfig) : DatabaseManager {
             """.trimIndent()
             val vehiculoStmt = con.prepareStatement(vehiculoInsert)
             vehiculoStmt.use { it.executeUpdate() }
-            
+
             // Informe
             val informeInsert = """
                 INSERT INTO Informe (frenado, contaminacion, fecha_informe, interior, luces, is_apto)
@@ -274,7 +276,7 @@ class DatabaseManagerImpl(private val appConfig: AppConfig) : DatabaseManager {
             """.trimIndent()
             val informeStmt = con.prepareStatement(informeInsert)
             informeStmt.use { it.executeUpdate() }
-            
+
             // Cita
             val citaInsert = """
                 INSERT INTO Cita (estado, fecha_hora, id_informe, usuario_trabajador, matricula_vehiculo)
