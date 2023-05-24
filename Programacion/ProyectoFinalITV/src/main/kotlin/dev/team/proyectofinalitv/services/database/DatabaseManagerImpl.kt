@@ -43,7 +43,6 @@ class DatabaseManagerImpl(private val appConfig: AppConfig) : DatabaseManager {
 
         // Insertamos
         insertDataByDefault()
-
     }
 
     /**
@@ -51,8 +50,9 @@ class DatabaseManagerImpl(private val appConfig: AppConfig) : DatabaseManager {
      */
     override fun dropDatabase() {
         logger.debug { "Borrando base de datos" }
+        val newConnection = DriverManager.getConnection(appConfig.urlConnectionLocalHost, appConfig.dbUser, appConfig.dbPassword)
         val query = "DROP DATABASE IF EXISTS ${appConfig.dbName}"
-        val stmt = con.prepareStatement(query)
+        val stmt = newConnection.prepareStatement(query)
         stmt.use { it.executeUpdate() }
     }
 
@@ -61,8 +61,9 @@ class DatabaseManagerImpl(private val appConfig: AppConfig) : DatabaseManager {
      */
     override fun createDatabase() {
         logger.debug { "Creando base de datos" }
+        val newConnection = DriverManager.getConnection(appConfig.urlConnectionLocalHost, appConfig.dbUser, appConfig.dbPassword)
         val query = "CREATE DATABASE IF NOT EXISTS ${appConfig.dbName}"
-        val stmt = con.prepareStatement(query)
+        val stmt = newConnection.prepareStatement(query)
         stmt.use { it.executeUpdate() }
     }
 
@@ -80,6 +81,8 @@ class DatabaseManagerImpl(private val appConfig: AppConfig) : DatabaseManager {
      * Creación de las tablas por defecto que tendrán nuestras tablas
      */
     private fun createTablesByDefault() {
+        logger.debug {"Creando tablas por defecto"}
+
         con.use { con ->
             selectDatabase(con)
 

@@ -1,7 +1,9 @@
 package dev.team.proyectofinalitv.repositories
 
+import dev.team.proyectofinalitv.config.AppConfig
 import dev.team.proyectofinalitv.models.Cita
 import dev.team.proyectofinalitv.services.database.DatabaseManager
+import dev.team.proyectofinalitv.services.database.DatabaseManagerImpl
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
@@ -16,13 +18,9 @@ import java.time.LocalDateTime
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class CitaRepositoryImplTest {
 
-    private val mockDatabaseManager: DatabaseManager = mock()
-
-    private val mockStatement: Statement = mock()
-
-    private val mockPreparedStatement: PreparedStatement = mock()
-
-    private var citaRepository: CitaRepositoryImpl = CitaRepositoryImpl(mockDatabaseManager)
+    private val appConfig = AppConfig()
+    private val dbManager = DatabaseManagerImpl(appConfig)
+    private var citaRepository: CitaRepositoryImpl = CitaRepositoryImpl(dbManager)
 
     private val dataToTest = mutableListOf<Cita>()
 
@@ -30,7 +28,7 @@ class CitaRepositoryImplTest {
         dataToTest.add(
             Cita(
                 1,
-                "Pendiente",
+                "Apto",
                 LocalDateTime.now(),
                 1,
                 "usuario1",
@@ -40,7 +38,7 @@ class CitaRepositoryImplTest {
         dataToTest.add(
             Cita(
                 2,
-                "Confirmada",
+                "No apto",
                 LocalDateTime.now(),
                 2,
                 "usuario2",
@@ -56,20 +54,9 @@ class CitaRepositoryImplTest {
 
     @Test
     fun deleteById() {
-        // Falseamos las acciones
-        whenever(mockDatabaseManager.createStatement()).thenReturn(mockStatement)
-
         // Caso de test
         val result = citaRepository.deleteById(dataToTest[0].id)
         assertTrue(result)
-
-        // Verificar llamadas a los métodos en el orden correcto
-        verify(mockDatabaseManager).openConnection()
-        verify(mockDatabaseManager).selectDataBase()
-        verify(mockDatabaseManager).createStatement()
-        verify(mockStatement).executeUpdate(anyString())
-        verify(mockStatement).close()
-        verify(mockDatabaseManager).closeConnection()
     }
 
 

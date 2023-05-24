@@ -1,21 +1,27 @@
 package dev.team.proyectofinalitv.viewmodels
 
+import dev.team.proyectofinalitv.config.AppConfig
 import dev.team.proyectofinalitv.mappers.parseTipoMotor
 import dev.team.proyectofinalitv.mappers.parseTipoVehiculo
 import dev.team.proyectofinalitv.models.Cita
 import dev.team.proyectofinalitv.models.Informe
 import dev.team.proyectofinalitv.models.Propietario
 import dev.team.proyectofinalitv.models.Vehiculo
+import dev.team.proyectofinalitv.models.dto.CitaDtoToExport
 import dev.team.proyectofinalitv.repositories.*
+import dev.team.proyectofinalitv.repositories.base.SaveUpdateRepository
+import dev.team.proyectofinalitv.services.storage.CitaStorage
+import javafx.stage.FileChooser
 import java.time.LocalDate
 import java.time.LocalDateTime
 
 class CitaViewModel(
-    private val propietarioRepository: PropietarioRepositoryImpl,
-    private val vehiculoRepository: VehiculoRepositoryImpl,
-    private val informeRepository: InformeRepositoryImpl,
-    private val citaRepository: CitaRepositoryImpl,
-) {
+    private val propietarioRepository: SaveUpdateRepository<Propietario>,
+    private val vehiculoRepository: SaveUpdateRepository<Vehiculo>,
+    private val informeRepository: SaveUpdateRepository<Informe>,
+    private val citaRepository: CitaRepository,
+    private val storage: CitaStorage
+)  {
 
     fun saveCita() {
         // ============== Para guardar una cita, DEBEMOS EN ESTE ORDEN: =============
@@ -65,6 +71,23 @@ class CitaViewModel(
             matriculaVehiculo = vehiculo.matricula
         )
         println(citaRepository.save(cita))
+
+        val list = mutableListOf<CitaDtoToExport>()
+        list.add(CitaDtoToExport(
+            cita.id,cita.estado,cita.fechaHora.toString(),
+            "a","A","4",
+            "a",1,informe.id,
+            informe.frenado,informe.contaminacion,
+            informe.fechaInforme.toString(),
+            informe.interior,
+            informe.luces,
+            informe.isApto,propietario.dni,
+            propietario.nombre,
+            propietario.apellidos,propietario.correo,propietario.telefono,
+            vehiculo.matricula,vehiculo.marca,vehiculo.modelo,
+            vehiculo.fechaMatriculacion.toString(),vehiculo.fechaRevision.toString(),
+            vehiculo.tipoMotor.toString(),vehiculo.tipoVehiculo.toString()
+        ))
         // ================================================
     }
 }
