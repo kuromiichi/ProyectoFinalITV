@@ -17,10 +17,15 @@ class AppConfig {
 
     private val RESOURCE_PATH_MAIN =
         "$APP_PATH${File.separator}src${File.separator}main${File.separator}resources${File.separator}"
+    private val RESOURCE_PATH_TEST =
+        "$APP_PATH${File.separator}src${File.separator}test${File.separator}resources${File.separator}"
 
     // Propiedades
     private lateinit var _urlConnection: String
     val urlConnection get() = _urlConnection
+
+    private lateinit var _urlConnectionLocalHost: String
+    val urlConnectionLocalHost get() = _urlConnectionLocalHost
 
     private lateinit var _dbName: String
     val dbName get() = _dbName
@@ -53,10 +58,12 @@ class AppConfig {
         logger.debug { "Cargando properties (configuración)" }
 
         val props = Properties()
-        props.load(AppConfig::class.java.getResourceAsStream(CONFIG_FILE))
+        props.load(ClassLoader.getSystemResourceAsStream(CONFIG_FILE))
 
         // Database
-        _urlConnection = props.getProperty("db.url.connection", "jdbc:mariadb://localhost:3306")
+        _urlConnection = props.getProperty("db.url.connection", "jdbc:mariadb://localhost:3306/itvdam")
+        _urlConnectionLocalHost = props.getProperty("db.url.connection.localhost", "jdbc:mariadb://localhost:3306")
+
         _dbName = props.getProperty("db.name", "ItvDam")
         _dbUser = props.getProperty("db.user", "root")
         _dbPassword = props.getProperty("db.pass", "1234")

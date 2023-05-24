@@ -4,7 +4,6 @@ import dev.team.proyectofinalitv.models.Propietario
 import dev.team.proyectofinalitv.repositories.base.SaveUpdateRepository
 import dev.team.proyectofinalitv.services.database.DatabaseManager
 import mu.KotlinLogging
-import java.sql.Statement
 
 class PropietarioRepositoryImpl(private val databaseManager: DatabaseManager) : SaveUpdateRepository<Propietario> {
 
@@ -54,14 +53,15 @@ class PropietarioRepositoryImpl(private val databaseManager: DatabaseManager) : 
             databaseManager.selectDatabase(con)
             val saveQuery = """
                 INSERT INTO Propietario (dni, nombre, apellidos, correo, telefono)
-                VALUES (?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?);
             """.trimIndent()
             val saveStmt = con.prepareStatement(saveQuery)
             saveStmt.use { stmt ->
-                stmt.setString(1, item.nombre)
-                stmt.setString(2, item.apellidos)
-                stmt.setString(3, item.correo)
-                stmt.setString(4, item.telefono)
+                stmt.setString(1, item.dni)
+                stmt.setString(2, item.nombre)
+                stmt.setString(3, item.apellidos)
+                stmt.setString(4, item.correo)
+                stmt.setString(5, item.telefono)
 
                 stmt.executeUpdate()
             }

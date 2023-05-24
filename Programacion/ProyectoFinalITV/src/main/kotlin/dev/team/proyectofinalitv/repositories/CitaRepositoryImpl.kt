@@ -111,7 +111,7 @@ class CitaRepositoryImpl(private val databaseManager: DatabaseManager) : CitaRep
             databaseManager.selectDatabase(con)
             val saveQuery = """
                 INSERT INTO Cita
-                (estado, fechaHora, idInforme, usuarioTrabajador, matriculaVehiculo)
+                (estado, fecha_hora, id_informe, usuario_trabajador, matricula_vehiculo)
                 VALUES (?, ?, ?, ?, ?)
             """.trimIndent()
             val saveStmt = con.prepareStatement(saveQuery, Statement.RETURN_GENERATED_KEYS)
