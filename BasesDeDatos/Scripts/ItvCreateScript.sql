@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS Trabajador
     salario            DECIMAL(6, 2) NOT NULL,
     fecha_contratacion VARCHAR(10)   NOT NULL,
     especialidad       VARCHAR(20)   NOT NULL,
+    is_responsable     INTEGER       NOT NULL,
     id_estacion        INT           REFERENCES Estacion (id) ON DELETE SET NULL
 );
 
