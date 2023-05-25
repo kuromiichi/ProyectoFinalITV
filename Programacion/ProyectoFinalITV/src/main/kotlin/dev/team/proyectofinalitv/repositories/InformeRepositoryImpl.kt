@@ -1,16 +1,60 @@
 package dev.team.proyectofinalitv.repositories
 
 import dev.team.proyectofinalitv.models.Informe
-import dev.team.proyectofinalitv.repositories.base.SaveUpdateRepository
+import dev.team.proyectofinalitv.models.Propietario
+import dev.team.proyectofinalitv.repositories.base.CRURepository
 import dev.team.proyectofinalitv.services.database.DatabaseManager
 import mu.KotlinLogging
+import java.sql.Connection
 import java.sql.Statement
+import java.time.LocalDate
 
-class InformeRepositoryImpl(private val databaseManager: DatabaseManager) : SaveUpdateRepository<Informe> {
+class InformeRepositoryImpl(private val databaseManager: DatabaseManager) : CRURepository<Informe> {
 
     private val logger = KotlinLogging.logger {}
 
-    private val con get() = databaseManager.con
+    val con: Connection
+        get() {
+        return when (databaseManager.appConfig.testDb){
+            false -> databaseManager.conProduction
+            true -> databaseManager.conTest
+        }
+    }
+
+    /**
+     * Busca todos los informes que se encuentren en la base de datos
+     * @return la lista de todas los informes
+     */
+    override fun getAll(): List<Informe> {
+        logger.debug { "Buscando todos los informes" }
+
+        val informes = mutableListOf<Informe>()
+
+        con.use { con ->
+            val findAllQuery = "SELECT * FROM Informe"
+            val findAllStmt = con.prepareStatement(findAllQuery)
+            findAllStmt.use { stmt ->
+                val findAllResultSet = stmt.executeQuery()
+                findAllResultSet.use { rs ->
+                    while (rs.next()) {
+                        informes.add(
+                            Informe(
+                                id = rs.getLong(1),
+                                frenado = rs.getDouble(2),
+                                contaminacion = rs.getDouble(3),
+                                fechaInforme = LocalDate.parse(rs.getString(4)),
+                                interior = rs.getBoolean(5),
+                                luces =  rs.getBoolean(6),
+                                isApto =  rs.getBoolean(7)
+                            )
+                        )
+                    }
+                }
+            }
+        }
+
+        return informes
+    }
 
     /**
      * Actualiza un informe en la base de datos
@@ -21,7 +65,6 @@ class InformeRepositoryImpl(private val databaseManager: DatabaseManager) : Save
         logger.debug { "Actualizando informe con ID: ${item.id}" }
 
         con.use { con ->
-            databaseManager.selectDatabase(con)
             val updateQuery = """
                 UPDATE Informe
                 SET frenado = ?, contaminacion = ?, fecha_informe = ?, interior = ?, luces = ?, is_apto = ?
@@ -55,7 +98,6 @@ class InformeRepositoryImpl(private val databaseManager: DatabaseManager) : Save
         var id: Long
 
         con.use { con ->
-            databaseManager.selectDatabase(con)
             val saveQuery = """
                 INSERT INTO Informe (frenado, contaminacion, fecha_informe, interior, luces, is_apto)
                 VALUES (?, ?, ?, ?, ?, ?)

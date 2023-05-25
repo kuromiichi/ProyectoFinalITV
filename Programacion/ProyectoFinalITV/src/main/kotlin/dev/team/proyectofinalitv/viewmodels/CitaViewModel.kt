@@ -1,6 +1,5 @@
 package dev.team.proyectofinalitv.viewmodels
 
-import dev.team.proyectofinalitv.config.AppConfig
 import dev.team.proyectofinalitv.mappers.parseTipoMotor
 import dev.team.proyectofinalitv.mappers.parseTipoVehiculo
 import dev.team.proyectofinalitv.models.Cita
@@ -9,16 +8,15 @@ import dev.team.proyectofinalitv.models.Propietario
 import dev.team.proyectofinalitv.models.Vehiculo
 import dev.team.proyectofinalitv.models.dto.CitaDtoToExport
 import dev.team.proyectofinalitv.repositories.*
-import dev.team.proyectofinalitv.repositories.base.SaveUpdateRepository
+import dev.team.proyectofinalitv.repositories.base.CRURepository
 import dev.team.proyectofinalitv.services.storage.CitaStorage
-import javafx.stage.FileChooser
 import java.time.LocalDate
 import java.time.LocalDateTime
 
 class CitaViewModel(
-    private val propietarioRepository: SaveUpdateRepository<Propietario>,
-    private val vehiculoRepository: SaveUpdateRepository<Vehiculo>,
-    private val informeRepository: SaveUpdateRepository<Informe>,
+    private val propietarioRepository: CRURepository<Propietario>,
+    private val vehiculoRepository: CRURepository<Vehiculo>,
+    private val informeRepository: CRURepository<Informe>,
     private val citaRepository: CitaRepository,
     private val storage: CitaStorage
 )  {
@@ -28,7 +26,7 @@ class CitaViewModel(
         // 1. Propietario
         // Debemos crear trigger para que no nos deje crear un nuevo propietario con esta dni!
         val propietario = Propietario(
-            dni = "12345678C",
+            dni = "12345678F",
             nombre = "Juan",
             apellidos = "Pérez",
             correo = "juan@example.com",

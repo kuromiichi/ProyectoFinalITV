@@ -36,13 +36,13 @@ class AppMain : Application() {
         val cont = ProbandoCosillasController()
         cont.onSaveCita()
 
-        println(repoCita.findAll().size)
+        println(repoCita.getAll().size)
         println(repoCita.findById(1))
         println(repoCita.deleteById(1))
 
         println(repoCita.findByMatricula("123ABC"))
-        println(repoCita.findAll().size)
-        println(repoCita.findAll().joinToString("\n"))
+        println(repoCita.getAll().size)
+        println(repoCita.getAll().joinToString("\n"))
     }
 }
 

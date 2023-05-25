@@ -1,15 +1,63 @@
 package dev.team.proyectofinalitv.repositories
 
+import dev.team.proyectofinalitv.mappers.parseEspecialidad
+import dev.team.proyectofinalitv.mappers.parseTipoMotor
+import dev.team.proyectofinalitv.mappers.parseTipoVehiculo
+import dev.team.proyectofinalitv.models.Trabajador
 import dev.team.proyectofinalitv.models.Vehiculo
-import dev.team.proyectofinalitv.repositories.base.SaveUpdateRepository
+import dev.team.proyectofinalitv.repositories.base.CRURepository
 import dev.team.proyectofinalitv.services.database.DatabaseManager
 import mu.KotlinLogging
+import java.sql.Connection
+import java.time.LocalDate
 
-class VehiculoRepositoryImpl(private val databaseManager: DatabaseManager) : SaveUpdateRepository<Vehiculo> {
+class VehiculoRepositoryImpl(private val databaseManager: DatabaseManager) : CRURepository<Vehiculo> {
 
     private val logger = KotlinLogging.logger {}
 
-    private val con get() = databaseManager.con
+    val con: Connection
+        get() {
+        return when (databaseManager.appConfig.testDb){
+            false -> databaseManager.conProduction
+            true -> databaseManager.conTest
+        }
+    }
+
+    /**
+     * Busca todos los trabajadores que se encuentren en la base de datos
+     * @return la lista de todas los trabajadores
+     */
+    override fun getAll(): List<Vehiculo> {
+        logger.debug { "Buscando todos los vehículos" }
+
+        val vehiculos = mutableListOf<Vehiculo>()
+
+        con.use { con ->
+            val findAllQuery = "SELECT * FROM Vehiculo"
+            val findAllStmt = con.prepareStatement(findAllQuery)
+            findAllStmt.use { stmt ->
+                val findAllResultSet = stmt.executeQuery()
+                findAllResultSet.use { rs ->
+                    while (rs.next()) {
+                        vehiculos.add(
+                            Vehiculo(
+                                matricula = rs.getString(1),
+                                marca = rs.getString(2),
+                                modelo = rs.getString(3),
+                                fechaMatriculacion = LocalDate.parse(rs.getString(4)),
+                                fechaRevision = LocalDate.parse(rs.getString(5)),
+                                tipoMotor = parseTipoMotor(rs.getString(6)),
+                                tipoVehiculo = parseTipoVehiculo(rs.getString(7)),
+                                dniPropietario = rs.getString(8)
+                            )
+                        )
+                    }
+                }
+            }
+        }
+
+        return vehiculos
+    }
 
     /**
      * Actualiza un vehículo en la base de datos
@@ -20,7 +68,6 @@ class VehiculoRepositoryImpl(private val databaseManager: DatabaseManager) : Sav
         logger.debug { "Actualizando vehículo con matrícula: ${item.matricula}" }
 
         con.use { con ->
-            databaseManager.selectDatabase(con)
             val updateQuery = """
                 UPDATE Vehiculo
                 SET marca = ?, modelo = ?, fecha_matriculacion = ?, fecha_revision = ?, tipo_motor = ?,
@@ -54,7 +101,6 @@ class VehiculoRepositoryImpl(private val databaseManager: DatabaseManager) : Sav
         logger.debug { "Creando vehículo con matrícula: ${item.matricula}" }
 
         con.use { con ->
-            databaseManager.selectDatabase(con)
             val saveQuery = """
                 INSERT INTO Vehiculo (matricula, marca, modelo, fecha_matriculacion, fecha_revision, tipo_motor,
                 tipo_vehiculo, dni_propietario)

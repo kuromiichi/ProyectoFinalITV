@@ -20,7 +20,7 @@ data class Vehiculo(
     }
 
     enum class TipoVehiculo {
-        TURISMO,
+        COCHE,
         FURGONETA,
         CAMION,
         MOTOCICLETA

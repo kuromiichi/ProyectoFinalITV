@@ -48,6 +48,17 @@ class AppConfig {
     private lateinit var _dataOutput: String
     val dataOutput get() = _dataOutput
 
+    // Sección de TEST
+
+    private lateinit var _urlConnectionTest: String
+    val urlConnectionTest get() = _urlConnectionTest
+
+    private lateinit var _dbNameTest: String
+    val dbNameTest get() = _dbNameTest
+
+    private var _testDb: Boolean = false
+    val testDb get() = _testDb
+
     init {
         loadProperties()
         initStorage()
@@ -68,6 +79,11 @@ class AppConfig {
         _dbUser = props.getProperty("db.user", "root")
         _dbPassword = props.getProperty("db.pass", "1234")
         _resetDb = props.getProperty("db.default", "false").toBoolean()
+
+        // Sección de TEST
+        _urlConnectionTest = props.getProperty("db.url.connection.test", "jdbc:mariadb://localhost:3306/itvdamtest")
+        _dbNameTest = props.getProperty("db.name.test", "itvdamtest")
+        _testDb = props.getProperty("db.test", "false").toBoolean()
 
         // Directorios
         _dataRoot = props.getProperty("data.root", "data")

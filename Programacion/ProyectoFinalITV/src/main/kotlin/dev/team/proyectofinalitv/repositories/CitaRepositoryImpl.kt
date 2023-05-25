@@ -3,6 +3,7 @@ package dev.team.proyectofinalitv.repositories
 import dev.team.proyectofinalitv.models.Cita
 import dev.team.proyectofinalitv.services.database.DatabaseManager
 import mu.KotlinLogging
+import java.sql.Connection
 import java.sql.Statement
 import java.time.LocalDateTime
 
@@ -10,19 +11,24 @@ class CitaRepositoryImpl(private val databaseManager: DatabaseManager) : CitaRep
 
     private val logger = KotlinLogging.logger {}
 
-    private val con get() = databaseManager.con
+    val con: Connection
+        get() {
+        return when (databaseManager.appConfig.testDb){
+            false -> databaseManager.conProduction
+            true -> databaseManager.conTest
+        }
+    }
 
     /**
      * Busca todas las citas que se encuentren en la base de datos
      * @return la lista de todas las citas
      */
-    override fun findAll(): List<Cita> {
+    override fun getAll(): List<Cita> {
         logger.debug { "Buscando todas las citas" }
 
         val citas = mutableListOf<Cita>()
 
         con.use { con ->
-            databaseManager.selectDatabase(con)
             val findAllQuery = "SELECT * FROM Cita"
             val findAllStmt = con.prepareStatement(findAllQuery)
             findAllStmt.use { stmt ->
@@ -56,7 +62,6 @@ class CitaRepositoryImpl(private val databaseManager: DatabaseManager) : CitaRep
         logger.debug { "Borrando la cita con ID: $id" }
 
         con.use { con ->
-            databaseManager.selectDatabase(con)
             val deleteQuery = "DELETE FROM Cita WHERE id = ?"
             val deleteStmt = con.prepareStatement(deleteQuery)
             deleteStmt.use { stmt ->
@@ -75,7 +80,6 @@ class CitaRepositoryImpl(private val databaseManager: DatabaseManager) : CitaRep
         logger.debug { "Actualizando cita con ID: ${item.id}" }
 
         con.use { con ->
-            databaseManager.selectDatabase(con)
             val updateQuery = """
                 UPDATE Cita
                 SET estado = ?, fechaHora = ?, idInforme = ?, matricula_vehiculo = ?, usuario_trabajador = ?
@@ -108,7 +112,6 @@ class CitaRepositoryImpl(private val databaseManager: DatabaseManager) : CitaRep
         var id: Long
 
         con.use { con ->
-            databaseManager.selectDatabase(con)
             val saveQuery = """
                 INSERT INTO Cita
                 (estado, fecha_hora, id_informe, usuario_trabajador, matricula_vehiculo)
@@ -142,7 +145,6 @@ class CitaRepositoryImpl(private val databaseManager: DatabaseManager) : CitaRep
         var cita: Cita? = null
 
         con.use { con ->
-            databaseManager.selectDatabase(con)
             val findQuery = "SELECT * FROM Cita WHERE id = ?"
             val findStmt = con.prepareStatement(findQuery)
             findStmt.use { stmt ->
@@ -177,7 +179,6 @@ class CitaRepositoryImpl(private val databaseManager: DatabaseManager) : CitaRep
         var cita: Cita? = null
 
         con.use { con ->
-            databaseManager.selectDatabase(con)
             val findQuery = "SELECT * FROM Cita WHERE matricula_vehiculo = ?"
             val findStmt = con.prepareStatement(findQuery)
             findStmt.use { stmt ->

@@ -44,9 +44,9 @@ VALUES ('5794-RGK', 'Ford', 'Focus', '2020-01-15', '2023-01-15', 'GASOLINA', 'Co
        ('1267-BTK', 'Toyota', 'Corolla', '2019-05-20', '2022-05-20', 'ELECTRICO', 'Coche', '54892376T'),
        ('2803-HNS', 'Volkswagen', 'Golf', '2021-08-10', '2024-08-10', 'DIESEL', 'Coche', '33571289M'),
        ('4578-FLS', 'Renault', 'Clio', '2018-11-28', '2021-11-28', 'GASOLINA', 'Coche', '75261498N'),
-       ('8026-QJK', 'BMW', 'X5', '2022-02-05', '2025-02-05', 'HIBRIDO', 'SUV', '45789632R'),
+       ('8026-QJK', 'BMW', 'X5', '2022-02-05', '2025-02-05', 'HIBRIDO', 'Coche', '45789632R'),
        ('2354-DHP', 'Ford', 'Mustang', '2020-03-12', '2023-03-12', 'ELECTRICO', 'Coche', '93651247L'),
-       ('6908-RSV', 'Nissan', 'Qashqai', '2019-06-30', '2022-06-30', 'DIESEL', 'SUV', '28963517S'),
+       ('6908-RSV', 'Nissan', 'Qashqai', '2019-06-30', '2022-06-30', 'DIESEL', 'Coche', '28963517S'),
        ('1482-CKM', 'Mercedes-Benz', 'A-Class', '2021-09-18', '2024-09-18', 'HIBRIDO', 'Coche', '69587412U'),
        ('3761-PZX', 'Audi', 'A4', '2022-04-25', '2025-04-25', 'GASOLINA', 'Coche', '12547896X'),
        ('5139-TBS', 'Volkswagen', 'Polo', '2021-07-05', '2024-07-05', 'DIESEL', 'Coche', '96321478Y');

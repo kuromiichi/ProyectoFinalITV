@@ -20,14 +20,11 @@ class PropietarioRepositoryImplTest {
 
     private val dataToTest = mutableListOf<Propietario>()
 
-    init{
-        dataToTest.add( Propietario(
-            dni = "12345678C",
-            nombre = "Juan",
-            apellidos = "Pérez",
-            correo = "juan@example.com",
-            telefono = "123456789"
-        ))
+    @BeforeEach
+    fun setUp() {
+        // Reiniciamos la Base de datos por si acaso se solapan con datos de otros TEST, para que sean independientes
+        dbManager.resetDataBase()
+
         dataToTest.add(Propietario(
             dni = "12345678C",
             nombre = "Juan",
@@ -36,24 +33,6 @@ class PropietarioRepositoryImplTest {
             telefono = "123456789"
         ))
     }
-/*    @BeforeEach
-    fun setUp() {
-        propietarioRepository.save( Propietario(
-            dni = "12345678C",
-            nombre = "Juan",
-            apellidos = "Pérez",
-            correo = "juan@example.com",
-            telefono = "123456789"
-        ))
-        propietarioRepository.save(Propietario(
-            dni = "12345678C",
-            nombre = "Juan",
-            apellidos = "Pérez",
-            correo = "juan@example.com",
-            telefono = "123456789"
-        )
-        )
-    }*/
 
     @Test
     fun updateTest() {

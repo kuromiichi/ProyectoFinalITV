@@ -1,10 +1,10 @@
 package dev.team.proyectofinalitv.repositories
 
 import dev.team.proyectofinalitv.models.Cita
-import dev.team.proyectofinalitv.repositories.base.SaveUpdateRepository
+import dev.team.proyectofinalitv.repositories.base.CRURepository
 
-interface CitaRepository : SaveUpdateRepository<Cita> {
-    fun findAll(): List<Cita>
+interface CitaRepository : CRURepository<Cita> {
+    override fun getAll(): List<Cita>
     fun findById(id: Long): Cita?
     override fun save(item: Cita): Cita
     override fun update(item: Cita): Cita
