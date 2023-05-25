@@ -19,7 +19,6 @@ module dev.team.proyectofinalitv {
 
     // MariaDb
     requires org.mariadb.jdbc;
-    requires freemarker;
 
     // Root to JavaFX
     opens dev.team.proyectofinalitv to javafx.fxml;

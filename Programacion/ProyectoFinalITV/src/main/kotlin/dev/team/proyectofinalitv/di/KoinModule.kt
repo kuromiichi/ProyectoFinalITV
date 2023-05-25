@@ -5,7 +5,7 @@ import dev.team.proyectofinalitv.models.Informe
 import dev.team.proyectofinalitv.models.Propietario
 import dev.team.proyectofinalitv.models.Vehiculo
 import dev.team.proyectofinalitv.repositories.*
-import dev.team.proyectofinalitv.repositories.base.SaveUpdateRepository
+import dev.team.proyectofinalitv.repositories.base.CRURepository
 import dev.team.proyectofinalitv.services.database.DatabaseManager
 import dev.team.proyectofinalitv.services.database.DatabaseManagerImpl
 import dev.team.proyectofinalitv.services.storage.CitaStorage
@@ -19,9 +19,9 @@ val koinModule = module {
 
     single<DatabaseManager>(named("DatabaseManager")) { DatabaseManagerImpl(get()) }
 
-    single<SaveUpdateRepository<Propietario>>(named("PropietarioRepository")) { PropietarioRepositoryImpl(get(named("DatabaseManager"))) }
-    single<SaveUpdateRepository<Vehiculo>>(named("VehiculoRepository")) { VehiculoRepositoryImpl(get(named("DatabaseManager"))) }
-    single<SaveUpdateRepository<Informe>>(named("InformeRepository")) { InformeRepositoryImpl(get(named("DatabaseManager"))) }
+    single<CRURepository<Propietario>>(named("PropietarioRepository")) { PropietarioRepositoryImpl(get(named("DatabaseManager"))) }
+    single<CRURepository<Vehiculo>>(named("VehiculoRepository")) { VehiculoRepositoryImpl(get(named("DatabaseManager"))) }
+    single<CRURepository<Informe>>(named("InformeRepository")) { InformeRepositoryImpl(get(named("DatabaseManager"))) }
     single<CitaRepository>(named("CitaRepository")) { CitaRepositoryImpl(get(named("DatabaseManager"))) }
     single<CitaStorage>(named("CitaStorage")) { CitaStorageImpl() }
 

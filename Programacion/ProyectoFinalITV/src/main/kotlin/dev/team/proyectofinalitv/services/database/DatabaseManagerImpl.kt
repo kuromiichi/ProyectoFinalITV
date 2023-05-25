@@ -5,33 +5,48 @@ import mu.KotlinLogging
 import java.sql.Connection
 import java.sql.DriverManager
 
-class DatabaseManagerImpl(private val appConfig: AppConfig) : DatabaseManager {
+class DatabaseManagerImpl(override val appConfig: AppConfig) : DatabaseManager {
 
     private val logger = KotlinLogging.logger { }
 
-    override val con: Connection
+    override val conProduction: Connection
         get() {
             logger.debug { "Creando conexión con la base de datos" }
             return DriverManager.getConnection(appConfig.urlConnection, appConfig.dbUser, appConfig.dbPassword)
         }
 
-    init {
-        when (appConfig.resetDb) {
-            true -> {
-                logger.info { "Inicializando DBManager con valores por defecto" }
-                resetDataBase()
-            }
+    override val conTest: Connection
+        get() {
+            logger.debug { "Creando conexión con la base de datos de Test" }
+            return DriverManager.getConnection(appConfig.urlConnectionTest, appConfig.dbUser, appConfig.dbPassword)
+        }
 
-            false -> {
-                logger.info { "Inicializando DBManager" }
+    init {
+        // Caso estemos en producción
+        if (!appConfig.testDb){
+            when (appConfig.resetDb) {
+                true -> {
+                    logger.info { "Inicializando DBManager con valores por defecto" }
+                    resetDataBase()
+                }
+
+                false -> {
+                    logger.info { "Inicializando DBManager" }
+                }
             }
+        }
+
+        // Caso de iniciar en TEST se cargará con los datos iniciales por defecto
+        if (appConfig.testDb) {
+            logger.info { "Inicializando DBManager en modo TEST con valores por defecto" }
+            resetDataBase()
         }
     }
 
     /**
      * En caso de querer reiniciar la base de datos con los valores por defecto, depende de application.properties
      */
-    private fun resetDataBase() {
+    fun resetDataBase() {
         // Borramos la base de datos
         dropDatabase()
 
@@ -39,40 +54,79 @@ class DatabaseManagerImpl(private val appConfig: AppConfig) : DatabaseManager {
         createDatabase()
 
         // Creamos tablas
-        createTablesByDefault()
+        when(appConfig.testDb){
+            false -> {
+                logger.debug { "Creando base de datos" }
+                createTablesByDefault(conProduction)
+            }
+            true -> {
+                logger.debug { "Creando base de datos en test" }
+                createTablesByDefault(conTest)
+            }
+        }
 
         // Insertamos
-        insertDataByDefault()
+        when(appConfig.testDb){
+            false -> {
+                logger.debug { "Insertando datos en base de datos" }
+                insertDataByDefault(conProduction)
+            }
+            true -> {
+                logger.debug { "Insertando datos de prueba en base de datos" }
+                insertDataByDefault(conTest)
+            }
+        }
     }
 
     /**
-     * Borrado de la base de datos inicial
+     * Borrado de la base de datos real y de prueba en caso de ejecutar en modo TEST
      */
     override fun dropDatabase() {
-        logger.debug { "Borrando base de datos" }
+
         val newConnection = DriverManager.getConnection(appConfig.urlConnectionLocalHost, appConfig.dbUser, appConfig.dbPassword)
-        val query = "DROP DATABASE IF EXISTS ${appConfig.dbName}"
-        val stmt = newConnection.prepareStatement(query)
-        stmt.use { it.executeUpdate() }
+
+        when(appConfig.testDb){
+            false -> {
+                logger.debug { "Borrando base de datos" }
+
+                val query = "DROP DATABASE IF EXISTS ${appConfig.dbName}"
+                val stmt = newConnection.prepareStatement(query)
+                stmt.use { it.executeUpdate() }
+            }
+
+            true -> {
+                logger.debug { "Borrando base de datos de Test" }
+
+                val query = "DROP DATABASE IF EXISTS ${appConfig.dbNameTest}"
+                val stmt = newConnection.prepareStatement(query)
+                stmt.use { it.executeUpdate() }
+            }
+        }
     }
 
     /**
-     * Creación de la base de datos inicial
+     * Creación de la base de datos real y de prueba en caso de ejecutar en modo TEST
      */
     override fun createDatabase() {
-        logger.debug { "Creando base de datos" }
         val newConnection = DriverManager.getConnection(appConfig.urlConnectionLocalHost, appConfig.dbUser, appConfig.dbPassword)
-        val query = "CREATE DATABASE IF NOT EXISTS ${appConfig.dbName}"
-        val stmt = newConnection.prepareStatement(query)
-        stmt.use { it.executeUpdate() }
-    }
 
-    /**
-     * Seleccionar la base de datos para saber donde realizar las consultas
-     */
-    override fun selectDatabase(con: Connection) {
-        logger.debug { "Seleccionando base de datos" }
-        con.catalog = appConfig.dbName
+        when(appConfig.testDb){
+            false -> {
+                logger.debug { "Creando base de datos" }
+
+                val query = "CREATE DATABASE IF NOT EXISTS ${appConfig.dbName}"
+                val stmt = newConnection.prepareStatement(query)
+                stmt.use { it.executeUpdate() }
+            }
+
+            true -> {
+                logger.debug { "Creando base de datos de Test" }
+
+                val query = "CREATE DATABASE IF NOT EXISTS ${appConfig.dbNameTest}"
+                val stmt = newConnection.prepareStatement(query)
+                stmt.use { it.executeUpdate() }
+            }
+        }
     }
 
     // ============== SECCIÓN DML (en caso de querer tener por defecto inicial la BD) =================
@@ -80,11 +134,9 @@ class DatabaseManagerImpl(private val appConfig: AppConfig) : DatabaseManager {
     /**
      * Creación de las tablas por defecto que tendrán nuestras tablas
      */
-    private fun createTablesByDefault() {
-        logger.debug {"Creando tablas por defecto"}
+    private fun createTablesByDefault(con: Connection) {
 
-        con.use { con ->
-            selectDatabase(con)
+        con.use { connection ->
 
             // Estación
             val estacionCreate = """
@@ -97,7 +149,7 @@ class DatabaseManagerImpl(private val appConfig: AppConfig) : DatabaseManager {
                     telefono  VARCHAR(20)  NOT NULL
                 );
             """.trimIndent()
-            val estacionStmt = this.con.prepareStatement(estacionCreate)
+            val estacionStmt = connection.prepareStatement(estacionCreate)
             estacionStmt.use { it.executeUpdate() }
 
             // Trabajador
@@ -117,7 +169,7 @@ class DatabaseManagerImpl(private val appConfig: AppConfig) : DatabaseManager {
                 );
                 
             """.trimIndent()
-            val trabajadorStmt = this.con.prepareStatement(trabajadorCreate)
+            val trabajadorStmt = connection.prepareStatement(trabajadorCreate)
             trabajadorStmt.use { it.executeUpdate() }
 
             // Propietario
@@ -131,7 +183,7 @@ class DatabaseManagerImpl(private val appConfig: AppConfig) : DatabaseManager {
                     telefono  VARCHAR(20)  NOT NULL
                 );
             """.trimIndent()
-            val propietarioStmt = this.con.prepareStatement(propietarioCreate)
+            val propietarioStmt = connection.prepareStatement(propietarioCreate)
             propietarioStmt.use { it.executeUpdate() }
 
             // Vehículo
@@ -148,7 +200,7 @@ class DatabaseManagerImpl(private val appConfig: AppConfig) : DatabaseManager {
                     dni_propietario     VARCHAR(9) REFERENCES Propietario (dni)
                 );
             """.trimIndent()
-            val vehiculoStmt = this.con.prepareStatement(vehiculoCreate)
+            val vehiculoStmt = connection.prepareStatement(vehiculoCreate)
             vehiculoStmt.use { it.executeUpdate() }
 
             // Informe
@@ -164,7 +216,7 @@ class DatabaseManagerImpl(private val appConfig: AppConfig) : DatabaseManager {
                     is_apto       INTEGER       NOT NULL
                 );
             """.trimIndent()
-            val informeStmt = this.con.prepareStatement(informeCreate)
+            val informeStmt = connection.prepareStatement(informeCreate)
             informeStmt.use { it.executeUpdate() }
 
             // Cita
@@ -179,7 +231,7 @@ class DatabaseManagerImpl(private val appConfig: AppConfig) : DatabaseManager {
                     matricula_vehiculo VARCHAR(15) REFERENCES Vehiculo (matricula)
                 );
             """.trimIndent()
-            val citaStmt = this.con.prepareStatement(citaCreate)
+            val citaStmt = connection.prepareStatement(citaCreate)
             citaStmt.use { it.executeUpdate() }
         }
     }
@@ -188,15 +240,15 @@ class DatabaseManagerImpl(private val appConfig: AppConfig) : DatabaseManager {
     /**
      * Insertamos los datos por defecto que tendrá nuestra base de datos
      */
-    private fun insertDataByDefault() {
-        con.use { con ->
-            selectDatabase(con)
+    private fun insertDataByDefault(con: Connection) {
+        con.use { connection ->
+
             // Estación
             val estacionInsert = """
                 INSERT INTO Estacion (nombre, direccion, correo, telefono)
                 VALUES ('ITV DAM', 'Paseo de la Ermita 15', 'itvdam@itvdam.org', '+34822659855');
             """.trimIndent()
-            val estacionStmt = con.prepareStatement(estacionInsert)
+            val estacionStmt = connection.prepareStatement(estacionInsert)
             estacionStmt.use { it.executeUpdate() }
 
             // Trabajador
@@ -225,7 +277,7 @@ class DatabaseManagerImpl(private val appConfig: AppConfig) : DatabaseManager {
                     ('r_lopez', 'R0b3rtL0p!', 'Roberto López', 'roberto.lopez@itvdam.org', '+34919012345', 1750.0, 
                     '2022-08-27', 'INTERIOR', 1, 1);            
             """.trimIndent()
-            val trabajadorStmt = con.prepareStatement(trabajadorInsert)
+            val trabajadorStmt = connection.prepareStatement(trabajadorInsert)
             trabajadorStmt.use { it.executeUpdate() }
 
             // Propietario
@@ -242,7 +294,7 @@ class DatabaseManagerImpl(private val appConfig: AppConfig) : DatabaseManager {
                        ('12547896X', 'Pedro', 'González', 'pedro.gonzalez@gmail.com', '+34652784596'),
                        ('96321478Y', 'Ana', 'López', 'ana.lopez@gmail.com', '+34658963214');
             """.trimIndent()
-            val propietarioStmt = con.prepareStatement(propietarioInsert)
+            val propietarioStmt = connection.prepareStatement(propietarioInsert)
             propietarioStmt.use { it.executeUpdate() }
 
             // Vehiculo
@@ -253,14 +305,14 @@ class DatabaseManagerImpl(private val appConfig: AppConfig) : DatabaseManager {
                        ('1267-BTK', 'Toyota', 'Corolla', '2019-05-20', '2022-05-20', 'ELECTRICO', 'Coche', '54892376T'),
                        ('2803-HNS', 'Volkswagen', 'Golf', '2021-08-10', '2024-08-10', 'DIESEL', 'Coche', '33571289M'),
                        ('4578-FLS', 'Renault', 'Clio', '2018-11-28', '2021-11-28', 'GASOLINA', 'Coche', '75261498N'),
-                       ('8026-QJK', 'BMW', 'X5', '2022-02-05', '2025-02-05', 'HIBRIDO', 'SUV', '45789632R'),
+                       ('8026-QJK', 'BMW', 'X5', '2022-02-05', '2025-02-05', 'HIBRIDO', 'Coche', '45789632R'),
                        ('2354-DHP', 'Ford', 'Mustang', '2020-03-12', '2023-03-12', 'ELECTRICO', 'Coche', '93651247L'),
-                       ('6908-RSV', 'Nissan', 'Qashqai', '2019-06-30', '2022-06-30', 'DIESEL', 'SUV', '28963517S'),
+                       ('6908-RSV', 'Nissan', 'Qashqai', '2019-06-30', '2022-06-30', 'DIESEL', 'Coche', '28963517S'),
                        ('1482-CKM', 'Mercedes-Benz', 'A-Class', '2021-09-18', '2024-09-18', 'HIBRIDO', 'Coche', '69587412U'),
                        ('3761-PZX', 'Audi', 'A4', '2022-04-25', '2025-04-25', 'GASOLINA', 'Coche', '12547896X'),
                        ('5139-TBS', 'Volkswagen', 'Polo', '2021-07-05', '2024-07-05', 'DIESEL', 'Coche', '96321478Y');
             """.trimIndent()
-            val vehiculoStmt = con.prepareStatement(vehiculoInsert)
+            val vehiculoStmt = connection.prepareStatement(vehiculoInsert)
             vehiculoStmt.use { it.executeUpdate() }
 
             // Informe
@@ -277,7 +329,7 @@ class DatabaseManagerImpl(private val appConfig: AppConfig) : DatabaseManager {
                        (4.57, 28.93, '2023-05-12', 0, 0, 0),
                        (9.23, 34.51, '2023-05-15', 1, 1, 1);
             """.trimIndent()
-            val informeStmt = con.prepareStatement(informeInsert)
+            val informeStmt = connection.prepareStatement(informeInsert)
             informeStmt.use { it.executeUpdate() }
 
             // Cita
@@ -294,7 +346,7 @@ class DatabaseManagerImpl(private val appConfig: AppConfig) : DatabaseManager {
                        ('No apto', '2023-05-12T12:30:00', 9, 'c_romero', '3761-PZX'),
                        ('Apto', '2023-05-15T14:00:00', 10, 'r_lopez', '5139-TBS');
             """.trimIndent()
-            val citaStmt = con.prepareStatement(citaInsert)
+            val citaStmt = connection.prepareStatement(citaInsert)
             citaStmt.use { it.executeUpdate() }
         }
     }
