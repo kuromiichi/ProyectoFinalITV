@@ -27,11 +27,7 @@ fun parseTipoMotor(tipoMotorString: String): Vehiculo.TipoMotor {
 
 fun parseTipoVehiculo(tipoVehiculoString: String): Vehiculo.TipoVehiculo {
     return when (tipoVehiculoString.lowercase()) {
-<<<<<<< HEAD
         "coche" -> Vehiculo.TipoVehiculo.COCHE
-=======
-        "turismo" -> Vehiculo.TipoVehiculo.TURISMO
->>>>>>> 6deb02449131df9a898da306b3a400685ba9cdfd
         "furgoneta" -> Vehiculo.TipoVehiculo.FURGONETA
         "camion" -> Vehiculo.TipoVehiculo.CAMION
         "motocicleta" -> Vehiculo.TipoVehiculo.MOTOCICLETA
