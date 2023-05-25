@@ -1,0 +1,40 @@
+#cuerpo_container_reserva {
+    text-align: center;
+    padding: 20px;
+  }
+
+  #cuerpo_container_reserva h1 {
+    font-size: 24px;
+    color: white;
+    text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black;
+    margin-bottom: 10px;
+  }
+
+  #cuerpo_container_reserva p {
+    font-size: 18px;
+    color: white;
+  text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black;
+    margin-bottom: 20px;
+  }
+
+  #cuerpo_container_reserva img {
+    width: 500px;
+  }
+
+  #volver_btn {
+    background-color: #333;
+    color: #fff;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    display: inline-block;
+    justify-content: center;
+    text-align: center;
+  }
+
+  #volver_btn:hover {
+    background-color: #555;
+  }
+
+  

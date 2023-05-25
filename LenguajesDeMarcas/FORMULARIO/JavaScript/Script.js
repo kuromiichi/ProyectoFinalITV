@@ -1,33 +1,60 @@
 var ventanaVisibleContacto = false;
 var ventanaVisibleQuienesSomos = false;
 
-function alternarDatosContacto() { //Funcion del encabezado para mostrar los datos de la empresa
+function alternarDatosContacto() {
   var ventanaEmergenteContacto = document.getElementById("ventanaEmergente");
   var ventanaEmergenteQuienesSomos = document.getElementById("ventanaEmergente2");
-  
+  var ventanaEmergenteServicios = document.getElementById("ventanaEmergente3");
+
   ventanaVisibleContacto = !ventanaVisibleContacto;
+  ventanaVisibleQuienesSomos = false; // Se cierra la ventana de Quienes Somos
+  ventanaVisibleServicios = false; // Se cierra la ventana de Servicios
 
   if (ventanaVisibleContacto) {
     ventanaEmergenteContacto.style.display = "block";
     ventanaEmergenteQuienesSomos.style.display = "none";
+    ventanaEmergenteServicios.style.display = "none";
   } else {
     ventanaEmergenteContacto.style.display = "none";
   }
 }
 
-function alternarDatosQuienesSomos() { //Funcion del encabezado para mostrar un breve descripción
+function alternarDatosQuienesSomos() {
   var ventanaEmergenteContacto = document.getElementById("ventanaEmergente");
   var ventanaEmergenteQuienesSomos = document.getElementById("ventanaEmergente2");
-  
+  var ventanaEmergenteServicios = document.getElementById("ventanaEmergente3");
+
   ventanaVisibleQuienesSomos = !ventanaVisibleQuienesSomos;
+  ventanaVisibleContacto = false; // Se cierra la ventana de Contacto
+  ventanaVisibleServicios = false; // Se cierra la ventana de Servicios
 
   if (ventanaVisibleQuienesSomos) {
     ventanaEmergenteQuienesSomos.style.display = "block";
     ventanaEmergenteContacto.style.display = "none";
+    ventanaEmergenteServicios.style.display = "none";
   } else {
     ventanaEmergenteQuienesSomos.style.display = "none";
   }
 }
+
+function alternarDatosServicios() {
+  var ventanaEmergenteContacto = document.getElementById("ventanaEmergente");
+  var ventanaEmergenteQuienesSomos = document.getElementById("ventanaEmergente2");
+  var ventanaEmergenteServicios = document.getElementById("ventanaEmergente3");
+
+  ventanaVisibleServicios = !ventanaVisibleServicios;
+  ventanaVisibleContacto = false; // Se cierra la ventana de Contacto
+  ventanaVisibleQuienesSomos = false; // Se cierra la ventana de Quienes Somos
+
+  if (ventanaVisibleServicios) {
+    ventanaEmergenteServicios.style.display = "block";
+    ventanaEmergenteContacto.style.display = "none";
+    ventanaEmergenteQuienesSomos.style.display = "none";
+  } else {
+    ventanaEmergenteServicios.style.display = "none";
+  }
+}
+
 var textoImagenes = { //Funcion del home para q salga texto bajo la imagen despues de pinchar en ella
   "Imagen 1": "¿Por qué deberían elegirnos? En nuestra empresa de ITV, nos destacamos por brindar un servicio excepcional y de calidad a nuestros clientes. Contamos con un equipo de profesionales altamente capacitados y apasionados por la seguridad vehicular. Nuestra experiencia y conocimiento nos permiten realizar inspecciones minuciosas y precisas, garantizando que su vehículo cumpla con los estándares de seguridad exigidos. Además, nos esforzamos por ofrecer una atención al cliente personalizada, escuchando sus necesidades y brindando asesoramiento profesional.",
   "Imagen 2": "¿Qué ofrecemos? En nuestra empresa de ITV, ofrecemos una amplia gama de servicios para garantizar la seguridad y el correcto funcionamiento de su vehículo. Realizamos inspecciones técnicas exhaustivas que abarcan aspectos como los sistemas de frenos, iluminación, emisiones, neumáticos, dirección y más. Nuestro objetivo es asegurarnos de que su vehículo cumpla con los requisitos legales y garantizar su seguridad en las carreteras.",
@@ -41,6 +68,7 @@ function toggleTexto(imagen) {
   
   if (textoContenedor.style.display === 'block' && textoContenedor.innerText === texto) {
     // Si el texto ya está mostrado y es el mismo que se hizo clic, se oculta
+    
     textoContenedor.style.display = 'none';
   } else {
     // Si el texto está oculto o es de otra imagen, se muestra y se actualiza el texto
@@ -169,7 +197,6 @@ function validarFormulario2() {
   }
 
   // Redirección al formulario3.html
-  window.location.href = 'formulario3.html';
+  window.location.href = 'Reserva.html';
   return false; // Evita que el formulario se envíe automáticamente
 }
-
