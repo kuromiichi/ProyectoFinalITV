@@ -1,10 +1,8 @@
 package dev.team.proyectofinalitv.di
 
 import dev.team.proyectofinalitv.config.AppConfig
-import dev.team.proyectofinalitv.controllers.ProbandoCosillasController
 import dev.team.proyectofinalitv.models.Informe
 import dev.team.proyectofinalitv.models.Propietario
-import dev.team.proyectofinalitv.models.Trabajador
 import dev.team.proyectofinalitv.models.Vehiculo
 import dev.team.proyectofinalitv.repositories.*
 import dev.team.proyectofinalitv.repositories.base.SaveUpdateRepository
