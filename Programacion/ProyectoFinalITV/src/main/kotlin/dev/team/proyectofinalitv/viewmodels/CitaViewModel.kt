@@ -6,7 +6,7 @@ import dev.team.proyectofinalitv.models.Cita
 import dev.team.proyectofinalitv.models.Informe
 import dev.team.proyectofinalitv.models.Propietario
 import dev.team.proyectofinalitv.models.Vehiculo
-import dev.team.proyectofinalitv.models.dto.CitaDtoToExport
+import dev.team.proyectofinalitv.dto.CitaDtoToExport
 import dev.team.proyectofinalitv.repositories.*
 import dev.team.proyectofinalitv.repositories.base.CRURepository
 import dev.team.proyectofinalitv.services.storage.CitaStorage
@@ -19,7 +19,7 @@ class CitaViewModel(
     private val informeRepository: CRURepository<Informe>,
     private val citaRepository: CitaRepository,
     private val storage: CitaStorage
-)  {
+) {
 
     fun saveCita() {
         // ============== Para guardar una cita, DEBEMOS EN ESTE ORDEN: =============
@@ -47,7 +47,7 @@ class CitaViewModel(
         )
         vehiculoRepository.save(vehiculo)
         // 3. Informe
-        // El informe se genera nuevo si todo es correcto
+        // El informe se genera nuevo si los datos son correctos
         val informe = Informe(
             id = 1,
             frenado = 4.5,
@@ -70,22 +70,12 @@ class CitaViewModel(
         )
         println(citaRepository.save(cita))
 
+        TODO("esto no lo entiendo")
         val list = mutableListOf<CitaDtoToExport>()
-        list.add(CitaDtoToExport(
-            cita.id,cita.estado,cita.fechaHora.toString(),
-            "a","A","4",
-            "a",1,informe.id,
-            informe.frenado,informe.contaminacion,
-            informe.fechaInforme.toString(),
-            informe.interior,
-            informe.luces,
-            informe.isApto,propietario.dni,
-            propietario.nombre,
-            propietario.apellidos,propietario.correo,propietario.telefono,
-            vehiculo.matricula,vehiculo.marca,vehiculo.modelo,
-            vehiculo.fechaMatriculacion.toString(),vehiculo.fechaRevision.toString(),
-            vehiculo.tipoMotor.toString(),vehiculo.tipoVehiculo.toString()
-        ))
+        list.add(
+            CitaDtoToExport(
+            )
+        )
         // ================================================
     }
 }
