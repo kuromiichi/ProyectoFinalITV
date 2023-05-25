@@ -1,9 +1,7 @@
 package dev.team.proyectofinalitv.repositories
 
-import dev.team.proyectofinalitv.mappers.parseEspecialidad
 import dev.team.proyectofinalitv.mappers.parseTipoMotor
 import dev.team.proyectofinalitv.mappers.parseTipoVehiculo
-import dev.team.proyectofinalitv.models.Trabajador
 import dev.team.proyectofinalitv.models.Vehiculo
 import dev.team.proyectofinalitv.repositories.base.CRURepository
 import dev.team.proyectofinalitv.services.database.DatabaseManager

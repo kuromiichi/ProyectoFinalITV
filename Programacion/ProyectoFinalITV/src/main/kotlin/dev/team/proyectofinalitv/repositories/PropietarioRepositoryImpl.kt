@@ -1,12 +1,10 @@
 package dev.team.proyectofinalitv.repositories
 
-import dev.team.proyectofinalitv.models.Cita
 import dev.team.proyectofinalitv.models.Propietario
 import dev.team.proyectofinalitv.repositories.base.CRURepository
 import dev.team.proyectofinalitv.services.database.DatabaseManager
 import mu.KotlinLogging
 import java.sql.Connection
-import java.time.LocalDateTime
 
 class PropietarioRepositoryImpl(private val databaseManager: DatabaseManager) : CRURepository<Propietario> {
 

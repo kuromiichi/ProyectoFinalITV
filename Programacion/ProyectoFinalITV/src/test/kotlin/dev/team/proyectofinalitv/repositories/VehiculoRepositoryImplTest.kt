@@ -54,7 +54,7 @@ class VehiculoRepositoryImplTest {
         val marcaToUpdate = "Otra marca"
 
         val vehiculoUpdated = vehiculoRepository.update(vehiculoToUpdate.copy(marca = marcaToUpdate))
-        val vehiculoEncontrado =  vehiculoRepository.findAll().find { it.matricula == vehiculoToUpdate.matricula }
+        val vehiculoEncontrado = vehiculoRepository.findAll().find { it.matricula == vehiculoToUpdate.matricula }
 
         assertTrue(marcaToUpdate == vehiculoEncontrado!!.marca)
     }

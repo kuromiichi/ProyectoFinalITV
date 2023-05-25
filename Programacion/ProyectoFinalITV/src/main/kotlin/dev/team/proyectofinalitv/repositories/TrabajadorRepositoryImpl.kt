@@ -1,7 +1,6 @@
 package dev.team.proyectofinalitv.repositories
 
 import dev.team.proyectofinalitv.mappers.parseEspecialidad
-import dev.team.proyectofinalitv.models.Propietario
 import dev.team.proyectofinalitv.models.Trabajador
 import dev.team.proyectofinalitv.repositories.base.CRURepository
 import dev.team.proyectofinalitv.services.database.DatabaseManager

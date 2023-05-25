@@ -1,7 +1,6 @@
 package dev.team.proyectofinalitv.repositories
 
 import dev.team.proyectofinalitv.models.Informe
-import dev.team.proyectofinalitv.models.Propietario
 import dev.team.proyectofinalitv.repositories.base.CRURepository
 import dev.team.proyectofinalitv.services.database.DatabaseManager
 import mu.KotlinLogging
@@ -14,12 +13,7 @@ class InformeRepositoryImpl(private val databaseManager: DatabaseManager) : CRUR
     private val logger = KotlinLogging.logger {}
 
     val con: Connection
-        get() {
-        return when (databaseManager.appConfig.testDb){
-            false -> databaseManager.conProduction
-            true -> databaseManager.conTest
-        }
-    }
+        get() = if (databaseManager.appConfig.testDb) databaseManager.conTest else databaseManager.conProduction
 
     /**
      * Busca todos los informes que se encuentren en la base de datos
