@@ -1,9 +1,7 @@
 package dev.team.proyectofinalitv.repositories
 
-import dev.team.proyectofinalitv.mappers.parseEspecialidad
 import dev.team.proyectofinalitv.mappers.parseTipoMotor
 import dev.team.proyectofinalitv.mappers.parseTipoVehiculo
-import dev.team.proyectofinalitv.models.Trabajador
 import dev.team.proyectofinalitv.models.Vehiculo
 import dev.team.proyectofinalitv.repositories.base.CRURepository
 import dev.team.proyectofinalitv.services.database.DatabaseManager
@@ -27,7 +25,7 @@ class VehiculoRepositoryImpl(private val databaseManager: DatabaseManager) : CRU
      * Busca todos los trabajadores que se encuentren en la base de datos
      * @return la lista de todas los trabajadores
      */
-    override fun getAll(): List<Vehiculo> {
+    override fun findAll(): List<Vehiculo> {
         logger.debug { "Buscando todos los vehículos" }
 
         val vehiculos = mutableListOf<Vehiculo>()

@@ -1,7 +1,6 @@
 package dev.team.proyectofinalitv.repositories
 
 import dev.team.proyectofinalitv.mappers.parseEspecialidad
-import dev.team.proyectofinalitv.models.Propietario
 import dev.team.proyectofinalitv.models.Trabajador
 import dev.team.proyectofinalitv.repositories.base.CRURepository
 import dev.team.proyectofinalitv.services.database.DatabaseManager
@@ -25,7 +24,7 @@ class TrabajadorRepositoryImpl(private val databaseManager: DatabaseManager) : C
      * Busca todos los trabajadores que se encuentren en la base de datos
      * @return la lista de todas los trabajadores
      */
-    override fun getAll(): List<Trabajador> {
+    override fun findAll(): List<Trabajador> {
         logger.debug { "Buscando todos los trabajadores" }
 
         val trabajadores = mutableListOf<Trabajador>()

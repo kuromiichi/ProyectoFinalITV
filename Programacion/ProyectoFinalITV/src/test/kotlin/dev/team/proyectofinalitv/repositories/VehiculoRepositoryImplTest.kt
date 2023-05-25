@@ -3,21 +3,12 @@ package dev.team.proyectofinalitv.repositories
 import dev.team.proyectofinalitv.config.AppConfig
 import dev.team.proyectofinalitv.models.Propietario
 import dev.team.proyectofinalitv.models.Vehiculo
-import dev.team.proyectofinalitv.services.database.DatabaseManager
 import dev.team.proyectofinalitv.services.database.DatabaseManagerImpl
 import org.junit.jupiter.api.*
 
 import org.junit.jupiter.api.Assertions.*
-import org.mockito.ArgumentMatchers.anyString
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
-import java.nio.file.Files
-import java.sql.PreparedStatement
-import java.sql.Statement
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.util.*
-import kotlin.io.path.Path
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class VehiculoRepositoryImplTest {
@@ -61,7 +52,7 @@ class VehiculoRepositoryImplTest {
     fun saveTest() {
         // El caso del test
         val result = vehiculoRepository.save(dataToTest[0])
-        val findItem =  vehiculoRepository.getAll().find { it.matricula == result.matricula }
+        val findItem =  vehiculoRepository.findAll().find { it.matricula == result.matricula }
         assertTrue(result.matricula == findItem!!.matricula)
     }
 

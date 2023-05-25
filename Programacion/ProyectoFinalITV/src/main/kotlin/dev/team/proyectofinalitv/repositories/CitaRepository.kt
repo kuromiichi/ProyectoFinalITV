@@ -4,7 +4,7 @@ import dev.team.proyectofinalitv.models.Cita
 import dev.team.proyectofinalitv.repositories.base.CRURepository
 
 interface CitaRepository : CRURepository<Cita> {
-    override fun getAll(): List<Cita>
+    override fun findAll(): List<Cita>
     fun findById(id: Long): Cita?
     override fun save(item: Cita): Cita
     override fun update(item: Cita): Cita

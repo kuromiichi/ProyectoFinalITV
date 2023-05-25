@@ -34,6 +34,8 @@ class CitaStorageImpl : CitaStorage {
     }
 
     override fun exportToMarkdown(file: File, citaDto: CitaDtoToExport) {
+        val apto = "Apto"
+        val noApto = "No apto"
         val markdownBuilder = StringBuilder()
         markdownBuilder.apply {
             append("# Informe de cita")
@@ -52,9 +54,9 @@ class CitaStorageImpl : CitaStorage {
             append("- Fecha del informe: ${citaDto.informeDto.informeFechaInforme}")
             append("- Frenado: ${citaDto.informeDto.informeFrenado}")
             append("- Contaminación: ${citaDto.informeDto.informeContaminacion}")
-            append("- Interior: ${if (citaDto.informeDto.informeInterior) "Apto" else "No apto"}")
-            append("- Luces: ${if (citaDto.informeDto.informeLuces) "Apto" else "No apto"}")
-            append("### **Resultado del informe:** ${if (citaDto.informeDto.informeIsApto) "Apto" else "No apto"}")
+            append("- Interior: ${if (citaDto.informeDto.informeInterior) apto else noApto}")
+            append("- Luces: ${if (citaDto.informeDto.informeLuces) apto else noApto}")
+            append("### **Resultado del informe:** ${if (citaDto.informeDto.informeIsApto) apto else noApto}")
             append("## Datos del propietario")
             append("- DNI del propietario: ${citaDto.propietarioDto.propietarioDni}")
             append("- Nombre del propietario: ${citaDto.propietarioDto.propietarioNombre} " +
