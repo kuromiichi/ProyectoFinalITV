@@ -2,14 +2,12 @@ package dev.team.proyectofinalitv.repositories
 
 import dev.team.proyectofinalitv.config.AppConfig
 import dev.team.proyectofinalitv.models.Propietario
-import dev.team.proyectofinalitv.models.Vehiculo
 import dev.team.proyectofinalitv.services.database.DatabaseManagerImpl
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.TestInstance
-import java.time.LocalDate
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class PropietarioRepositoryImplTest {
@@ -36,15 +34,27 @@ class PropietarioRepositoryImplTest {
 
     @Test
     fun updateTest() {
-        // El caso del test
-        val result = propietarioRepository.update(dataToTest[0])
-        assertTrue(result.dni == dataToTest[0].dni)
+        val allPropietario = propietarioRepository.findAll()
+        val propietarioToUpdate = allPropietario[0]
+        val nameToUpdate = "Otro nombre"
+
+        val propietarioUpdated = propietarioRepository.update(propietarioToUpdate.copy(nombre = nameToUpdate))
+        val propietarioEncontrado =  propietarioRepository.findAll().find { it.dni == propietarioToUpdate.dni }
+
+        assertTrue(nameToUpdate == propietarioEncontrado!!.nombre)
     }
 
     @Test
     fun saveTest() {
-        // El caso del test
-        val result = propietarioRepository.save(dataToTest[0])
-        assertTrue(result.dni == dataToTest[0].dni)
+        val propietarioSaved = propietarioRepository.save(dataToTest[0])
+        val propietarioEncontrado =  propietarioRepository.findAll().find { it.dni == propietarioSaved.dni }
+        assertTrue(propietarioSaved.dni == propietarioEncontrado!!.dni)
+    }
+
+    @Test
+    fun findAllTest(){
+        // Tenemos insertado en nuestro DatabaseManager por defecto al crear la Base de datos 10 items
+        val allPropietario = propietarioRepository.findAll()
+        assertTrue(allPropietario.size == 10)
     }
 }

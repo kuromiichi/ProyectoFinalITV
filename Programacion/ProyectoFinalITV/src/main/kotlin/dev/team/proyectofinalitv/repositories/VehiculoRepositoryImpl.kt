@@ -68,7 +68,7 @@ class VehiculoRepositoryImpl(private val databaseManager: DatabaseManager) : CRU
         con.use { con ->
             val updateQuery = """
                 UPDATE Vehiculo
-                SET marca = ?, modelo = ?, fecha_matriculacion = ?, fecha_revision = ?, tipo_motor = ?,
+                SET  marca = ?, modelo = ?, fecha_matriculacion = ?, fecha_revision = ?, tipo_motor = ?,
                 tipo_vehiculo = ?, dni_propietario = ?
                 WHERE matricula = ?
             """.trimIndent()

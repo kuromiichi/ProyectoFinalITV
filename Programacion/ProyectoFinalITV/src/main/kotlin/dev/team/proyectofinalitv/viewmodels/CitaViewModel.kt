@@ -72,10 +72,10 @@ class CitaViewModel(
 
         TODO("esto no lo entiendo")
         val list = mutableListOf<CitaDtoToExport>()
-        list.add(
+/*        list.add(
             CitaDtoToExport(
             )
-        )
+        )*/
         // ================================================
     }
 }

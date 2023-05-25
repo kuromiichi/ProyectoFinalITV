@@ -82,7 +82,7 @@ class CitaRepositoryImpl(private val databaseManager: DatabaseManager) : CitaRep
         con.use { con ->
             val updateQuery = """
                 UPDATE Cita
-                SET estado = ?, fechaHora = ?, idInforme = ?, matricula_vehiculo = ?, usuario_trabajador = ?
+                SET estado = ?, fecha_hora = ?, id_informe = ?, matricula_vehiculo = ?, usuario_trabajador = ?
                 WHERE id = ?
             """.trimIndent()
             val updateStmt = con.prepareStatement(updateQuery)
