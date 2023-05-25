@@ -42,6 +42,7 @@ javafx {
 }
 
 dependencies {
+    // JUNIT
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
 
@@ -49,10 +50,9 @@ dependencies {
     implementation("org.mariadb.jdbc:mariadb-java-client:3.0.7")
 
     // Mockito
+    testImplementation("org.mockito:mockito-core:5.3.1")
+    testImplementation("org.mockito:mockito-junit-jupiter:5.3.1")
     testImplementation("org.mockito.kotlin:mockito-kotlin:4.0.0")
-
-    // Mockk
-    //testImplementation("io.mockk:mockk:1.13.3")
 
     // Results
     implementation("com.michael-bull.kotlin-result:kotlin-result:1.1.17")
