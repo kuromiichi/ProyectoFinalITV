@@ -25,7 +25,7 @@ class InformeRepositoryImpl(private val databaseManager: DatabaseManager) : CRUR
      * Busca todos los informes que se encuentren en la base de datos
      * @return la lista de todas los informes
      */
-    override fun getAll(): List<Informe> {
+    override fun findAll(): List<Informe> {
         logger.debug { "Buscando todos los informes" }
 
         val informes = mutableListOf<Informe>()

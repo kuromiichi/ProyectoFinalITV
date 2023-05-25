@@ -23,7 +23,7 @@ class PropietarioRepositoryImpl(private val databaseManager: DatabaseManager) : 
      * Busca todos los propietarios que se encuentren en la base de datos
      * @return la lista de todas los propietarios
      */
-    override fun getAll(): List<Propietario> {
+    override fun findAll(): List<Propietario> {
         logger.debug { "Buscando todos los propietarios" }
 
         val propietarios = mutableListOf<Propietario>()

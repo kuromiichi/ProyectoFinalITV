@@ -27,7 +27,7 @@ class VehiculoRepositoryImpl(private val databaseManager: DatabaseManager) : CRU
      * Busca todos los trabajadores que se encuentren en la base de datos
      * @return la lista de todas los trabajadores
      */
-    override fun getAll(): List<Vehiculo> {
+    override fun findAll(): List<Vehiculo> {
         logger.debug { "Buscando todos los vehículos" }
 
         val vehiculos = mutableListOf<Vehiculo>()
@@ -70,7 +70,7 @@ class VehiculoRepositoryImpl(private val databaseManager: DatabaseManager) : CRU
         con.use { con ->
             val updateQuery = """
                 UPDATE Vehiculo
-                SET marca = ?, modelo = ?, fecha_matriculacion = ?, fecha_revision = ?, tipo_motor = ?,
+                SET  marca = ?, modelo = ?, fecha_matriculacion = ?, fecha_revision = ?, tipo_motor = ?,
                 tipo_vehiculo = ?, dni_propietario = ?
                 WHERE matricula = ?
             """.trimIndent()

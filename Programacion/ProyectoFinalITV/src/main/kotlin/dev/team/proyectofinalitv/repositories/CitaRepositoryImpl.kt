@@ -23,7 +23,7 @@ class CitaRepositoryImpl(private val databaseManager: DatabaseManager) : CitaRep
      * Busca todas las citas que se encuentren en la base de datos
      * @return la lista de todas las citas
      */
-    override fun getAll(): List<Cita> {
+    override fun findAll(): List<Cita> {
         logger.debug { "Buscando todas las citas" }
 
         val citas = mutableListOf<Cita>()
@@ -82,7 +82,7 @@ class CitaRepositoryImpl(private val databaseManager: DatabaseManager) : CitaRep
         con.use { con ->
             val updateQuery = """
                 UPDATE Cita
-                SET estado = ?, fechaHora = ?, idInforme = ?, matricula_vehiculo = ?, usuario_trabajador = ?
+                SET estado = ?, fecha_hora = ?, id_informe = ?, matricula_vehiculo = ?, usuario_trabajador = ?
                 WHERE id = ?
             """.trimIndent()
             val updateStmt = con.prepareStatement(updateQuery)

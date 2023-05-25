@@ -3,21 +3,12 @@ package dev.team.proyectofinalitv.repositories
 import dev.team.proyectofinalitv.config.AppConfig
 import dev.team.proyectofinalitv.models.Propietario
 import dev.team.proyectofinalitv.models.Vehiculo
-import dev.team.proyectofinalitv.services.database.DatabaseManager
 import dev.team.proyectofinalitv.services.database.DatabaseManagerImpl
 import org.junit.jupiter.api.*
 
 import org.junit.jupiter.api.Assertions.*
-import org.mockito.ArgumentMatchers.anyString
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
-import java.nio.file.Files
-import java.sql.PreparedStatement
-import java.sql.Statement
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.util.*
-import kotlin.io.path.Path
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class VehiculoRepositoryImplTest {
@@ -29,7 +20,6 @@ class VehiculoRepositoryImplTest {
     private var propietarioRepository: PropietarioRepositoryImpl = PropietarioRepositoryImpl(dbManager)
 
     private val dataToTest = mutableListOf<Vehiculo>()
-    private val dataPropietario = mutableListOf<Propietario>()
 
     @BeforeEach
     fun setUp() {
@@ -58,17 +48,28 @@ class VehiculoRepositoryImplTest {
     }
 
     @Test
-    fun saveTest() {
-        // El caso del test
-        val result = vehiculoRepository.save(dataToTest[0])
-        val findItem =  vehiculoRepository.getAll().find { it.matricula == result.matricula }
-        assertTrue(result.matricula == findItem!!.matricula)
+    fun updateTest() {
+        val allVehicule = vehiculoRepository.findAll()
+        val vehiculoToUpdate = allVehicule[0]
+        val marcaToUpdate = "Otra marca"
+
+        val vehiculoUpdated = vehiculoRepository.update(vehiculoToUpdate.copy(marca = marcaToUpdate))
+        val vehiculoEncontrado =  vehiculoRepository.findAll().find { it.matricula == vehiculoToUpdate.matricula }
+
+        assertTrue(marcaToUpdate == vehiculoEncontrado!!.marca)
     }
 
     @Test
-    fun updateTest() {
-        // El caso del test
-        val result = vehiculoRepository.update(dataToTest[0])
-        assertTrue(result.matricula == dataToTest[0].matricula)
+    fun saveTest() {
+        val vehiculoSaved = vehiculoRepository.save(dataToTest[0])
+        val vehiculoEncontrado =  vehiculoRepository.findAll().find { it.matricula == vehiculoSaved.matricula }
+        assertTrue(vehiculoSaved.matricula == vehiculoEncontrado!!.matricula)
+    }
+
+    @Test
+    fun findAllTest(){
+        // Tenemos insertado en nuestro DatabaseManager por defecto al crear la Base de datos 10 items
+        val allVehicule = vehiculoRepository.findAll()
+        assertTrue(allVehicule.size == 10)
     }
 }

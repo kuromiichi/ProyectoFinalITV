@@ -48,9 +48,8 @@ dependencies {
     // MariaDB Driver
     implementation("org.mariadb.jdbc:mariadb-java-client:3.0.7")
 
-    // Mockito (para poder mockear la database)
+    // Mockito
     testImplementation("org.mockito.kotlin:mockito-kotlin:4.0.0")
-    //testImplementation ("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
 
     // Mockk
     //testImplementation("io.mockk:mockk:1.13.3")
@@ -68,10 +67,6 @@ dependencies {
 
     // GSON
     implementation("com.google.code.gson:gson:2.8.9")
-
-    // Apache FreeMaker
-    // implementation ("org.freemarker:freemarker:2.3.31")
-
 }
 
 test {

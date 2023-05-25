@@ -13,12 +13,16 @@ module dev.team.proyectofinalitv {
 
     // Koin
     requires koin.core.jvm;
-    requires com.google.gson;
-    requires kotlin.result.jvm;
     requires java.sql;
 
     // MariaDb
     requires org.mariadb.jdbc;
+
+    // GSON
+    requires com.google.gson;
+
+    // Result
+    requires kotlin.result.jvm;
 
     // Root to JavaFX
     opens dev.team.proyectofinalitv to javafx.fxml;
