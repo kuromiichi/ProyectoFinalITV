@@ -5,8 +5,10 @@ import dev.team.proyectofinalitv.repositories.*
 import dev.team.proyectofinalitv.repositories.base.CRURepository
 import dev.team.proyectofinalitv.services.storage.CitaStorage
 import javafx.beans.property.SimpleObjectProperty
+import mu.KotlinLogging
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalTime
 
 class CitaViewModel(
     private val propietarioRepository: CRURepository<Propietario, String>,
@@ -16,52 +18,57 @@ class CitaViewModel(
     private val citaRepository: CitaRepository,
     private val storage: CitaStorage
 ) {
-    // Actualizar cita
+    private val logger = KotlinLogging.logger {}
+    fun updateCitaSeleccionada(cita: Cita) {
+        logger.debug { "Actualizando cita seleccionada: $cita" }
 
+        val trabajador = trabajadorRepository.findById(cita.usuarioTrabajador)
+        val vehiculo = vehiculoRepository.findById(cita.matriculaVehiculo)
+        val informe = informeRepository.findById(cita.idInforme)
+        val propietario = vehiculo?.let { propietarioRepository.findById(it.dniPropietario) }
+
+        var citaSeleccionada = CitaFormulario()
+
+        if (trabajador != null && vehiculo != null && informe != null && propietario != null) {
+            citaSeleccionada = CitaFormulario(
+                idCita = cita.id.toString(),
+                estadoCita = cita.estado,
+                fechaCita = cita.fechaHora.toLocalDate(),
+                horaCita = cita.fechaHora.toLocalTime(),
+                nombreTrabajador = trabajador.nombre,
+                correoTrabajador = trabajador.correo,
+                telefonoTrabajador = trabajador.telefono,
+                especialidadTrabajador = trabajador.especialidad.name,
+                dniPropietario = propietario.dni,
+                nombrePropietario = propietario.nombre,
+                apellidosPropietario = propietario.apellidos,
+                correoPropietario = propietario.correo,
+                telefonoPropietario = propietario.telefono,
+                matriculaVehiculo = vehiculo.matricula,
+                marcaVehiculo = vehiculo.marca,
+                modeloVehiculo = vehiculo.modelo,
+                fechaMatriculacionVehiculo = vehiculo.fechaMatriculacion,
+                fechaRevisionVehiculo = vehiculo.fechaRevision,
+                tipoMotorVehiculo = vehiculo.tipoMotor.name.lowercase(),
+                tipoVehiculo = vehiculo.tipoVehiculo.name.lowercase(),
+                frenadoInforme = informe.frenado,
+                contaminacionInforme = informe.contaminacion,
+                interiorInforme = informe.interior,
+                lucesInforme = informe.luces,
+                isAptoInforme = informe.isApto
+            )
+        }
+        state.value = state.value.copy(citaSeleccionada = citaSeleccionada)
+    }
 
     // Gestión del estado de la vista
     val state = SimpleObjectProperty<CitaState>()
 
-    fun updateState(cita: Cita) {
-        val informe = informeRepository.findById(cita.idInforme)
-        val vehiculo = vehiculoRepository.findById(cita.matriculaVehiculo)
-        val propietario = vehiculo?.let { propietarioRepository.findById(it.dniPropietario) }
-        val trabajador = trabajadorRepository.findById(cita.usuarioTrabajador)
-        if (informe != null && vehiculo != null && propietario != null && trabajador != null) {
-            state.value = state.value.copy(
-                citaSeleccionada = CitaFormulario(
-                    idCita = cita.id.toString(),
-                    estadoCita = cita.estado,
-                    fechaCita = cita.fechaHora,
-                    nombreTrabajador = trabajador.nombre,
-                    correoTrabajador = trabajador.correo,
-                    telefonoTrabajador = trabajador.telefono,
-                    especialidadTrabajador = trabajador.especialidad.name.lowercase(),
-                    dniPropietario = propietario.dni,
-                    nombrePropietario = propietario.nombre,
-                    apellidosPropietario = propietario.apellidos,
-                    correoPropietario = propietario.correo,
-                    telefonoPropietario = propietario.telefono,
-                    matriculaVehiculo = vehiculo.matricula,
-                    marcaVehiculo = vehiculo.marca,
-                    modeloVehiculo = vehiculo.modelo,
-                    fechaMatriculacionVehiculo = vehiculo.fechaMatriculacion,
-                    fechaRevisionVehiculo = vehiculo.fechaRevision,
-                    tipoMotorVehiculo = vehiculo.tipoMotor.name.lowercase(),
-                    tipoVehiculo = vehiculo.tipoVehiculo.name.lowercase(),
-                    frenadoInforme = informe.frenado,
-                    contaminacionInforme = informe.contaminacion,
-                    interiorInforme = informe.interior,
-                    lucesInforme = informe.luces,
-                    isAptoInforme = informe.isApto
-                )
-            )
-        }
-    }
 
     enum class TipoOperacion { CREAR, ACTUALIZAR }
 
     fun setTipoOperacion(tipo: TipoOperacion) {
+        logger.debug { "Modificando tipo de operación a: ${tipo.name}" }
         state.value = state.value.copy(tipoOperacion = tipo)
     }
 
@@ -74,7 +81,8 @@ class CitaViewModel(
     data class CitaFormulario(
         val idCita: String = "",
         val estadoCita: String = "",
-        val fechaCita: LocalDateTime = LocalDateTime.now(),
+        val fechaCita: LocalDate = LocalDate.now(),
+        val horaCita: LocalTime = LocalTime.now(),
         val nombreTrabajador: String = "",
         val correoTrabajador: String = "",
         val telefonoTrabajador: String = "",

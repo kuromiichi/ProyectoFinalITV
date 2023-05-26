@@ -22,23 +22,23 @@ class DatabaseManagerImpl(override val appConfig: AppConfig) : DatabaseManager {
         }
 
     init {
-        // Caso estemos en producción
-        if (!appConfig.testDb){
+        // Iniciar base de datos de producción
+        if (!appConfig.testDb) {
             when (appConfig.resetDb) {
                 true -> {
-                    logger.info { "Inicializando DBManager con valores por defecto" }
+                    logger.debug { "Inicializando DBManager con valores por defecto" }
                     resetDataBase()
                 }
 
                 false -> {
-                    logger.info { "Inicializando DBManager" }
+                    logger.debug { "Inicializando DBManager" }
                 }
             }
         }
 
-        // Caso de iniciar en TEST se cargará con los datos iniciales por defecto
+        // Iniciar en TEST cargando los datos iniciales por defecto
         if (appConfig.testDb) {
-            logger.info { "Inicializando DBManager en modo TEST con valores por defecto" }
+            logger.debug { "Inicializando DBManager en modo TEST con valores por defecto" }
             resetDataBase()
         }
     }
@@ -54,11 +54,12 @@ class DatabaseManagerImpl(override val appConfig: AppConfig) : DatabaseManager {
         createDatabase()
 
         // Creamos tablas
-        when(appConfig.testDb){
+        when (appConfig.testDb) {
             false -> {
                 logger.debug { "Creando base de datos" }
                 createTablesByDefault(conProduction)
             }
+
             true -> {
                 logger.debug { "Creando base de datos en test" }
                 createTablesByDefault(conTest)
@@ -66,11 +67,12 @@ class DatabaseManagerImpl(override val appConfig: AppConfig) : DatabaseManager {
         }
 
         // Insertamos
-        when(appConfig.testDb){
+        when (appConfig.testDb) {
             false -> {
                 logger.debug { "Insertando datos en base de datos" }
                 insertDataByDefault(conProduction)
             }
+
             true -> {
                 logger.debug { "Insertando datos de prueba en base de datos" }
                 insertDataByDefault(conTest)
@@ -83,9 +85,10 @@ class DatabaseManagerImpl(override val appConfig: AppConfig) : DatabaseManager {
      */
     override fun dropDatabase() {
 
-        val newConnection = DriverManager.getConnection(appConfig.urlConnectionLocalHost, appConfig.dbUser, appConfig.dbPassword)
+        val newConnection =
+            DriverManager.getConnection(appConfig.urlConnectionLocalHost, appConfig.dbUser, appConfig.dbPassword)
 
-        when(appConfig.testDb){
+        when (appConfig.testDb) {
             false -> {
                 logger.debug { "Borrando base de datos" }
 
@@ -108,9 +111,10 @@ class DatabaseManagerImpl(override val appConfig: AppConfig) : DatabaseManager {
      * Creación de la base de datos real y de prueba en caso de ejecutar en modo TEST
      */
     override fun createDatabase() {
-        val newConnection = DriverManager.getConnection(appConfig.urlConnectionLocalHost, appConfig.dbUser, appConfig.dbPassword)
+        val newConnection =
+            DriverManager.getConnection(appConfig.urlConnectionLocalHost, appConfig.dbUser, appConfig.dbPassword)
 
-        when(appConfig.testDb){
+        when (appConfig.testDb) {
             false -> {
                 logger.debug { "Creando base de datos" }
 

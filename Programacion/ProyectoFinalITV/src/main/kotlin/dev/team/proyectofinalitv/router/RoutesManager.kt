@@ -9,9 +9,11 @@ import mu.KotlinLogging
 import java.io.InputStream
 import java.net.URL
 
-object RouterManager {
+object RoutesManager {
 
     private val logger = KotlinLogging.logger {}
+
+    lateinit var app: AppMain
 
     private lateinit var _mainStage: Stage
     private lateinit var _activeStage: Stage
