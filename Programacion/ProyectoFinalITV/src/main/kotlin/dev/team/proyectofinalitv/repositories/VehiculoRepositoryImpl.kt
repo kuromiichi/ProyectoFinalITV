@@ -9,7 +9,7 @@ import mu.KotlinLogging
 import java.sql.Connection
 import java.time.LocalDate
 
-class VehiculoRepositoryImpl(private val databaseManager: DatabaseManager) : CRURepository<Vehiculo> {
+class VehiculoRepositoryImpl(private val databaseManager: DatabaseManager) : CRURepository<Vehiculo, String> {
 
     private val logger = KotlinLogging.logger {}
 
@@ -56,6 +56,13 @@ class VehiculoRepositoryImpl(private val databaseManager: DatabaseManager) : CRU
 
         return vehiculos
     }
+
+    /**
+     * Busca un vehículo en la base de datos
+     * @param id el id del vehículo que buscaremos
+     * @return el vehículo con la matrícula especificada, null si no lo encuentra
+     */
+    override fun findById(id: String): Vehiculo? = findAll().find { it.matricula == id }
 
     /**
      * Actualiza un vehículo en la base de datos

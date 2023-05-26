@@ -6,7 +6,7 @@ import dev.team.proyectofinalitv.services.database.DatabaseManager
 import mu.KotlinLogging
 import java.sql.Connection
 
-class PropietarioRepositoryImpl(private val databaseManager: DatabaseManager) : CRURepository<Propietario> {
+class PropietarioRepositoryImpl(private val databaseManager: DatabaseManager) : CRURepository<Propietario, String> {
 
     private val logger = KotlinLogging.logger {}
 
@@ -49,6 +49,13 @@ class PropietarioRepositoryImpl(private val databaseManager: DatabaseManager) : 
 
         return propietarios
     }
+
+    /**
+     * Busca un propietario por su DNI
+     * @param id el DNI del propietario que buscaremos
+     * @return el propietario con el DNI especificado, null si no lo encuentra
+     */
+    override fun findById(id: String): Propietario? = findAll().find { it.dni == id }
 
     /**
      * Actualiza un propietario en la base de datos

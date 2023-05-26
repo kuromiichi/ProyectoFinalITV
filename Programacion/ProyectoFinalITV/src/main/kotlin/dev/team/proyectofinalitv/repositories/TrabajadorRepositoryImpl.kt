@@ -8,7 +8,7 @@ import mu.KotlinLogging
 import java.sql.Connection
 import java.time.LocalDate
 
-class TrabajadorRepositoryImpl(private val databaseManager: DatabaseManager) : CRURepository<Trabajador> {
+class TrabajadorRepositoryImpl(private val databaseManager: DatabaseManager) : CRURepository<Trabajador, String> {
 
     private val logger = KotlinLogging.logger {}
 
@@ -57,6 +57,13 @@ class TrabajadorRepositoryImpl(private val databaseManager: DatabaseManager) : C
 
         return trabajadores
     }
+
+    /**
+     * Busca un trabajador por su usuario
+     * @param id el usuario del trabajador que buscamos
+     * @return el trabajador con el usuario especificado, null si no lo encuentra
+     */
+    override fun findById(id: String): Trabajador? = findAll().find { it.usuario == id }
 
     /**
      * Actualiza un vehículo en la base de datos

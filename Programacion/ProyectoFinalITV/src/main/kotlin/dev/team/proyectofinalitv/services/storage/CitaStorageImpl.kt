@@ -51,7 +51,6 @@ class CitaStorageImpl : CitaStorage {
             append("- ID de estación del trabajador: ${citaDto.trabajadorDto.idEstacion}")
             append("## Informe de inspección técnica")
             append("- ID del informe: ${citaDto.informeDto.informeId}")
-            append("- Fecha del informe: ${citaDto.informeDto.informeFechaInforme}")
             append("- Frenado: ${citaDto.informeDto.informeFrenado}")
             append("- Contaminación: ${citaDto.informeDto.informeContaminacion}")
             append("- Interior: ${if (citaDto.informeDto.informeInterior) apto else noApto}")

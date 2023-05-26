@@ -210,7 +210,6 @@ class DatabaseManagerImpl(override val appConfig: AppConfig) : DatabaseManager {
                     id            INTEGER PRIMARY KEY AUTO_INCREMENT,
                     frenado       DECIMAL(4, 2) NOT NULL,
                     contaminacion DECIMAL(4, 2) NOT NULL,
-                    fecha_informe VARCHAR(10)   NOT NULL,
                     interior      INTEGER       NOT NULL,
                     luces         INTEGER       NOT NULL,
                     is_apto       INTEGER       NOT NULL
@@ -317,17 +316,17 @@ class DatabaseManagerImpl(override val appConfig: AppConfig) : DatabaseManager {
 
             // Informe
             val informeInsert = """
-                INSERT INTO Informe (frenado, contaminacion, fecha_informe, interior, luces, is_apto)
-                VALUES (8.35, 30.75, '2023-04-20', 1, 1, 0),
-                       (6.92, 42.18, '2023-04-22', 0, 1, 1),
-                       (3.76, 25.62, '2023-04-25', 1, 0, 0),
-                       (9.87, 47.93, '2023-04-28', 0, 1, 1),
-                       (5.21, 38.79, '2023-05-02', 1, 0, 0),
-                       (7.64, 31.45, '2023-05-05', 0, 1, 1),
-                       (2.98, 26.87, '2023-05-08', 1, 0, 0),
-                       (8.14, 43.26, '2023-05-10', 1, 1, 1),
-                       (4.57, 28.93, '2023-05-12', 0, 0, 0),
-                       (9.23, 34.51, '2023-05-15', 1, 1, 1);
+                INSERT INTO Informe (frenado, contaminacion, interior, luces, is_apto)
+                VALUES (8.35, 30.75, 1, 1, 0),
+                       (6.92, 42.18, 0, 1, 1),
+                       (3.76, 25.62, 1, 0, 0),
+                       (9.87, 47.93, 0, 1, 1),
+                       (5.21, 38.79, 1, 0, 0),
+                       (7.64, 31.45, 0, 1, 1),
+                       (2.98, 26.87, 1, 0, 0),
+                       (8.14, 43.26, 1, 1, 1),
+                       (4.57, 28.93, 0, 0, 0),
+                       (9.23, 34.51, 1, 1, 1);
             """.trimIndent()
             val informeStmt = connection.prepareStatement(informeInsert)
             informeStmt.use { it.executeUpdate() }

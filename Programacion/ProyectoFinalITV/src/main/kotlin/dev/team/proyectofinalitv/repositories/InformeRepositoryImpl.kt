@@ -8,7 +8,7 @@ import java.sql.Connection
 import java.sql.Statement
 import java.time.LocalDate
 
-class InformeRepositoryImpl(private val databaseManager: DatabaseManager) : CRURepository<Informe> {
+class InformeRepositoryImpl(private val databaseManager: DatabaseManager) : CRURepository<Informe, Long> {
 
     private val logger = KotlinLogging.logger {}
 
@@ -36,10 +36,9 @@ class InformeRepositoryImpl(private val databaseManager: DatabaseManager) : CRUR
                                 id = rs.getLong(1),
                                 frenado = rs.getDouble(2),
                                 contaminacion = rs.getDouble(3),
-                                fechaInforme = LocalDate.parse(rs.getString(4)),
+                                luces = rs.getBoolean(4),
                                 interior = rs.getBoolean(5),
-                                luces =  rs.getBoolean(6),
-                                isApto =  rs.getBoolean(7)
+                                isApto = rs.getBoolean(6)
                             )
                         )
                     }
@@ -49,6 +48,13 @@ class InformeRepositoryImpl(private val databaseManager: DatabaseManager) : CRUR
 
         return informes
     }
+
+    /**
+     * Busca un informe por su ID
+     * @param id el ID del informe que buscaremos
+     * @return el informe con el ID especificado, null si no lo encuentra
+     */
+    override fun findById(id: Long): Informe? = findAll().find { it.id == id }
 
     /**
      * Actualiza un informe en la base de datos
@@ -61,19 +67,17 @@ class InformeRepositoryImpl(private val databaseManager: DatabaseManager) : CRUR
         con.use { con ->
             val updateQuery = """
                 UPDATE Informe
-                SET frenado = ?, contaminacion = ?, fecha_informe = ?, interior = ?, luces = ?, is_apto = ?
+                SET frenado = ?, contaminacion = ?, interior = ?, luces = ?, is_apto = ?
                 WHERE id = ?
             """.trimIndent()
             val updateStmt = con.prepareStatement(updateQuery)
             updateStmt.use { stmt ->
                 stmt.setDouble(1, item.frenado)
                 stmt.setDouble(2, item.contaminacion)
-                stmt.setString(3, item.fechaInforme.toString())
-                stmt.setBoolean(4, item.interior)
-                stmt.setBoolean(5, item.luces)
-                stmt.setBoolean(6, item.isApto)
-                stmt.setLong(7, item.id)
-
+                stmt.setBoolean(3, item.interior)
+                stmt.setBoolean(4, item.luces)
+                stmt.setBoolean(5, item.isApto)
+                stmt.setLong(6, item.id)
                 stmt.executeUpdate()
             }
         }
@@ -93,17 +97,16 @@ class InformeRepositoryImpl(private val databaseManager: DatabaseManager) : CRUR
 
         con.use { con ->
             val saveQuery = """
-                INSERT INTO Informe (frenado, contaminacion, fecha_informe, interior, luces, is_apto)
-                VALUES (?, ?, ?, ?, ?, ?)
+                INSERT INTO Informe (frenado, contaminacion, interior, luces, is_apto)
+                VALUES (?, ?, ?, ?, ?)
             """.trimIndent()
             val saveStmt = con.prepareStatement(saveQuery, Statement.RETURN_GENERATED_KEYS)
             saveStmt.use { stmt ->
                 stmt.setDouble(1, item.frenado)
                 stmt.setDouble(2, item.contaminacion)
-                stmt.setString(3, item.fechaInforme.toString())
-                stmt.setBoolean(4, item.interior)
-                stmt.setBoolean(5, item.luces)
-                stmt.setBoolean(6, item.isApto)
+                stmt.setBoolean(3, item.interior)
+                stmt.setBoolean(4, item.luces)
+                stmt.setBoolean(5, item.isApto)
 
                 stmt.executeUpdate()
                 val key = stmt.generatedKeys

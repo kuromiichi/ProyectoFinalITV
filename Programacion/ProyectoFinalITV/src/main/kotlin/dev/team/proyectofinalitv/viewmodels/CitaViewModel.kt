@@ -1,81 +1,100 @@
 package dev.team.proyectofinalitv.viewmodels
 
-import dev.team.proyectofinalitv.mappers.parseTipoMotor
-import dev.team.proyectofinalitv.mappers.parseTipoVehiculo
-import dev.team.proyectofinalitv.models.Cita
-import dev.team.proyectofinalitv.models.Informe
-import dev.team.proyectofinalitv.models.Propietario
-import dev.team.proyectofinalitv.models.Vehiculo
-import dev.team.proyectofinalitv.dto.CitaDtoToExport
+import dev.team.proyectofinalitv.models.*
 import dev.team.proyectofinalitv.repositories.*
 import dev.team.proyectofinalitv.repositories.base.CRURepository
 import dev.team.proyectofinalitv.services.storage.CitaStorage
+import javafx.beans.property.SimpleObjectProperty
 import java.time.LocalDate
 import java.time.LocalDateTime
 
 class CitaViewModel(
-    private val propietarioRepository: CRURepository<Propietario>,
-    private val vehiculoRepository: CRURepository<Vehiculo>,
-    private val informeRepository: CRURepository<Informe>,
+    private val propietarioRepository: CRURepository<Propietario, String>,
+    private val vehiculoRepository: CRURepository<Vehiculo, String>,
+    private val informeRepository: CRURepository<Informe, Long>,
+    private val trabajadorRepository: CRURepository<Trabajador, String>,
     private val citaRepository: CitaRepository,
     private val storage: CitaStorage
 ) {
+    // Actualizar cita
 
-    fun saveCita() {
-        // ============== Para guardar una cita, DEBEMOS EN ESTE ORDEN: =============
-        // 1. Propietario
-        // Debemos crear trigger para que no nos deje crear un nuevo propietario con esta dni!
-        val propietario = Propietario(
-            dni = "12345678F",
-            nombre = "Juan",
-            apellidos = "Pérez",
-            correo = "juan@example.com",
-            telefono = "123456789"
-        )
-        propietarioRepository.save(propietario)
-        // 2. Vehiculo, arrastramos la clave del propietario DNI
-        // Debemos crear trigger para que no nos deje crear un nuevo vehiculo con esta matricula!
-        val vehiculo = Vehiculo(
-            matricula = "123ABCD",
-            marca = "Toyota",
-            modelo = "Corolla",
-            fechaMatriculacion = LocalDate.now(),
-            fechaRevision = LocalDate.now(),
-            tipoMotor = parseTipoMotor("Gasolina"),
-            tipoVehiculo = parseTipoVehiculo("Camion"),
-            dniPropietario = propietario.dni
-        )
-        vehiculoRepository.save(vehiculo)
-        // 3. Informe
-        // El informe se genera nuevo si los datos son correctos
-        val informe = Informe(
-            id = 1,
-            frenado = 4.5,
-            contaminacion = 3.2,
-            fechaInforme = LocalDate.now(),
-            interior = true,
-            luces = true,
-            isApto = false
-        )
-        informeRepository.save(informe)
-        // EL USER NO HACE FALTA PORQUE SELECCIONAMOS DE LOS QUE TENGAMOS
-        // Arrastramos la clave de la matricula y el id del informe, a la cita, si todo es correcto se genera
-        val cita = Cita(
-            id = 1,
-            estado = "No apto",
-            fechaHora = LocalDateTime.now(),
-            idInforme = informe.id,
-            usuarioTrabajador = "p_martinez",
-            matriculaVehiculo = vehiculo.matricula
-        )
-        println(citaRepository.save(cita))
 
-        TODO("esto no lo entiendo")
-        val list = mutableListOf<CitaDtoToExport>()
-/*        list.add(
-            CitaDtoToExport(
+    // Gestión del estado de la vista
+    val state = SimpleObjectProperty<CitaState>()
+
+    fun updateState(cita: Cita) {
+        val informe = informeRepository.findById(cita.idInforme)
+        val vehiculo = vehiculoRepository.findById(cita.matriculaVehiculo)
+        val propietario = vehiculo?.let { propietarioRepository.findById(it.dniPropietario) }
+        val trabajador = trabajadorRepository.findById(cita.usuarioTrabajador)
+        if (informe != null && vehiculo != null && propietario != null && trabajador != null) {
+            state.value = state.value.copy(
+                citaSeleccionada = CitaFormulario(
+                    idCita = cita.id.toString(),
+                    estadoCita = cita.estado,
+                    fechaCita = cita.fechaHora,
+                    nombreTrabajador = trabajador.nombre,
+                    correoTrabajador = trabajador.correo,
+                    telefonoTrabajador = trabajador.telefono,
+                    especialidadTrabajador = trabajador.especialidad.name.lowercase(),
+                    dniPropietario = propietario.dni,
+                    nombrePropietario = propietario.nombre,
+                    apellidosPropietario = propietario.apellidos,
+                    correoPropietario = propietario.correo,
+                    telefonoPropietario = propietario.telefono,
+                    matriculaVehiculo = vehiculo.matricula,
+                    marcaVehiculo = vehiculo.marca,
+                    modeloVehiculo = vehiculo.modelo,
+                    fechaMatriculacionVehiculo = vehiculo.fechaMatriculacion,
+                    fechaRevisionVehiculo = vehiculo.fechaRevision,
+                    tipoMotorVehiculo = vehiculo.tipoMotor.name.lowercase(),
+                    tipoVehiculo = vehiculo.tipoVehiculo.name.lowercase(),
+                    frenadoInforme = informe.frenado,
+                    contaminacionInforme = informe.contaminacion,
+                    interiorInforme = informe.interior,
+                    lucesInforme = informe.luces,
+                    isAptoInforme = informe.isApto
+                )
             )
-        )*/
-        // ================================================
+        }
     }
+
+    enum class TipoOperacion { CREAR, ACTUALIZAR }
+
+    fun setTipoOperacion(tipo: TipoOperacion) {
+        state.value = state.value.copy(tipoOperacion = tipo)
+    }
+
+    data class CitaState(
+        val citas: List<Cita> = listOf(),
+        val citaSeleccionada: CitaFormulario = CitaFormulario(),
+        val tipoOperacion: TipoOperacion = TipoOperacion.CREAR
+    )
+
+    data class CitaFormulario(
+        val idCita: String = "",
+        val estadoCita: String = "",
+        val fechaCita: LocalDateTime = LocalDateTime.now(),
+        val nombreTrabajador: String = "",
+        val correoTrabajador: String = "",
+        val telefonoTrabajador: String = "",
+        val especialidadTrabajador: String = "",
+        val dniPropietario: String = "",
+        val nombrePropietario: String = "",
+        val apellidosPropietario: String = "",
+        val correoPropietario: String = "",
+        val telefonoPropietario: String = "",
+        val matriculaVehiculo: String = "",
+        val marcaVehiculo: String = "",
+        val modeloVehiculo: String = "",
+        val fechaMatriculacionVehiculo: LocalDate = LocalDate.now(),
+        val fechaRevisionVehiculo: LocalDate = LocalDate.now(),
+        val tipoMotorVehiculo: String = "",
+        val tipoVehiculo: String = "",
+        val frenadoInforme: Double = 0.0,
+        val contaminacionInforme: Double = 0.0,
+        val interiorInforme: Boolean = false,
+        val lucesInforme: Boolean = false,
+        val isAptoInforme: Boolean = false
+    )
 }
