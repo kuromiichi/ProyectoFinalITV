@@ -6,7 +6,6 @@ import dev.team.proyectofinalitv.services.database.DatabaseManager
 import mu.KotlinLogging
 import java.sql.Connection
 import java.sql.Statement
-import java.time.LocalDate
 
 class InformeRepositoryImpl(private val databaseManager: DatabaseManager) : CRURepository<Informe, Long> {
 

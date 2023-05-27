@@ -16,21 +16,22 @@ fun parseEspecialidad(especialidadString: String): Trabajador.Especialidad {
 }
 
 fun parseTipoMotor(tipoMotorString: String): Vehiculo.TipoMotor {
-    return when (tipoMotorString.lowercase()) {
-        "gasolina" -> Vehiculo.TipoMotor.GASOLINA
-        "diesel" -> Vehiculo.TipoMotor.DIESEL
-        "hibrido" -> Vehiculo.TipoMotor.HIBRIDO
-        "electrico" -> Vehiculo.TipoMotor.ELECTRICO
+    return when (tipoMotorString.uppercase()) {
+        "GASOLINA" -> Vehiculo.TipoMotor.GASOLINA
+        "DIESEL" -> Vehiculo.TipoMotor.DIESEL
+        "HIBRIDO" -> Vehiculo.TipoMotor.HIBRIDO
+        "ELECTRICO" -> Vehiculo.TipoMotor.ELECTRICO
         else -> throw IllegalArgumentException("Tipo de motor inválido: $tipoMotorString")
     }
 }
 
 fun parseTipoVehiculo(tipoVehiculoString: String): Vehiculo.TipoVehiculo {
-    return when (tipoVehiculoString.lowercase()) {
-        "coche" -> Vehiculo.TipoVehiculo.COCHE
-        "furgoneta" -> Vehiculo.TipoVehiculo.FURGONETA
-        "camion" -> Vehiculo.TipoVehiculo.CAMION
-        "motocicleta" -> Vehiculo.TipoVehiculo.MOTOCICLETA
+    return when (tipoVehiculoString.uppercase()) {
+        "COCHE" -> Vehiculo.TipoVehiculo.COCHE
+        "FURGONETA" -> Vehiculo.TipoVehiculo.FURGONETA
+        "CAMION" -> Vehiculo.TipoVehiculo.CAMION
+        "MOTOCICLETA" -> Vehiculo.TipoVehiculo.MOTOCICLETA
+        "ALL" -> Vehiculo.TipoVehiculo.ALL
         else -> throw IllegalArgumentException("Tipo de vehículo inválido: $tipoVehiculoString")
     }
 }

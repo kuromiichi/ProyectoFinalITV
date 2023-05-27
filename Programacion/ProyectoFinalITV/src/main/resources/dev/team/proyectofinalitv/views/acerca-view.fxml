@@ -1,13 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
-<VBox xmlns:fx="http://javafx.com/fxml" alignment="CENTER" spacing="20.0"
-      fx:controller="dev.team.proyectofinalitv.controllers.ProbandoCosillasController">
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-    </padding>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-    <Label fx:id="welcomeText"/>
-</VBox>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="264.0" prefWidth="449.0" xmlns="http://javafx.com/javafx/17.0.2-ea">
+   <top>
+      <AnchorPane prefHeight="128.0" prefWidth="423.0">
+            <Label prefHeight="17.0" prefWidth="28.0" scaleX="10.0" scaleY="9.0" text="AEA" textFill="#1d96e1" BorderPane.alignment="CENTER" />
+      </AnchorPane>
+   </top>
+   <bottom>
+      <VBox prefHeight="93.0" prefWidth="317.0" style="-fx-background-color: LightBlue;" translateY="51.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label translateX="18.0" translateY="-51.0" />
+            <Separator prefHeight="37.0" prefWidth="450.0" translateY="-18.0" />
+            <Label text="AEA, Asociación Española de Automovilismo" translateX="123.0" translateY="5.0" />
+            <Label text="QUIENES SOMOS:" translateX="18.0" translateY="-12.0" />
+            <Label text="Ángel, Emma y Adrian" translateX="149.0" translateY="-1.0" />
+            <Label text="678297832" translateX="90.0" translateY="7.0" />
+            <Label text="itv.aea@gmail.com" translateX="157.0" translateY="14.0" />
+            <Label text="Paseo de la Ermita 15. Leganés, Madrid. c.p: 28918." translateX="66.0" translateY="20.0" />
+            <Label text="JEFES DE LA EMPRESA:" translateX="18.0" translateY="-71.0" />
+            <Label text="TEĹEFONO:" translateX="18.0" translateY="-64.0" />
+            <Label text="CORREO ELECTRÓNICO:" translateX="18.0" translateY="-56.0" />
+            <Label text="CALLE:" translateX="18.0" translateY="-51.0" />
+            <Separator prefWidth="200.0" translateY="-49.0" />
+         </children>
+      </VBox>
+   </bottom>
+</BorderPane>

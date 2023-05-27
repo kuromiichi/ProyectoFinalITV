@@ -8,5 +8,5 @@ data class Cita(
     val fechaHora: LocalDateTime,
     val idInforme: Long,
     val usuarioTrabajador: String,
-    val matriculaVehiculo: String,
+    val matriculaVehiculo: String
 )
