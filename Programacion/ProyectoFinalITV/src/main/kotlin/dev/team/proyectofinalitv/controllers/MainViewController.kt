@@ -4,8 +4,8 @@ import com.github.michaelbull.result.onFailure
 import com.github.michaelbull.result.onSuccess
 import dev.team.proyectofinalitv.mappers.parseTipoVehiculo
 import dev.team.proyectofinalitv.models.Cita
-import dev.team.proyectofinalitv.router.RouterManager
-import dev.team.proyectofinalitv.router.RouterManager.getResourceAsStream
+import dev.team.proyectofinalitv.router.RoutesManager
+import dev.team.proyectofinalitv.router.RoutesManager.getResourceAsStream
 import dev.team.proyectofinalitv.viewmodels.CitaViewModel
 import javafx.beans.property.SimpleStringProperty
 import javafx.beans.value.ObservableValue
@@ -32,7 +32,7 @@ class MainViewController : KoinComponent {
     // Menu
 
     @FXML
-    private lateinit var menuAcerDe: MenuItem
+    private lateinit var menuAcercaDe: MenuItem
 
     @FXML
     private lateinit var menuCrearCita: MenuItem
@@ -171,27 +171,87 @@ class MainViewController : KoinComponent {
     @FXML
     private lateinit var buttonExportarCitaJson: Button
 
+    private lateinit var textFields: List<TextField>
+
 
     @FXML
     private fun initialize() {
         logger.debug { "Inicializando vista principal" }
 
+        initTextFields()
         initDetails()
         initBindings()
         initEvents()
     }
 
+    /**
+     * Inicializa los campos de texto del formulario
+     */
+    private fun initTextFields() {
+        textFields = listOf(
+            textCitaId,
+            textCitaEstado,
+            textCitaFecha,
+            textCitaHora,
+            textTrabajadorNombre,
+            textTrabajadorCorreo,
+            textTrabajadorTelefono,
+            textTrabajadorEspecialidad,
+            textPropietarioDni,
+            textPropietarioNombre,
+            textPropietarioTelefono,
+            textPropietarioCorreo,
+            textVehiculoMatricula,
+            textVehiculoMarca,
+            textVehiculoModelo,
+            textVehiculoMatriculacion,
+            textVehiculoRevision,
+            textVehiculoMotor,
+            textVehiculoTipo,
+            textInformeFrenado,
+            textInformeContaminacion,
+            textInformeInterior,
+            textInformeLuces,
+            textInformeResultado
+        )
+    }
+
+    /**
+     * Bloquea los campos de texto del formulario
+     */
+    private fun lockTextFields() {
+        logger.debug { "Bloqueando campos" }
+
+        textFields.forEach { it.isEditable = false }
+    }
+
+    /**
+     * Establece la opacidad de los campos de texto del formulario
+     */
+    private fun setOpacity() {
+        logger.debug { "Estableciendo opacidad de los campos de texto" }
+
+        textFields.forEach { it.opacity = 0.75 }
+    }
+
+    /**
+     * Inicializa los detalles de la vista (logo, bloquear campos, modificar opacidad)
+     */
     private fun initDetails() {
         logger.debug { "Inicializando detalles" }
 
         logo.image = Image(getResourceAsStream("image/logo.png"))
+
+        lockTextFields()
+        setOpacity()
     }
 
     private fun initBindings() {
         logger.debug { "Inicializando bindings" }
 
         // Filtrado por tipo de vehículo
-        comboTipoVehiculoFiltradoTabla.items = FXCollections.observableArrayList(citaViewModel.state.value.tipoVehiculoFilter)
+        comboTipoVehiculoFiltradoTabla.items =
+            FXCollections.observableArrayList(citaViewModel.state.value.tipoVehiculoFilter)
         comboTipoVehiculoFiltradoTabla.selectionModel.selectFirst()
 
         // Tabla (selector de cita)
@@ -200,16 +260,18 @@ class MainViewController : KoinComponent {
 
         columnId.cellValueFactory = PropertyValueFactory("id")
         columnEstado.cellValueFactory = PropertyValueFactory("estado")
-        columnFecha.cellValueFactory = Callback<TableColumn.CellDataFeatures<Cita, String>, ObservableValue<String>> {
-            val fecha = it.value.fechaHora.toLocalDate()
-            val fechaString = fecha.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
-            SimpleStringProperty(fechaString)
-        }
-        columnHora.cellValueFactory = Callback<TableColumn.CellDataFeatures<Cita, String>, ObservableValue<String>> {
-            val hora = it.value.fechaHora.toLocalTime()
-            val horaString = hora.format(DateTimeFormatter.ofPattern("HH:mm:ss"))
-            SimpleStringProperty(horaString)
-        }
+        columnFecha.cellValueFactory =
+            Callback<TableColumn.CellDataFeatures<Cita, String>, ObservableValue<String>> {
+                val fecha = it.value.fechaHora.toLocalDate()
+                val fechaString = fecha.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+                SimpleStringProperty(fechaString)
+            }
+        columnHora.cellValueFactory =
+            Callback<TableColumn.CellDataFeatures<Cita, String>, ObservableValue<String>> {
+                val hora = it.value.fechaHora.toLocalTime()
+                val horaString = hora.format(DateTimeFormatter.ofPattern("HH:mm:ss"))
+                SimpleStringProperty(horaString)
+            }
         columnMatricula.cellValueFactory = PropertyValueFactory("matriculaVehiculo")
 
         // Observable State
@@ -220,10 +282,11 @@ class MainViewController : KoinComponent {
     }
 
     private fun initEvents() {
+        logger.debug { "Inicializando eventos" }
 
         // Menu
         // Ventana de Acerca de
-        menuAcerDe.setOnAction {
+        menuAcercaDe.setOnAction {
             onAcercaDeAction()
         }
         // Crear cita
@@ -232,7 +295,7 @@ class MainViewController : KoinComponent {
         }
         // Exportar todas las cita
         menuExportarCitas.setOnAction {
-            onExportarTodasLasCitas()
+            onExportAll()
         }
 
         tableCitas.selectionModel.selectedItemProperty().addListener { _, _, newValue ->
@@ -283,16 +346,14 @@ class MainViewController : KoinComponent {
     private fun onCrearCitaAction() {
         logger.debug { "Creando una cita" }
 
-        citaViewModel.state.value = citaViewModel.state.value.copy(tipoOperacion = CitaViewModel.TipoOperacion.CREAR)
-
-        RouterManager.initDetailsCita()
+        RoutesManager.initCrearCita()
     }
 
     /**
      * Al pulsar el botón de editar, al State le indicamos que vamos a editar, si no tenemos una cita seleccionada en la
      * tabla, no se continuará el proceso de demostrar la ventana de edición de DETAILS.
      */
-    private fun onEditarCitaAction(){
+    private fun onEditarCitaAction() {
         logger.debug { "Editando una cita" }
 
         // Si no tenemos un item seleccionado, no continuamos editando
@@ -300,9 +361,7 @@ class MainViewController : KoinComponent {
             return
         }
 
-        citaViewModel.state.value = citaViewModel.state.value.copy(tipoOperacion = CitaViewModel.TipoOperacion.ACTUALIZAR)
-
-        RouterManager.initDetailsCita()
+        RoutesManager.initEditarCita()
     }
 
     /**
@@ -344,7 +403,7 @@ class MainViewController : KoinComponent {
             textTrabajadorNombre.text = newState.citaSeleccionada.nombreTrabajador
             textTrabajadorCorreo.text = newState.citaSeleccionada.correoTrabajador
             textTrabajadorTelefono.text = newState.citaSeleccionada.telefonoTrabajador
-            textTrabajadorEspecialidad.text = newState.citaSeleccionada.especialidadTrabajador
+            textTrabajadorEspecialidad.text = newState.citaSeleccionada.especialidadTrabajador.lowercase()
             textPropietarioDni.text = newState.citaSeleccionada.dniPropietario
             textPropietarioNombre.text = newState.citaSeleccionada.nombrePropietario
             textPropietarioTelefono.text = newState.citaSeleccionada.telefonoPropietario
@@ -354,8 +413,8 @@ class MainViewController : KoinComponent {
             textVehiculoModelo.text = newState.citaSeleccionada.modeloVehiculo
             textVehiculoMatriculacion.text = newState.citaSeleccionada.fechaMatriculacionVehiculo.toString()
             textVehiculoRevision.text = newState.citaSeleccionada.fechaRevisionVehiculo.toString()
-            textVehiculoMotor.text = newState.citaSeleccionada.tipoMotorVehiculo
-            textVehiculoTipo.text = newState.citaSeleccionada.tipoVehiculo
+            textVehiculoMotor.text = newState.citaSeleccionada.tipoMotorVehiculo.lowercase()
+            textVehiculoTipo.text = newState.citaSeleccionada.tipoVehiculo.lowercase()
             textInformeFrenado.text = newState.citaSeleccionada.frenadoInforme.toString()
             textInformeContaminacion.text = newState.citaSeleccionada.contaminacionInforme.toString()
             textInformeInterior.text = if (newState.citaSeleccionada.interiorInforme) apto else noApto
@@ -364,15 +423,15 @@ class MainViewController : KoinComponent {
         }
     }
 
-    private fun onAcercaDeAction(){
+    private fun onAcercaDeAction() {
         logger.debug { "Iniciando ventana Acerca de..." }
-        RouterManager.initAcercaDeStage()
+        RoutesManager.initAcercaDeStage()
     }
 
     /**
      * Exportar todas las citas almacenadas en la base de datos
      */
-    private fun onExportarTodasLasCitas() {
+    private fun onExportAll() {
         logger.debug { "Exportando todas las citas" }
 
         val citaDtoExport = citaViewModel.mapperListCitaDtoToExport()
@@ -380,9 +439,9 @@ class MainViewController : KoinComponent {
         val fileChooser = FileChooser()
         fileChooser.title = "Exportando todas las citas a JSON"
         fileChooser.extensionFilters.add(FileChooser.ExtensionFilter("JSON", "*.json"))
-        val file = fileChooser.showSaveDialog(RouterManager.getActiveStage())
+        val file = fileChooser.showSaveDialog(RoutesManager.getActiveStage())
 
-        RouterManager.getActiveStage().scene.cursor = Cursor.WAIT
+        RoutesManager.getActiveStage().scene.cursor = Cursor.WAIT
 
         if (file != null) {
             citaViewModel.exportAllToJson(file, citaDtoExport).onSuccess {
@@ -392,9 +451,13 @@ class MainViewController : KoinComponent {
                     mensaje = "Se han exportado todas las citas a JSON"
                 )
             }.onFailure { error ->
-                showAlertOperacion(alerta = Alert.AlertType.ERROR, title = "Error al exportar en JSON", mensaje = error.message)
+                showAlertOperacion(
+                    alerta = Alert.AlertType.ERROR,
+                    title = "Error al exportar en JSON",
+                    mensaje = error.message
+                )
             }
-            RouterManager.getActiveStage().scene.cursor = Cursor.DEFAULT
+            RoutesManager.getActiveStage().scene.cursor = Cursor.DEFAULT
         }
     }
 
@@ -417,9 +480,9 @@ class MainViewController : KoinComponent {
         val fileChooser = FileChooser()
         fileChooser.title = "Exportando cita en JSON"
         fileChooser.extensionFilters.add(FileChooser.ExtensionFilter("JSON", "*.json"))
-        val file = fileChooser.showSaveDialog(RouterManager.getActiveStage())
+        val file = fileChooser.showSaveDialog(RoutesManager.getActiveStage())
 
-        RouterManager.getActiveStage().scene.cursor = Cursor.WAIT
+        RoutesManager.getActiveStage().scene.cursor = Cursor.WAIT
 
         if (file != null) {
             citaViewModel.exportToJson(file, citaDtoExport).onSuccess {
@@ -429,9 +492,13 @@ class MainViewController : KoinComponent {
                     mensaje = "Se ha exportado la cita en JSON"
                 )
             }.onFailure { error ->
-                showAlertOperacion(alerta = Alert.AlertType.ERROR, title = "Error al exportar en JSON", mensaje = error.message)
+                showAlertOperacion(
+                    alerta = Alert.AlertType.ERROR,
+                    title = "Error al exportar en JSON",
+                    mensaje = error.message
+                )
             }
-            RouterManager.getActiveStage().scene.cursor = Cursor.DEFAULT
+            RoutesManager.getActiveStage().scene.cursor = Cursor.DEFAULT
         }
     }
 
@@ -446,9 +513,9 @@ class MainViewController : KoinComponent {
         val fileChooser = FileChooser()
         fileChooser.title = "Exportando cita en MarkDown"
         fileChooser.extensionFilters.add(FileChooser.ExtensionFilter("MARKDOWN", "*.md"))
-        val file = fileChooser.showSaveDialog(RouterManager.getActiveStage())
+        val file = fileChooser.showSaveDialog(RoutesManager.getActiveStage())
 
-        RouterManager.getActiveStage().scene.cursor = Cursor.WAIT
+        RoutesManager.getActiveStage().scene.cursor = Cursor.WAIT
 
         if (file != null) {
             citaViewModel.exportToMarkDown(file, citaDtoExport).onSuccess {
@@ -458,9 +525,13 @@ class MainViewController : KoinComponent {
                     mensaje = "Se ha exportado la cita en MarkDown"
                 )
             }.onFailure { error ->
-                showAlertOperacion(alerta = Alert.AlertType.ERROR, title = "Error al exportar en MarkDown", mensaje = error.message)
+                showAlertOperacion(
+                    alerta = Alert.AlertType.ERROR,
+                    title = "Error al exportar en MarkDown",
+                    mensaje = error.message
+                )
             }
-            RouterManager.getActiveStage().scene.cursor = Cursor.DEFAULT
+            RoutesManager.getActiveStage().scene.cursor = Cursor.DEFAULT
         }
     }
 

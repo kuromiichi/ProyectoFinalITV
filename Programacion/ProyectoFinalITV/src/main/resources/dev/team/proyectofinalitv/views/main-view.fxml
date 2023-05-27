@@ -28,13 +28,13 @@
     <MenuBar prefWidth="916.0" VBox.vgrow="NEVER">
         <Menu mnemonicParsing="false" text="Archivo">
          <items>
-            <MenuItem fx:id="menuCrearCita" mnemonicParsing="false" text="Crear cita+" />
+            <MenuItem fx:id="menuCrearCita" mnemonicParsing="false" text="Crear cita" />
             <MenuItem fx:id="menuExportarCitas" mnemonicParsing="false" text="Exportar citas" />
          </items>
         </Menu>
         <Menu mnemonicParsing="false" text="Ayuda">
          <items>
-            <MenuItem fx:id="menuAcerDe" mnemonicParsing="false" text="Acerca de AEA" />
+            <MenuItem fx:id="menuAcercaDe" mnemonicParsing="false" text="Acerca de AEA" />
          </items></Menu>
     </MenuBar>
     <AnchorPane VBox.vgrow="ALWAYS">
