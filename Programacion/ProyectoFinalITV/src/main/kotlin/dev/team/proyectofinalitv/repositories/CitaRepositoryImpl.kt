@@ -41,9 +41,9 @@ class CitaRepositoryImpl(private val databaseManager: DatabaseManager) : CitaRep
                                 estado = rs.getString(2),
                                 fechaHora = LocalDateTime.parse(rs.getString(3)),
                                 idInforme = rs.getLong(4),
-                                matriculaVehiculo = rs.getString(5),
-                                usuarioTrabajador = rs.getString(6)
-                            )
+                                usuarioTrabajador = rs.getString(5),
+                                matriculaVehiculo = rs.getString(6)
+                                )
                         )
                     }
                 }
@@ -82,7 +82,7 @@ class CitaRepositoryImpl(private val databaseManager: DatabaseManager) : CitaRep
         con.use { con ->
             val updateQuery = """
                 UPDATE Cita
-                SET estado = ?, fecha_hora = ?, id_informe = ?, matricula_vehiculo = ?, usuario_trabajador = ?
+                SET estado = ?, fecha_hora = ?, id_informe = ?, usuario_trabajador = ?, matricula_vehiculo = ?
                 WHERE id = ?
             """.trimIndent()
             val updateStmt = con.prepareStatement(updateQuery)
@@ -90,8 +90,8 @@ class CitaRepositoryImpl(private val databaseManager: DatabaseManager) : CitaRep
                 stmt.setString(1, item.estado)
                 stmt.setString(2, item.fechaHora.toString())
                 stmt.setLong(3, item.idInforme)
-                stmt.setString(4, item.matriculaVehiculo)
-                stmt.setString(5, item.usuarioTrabajador)
+                stmt.setString(4, item.usuarioTrabajador)
+                stmt.setString(5, item.matriculaVehiculo)
                 stmt.setLong(6, item.id)
 
                 stmt.executeUpdate()

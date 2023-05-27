@@ -7,5 +7,8 @@ import java.io.File
 
 interface CitaStorage {
     fun exportToJson(file: File, citaDto: CitaDtoToExport): Result<Unit, CitaError>
-    fun exportToMarkdown(file: File, citaDto: CitaDtoToExport)
+
+    fun exportAllToJson(file: File, listCitaDto: List<CitaDtoToExport>): Result<Unit, CitaError>
+
+    fun exportToMarkdown(file: File, citaDto: CitaDtoToExport): Result<Unit, CitaError>
 }

@@ -23,6 +23,7 @@ data class Vehiculo(
         COCHE,
         FURGONETA,
         CAMION,
-        MOTOCICLETA
+        MOTOCICLETA,
+        ALL
     }
 }

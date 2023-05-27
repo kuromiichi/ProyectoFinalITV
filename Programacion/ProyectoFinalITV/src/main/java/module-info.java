@@ -31,4 +31,12 @@ module dev.team.proyectofinalitv {
     // Controller to JavaFX
     opens dev.team.proyectofinalitv.controllers to javafx.fxml;
     exports dev.team.proyectofinalitv.controllers;
+
+    // Models to JavaFX
+    opens dev.team.proyectofinalitv.models to javafx.fxml;
+    exports dev.team.proyectofinalitv.models;
+
+    // Dto to GSON
+    opens dev.team.proyectofinalitv.dto to com.google.gson;
+    exports dev.team.proyectofinalitv.dto;
 }

@@ -4,12 +4,13 @@ import dev.team.proyectofinalitv.AppMain
 import javafx.fxml.FXMLLoader
 import javafx.scene.Scene
 import javafx.scene.image.Image
+import javafx.stage.Modality
 import javafx.stage.Stage
 import mu.KotlinLogging
 import java.io.InputStream
 import java.net.URL
 
-object RoutesManager {
+object RouterManager {
 
     private val logger = KotlinLogging.logger {}
 
@@ -22,10 +23,12 @@ object RoutesManager {
         return _activeStage
     }
 
+    private const val logoPath = "image/logo-white.png"
+
     enum class TypeView(val pathFxml: String) {
         MAIN("views/main-view.fxml"),
         ACERCA_DE("views/acerca-view.fxml"),
-        UPDATE_CITA("views/update-cita-view.fxml"),
+        DETAILS_CITA("views/details-cita-view.fxml"),
     }
 
     fun initMainView(stage: Stage) {
@@ -34,16 +37,13 @@ object RoutesManager {
         // Cargamos el fxml para poder leerlo del resources (es estático)
         val fxmlLoader = FXMLLoader(getResource(TypeView.MAIN.pathFxml))
 
-        // Pasar instancia del controlador al FXMLLoader
-        //fxmlLoader.setController(mainVieController)
-
         // Configuración de la escena
-        val scene = Scene(fxmlLoader.load(), 808.0, 486.0)
+        val scene = Scene(fxmlLoader.load(), 978.0, 700.0)
         stage.title = "ITV"
         stage.isResizable = false
 
         // Añadir icono desde los recursos
-        val iconStream = getResourceAsStream("icons/about.png")
+        val iconStream = getResourceAsStream(logoPath)
         val icon = Image(iconStream)
         stage.icons.add(icon)
 
@@ -54,6 +54,62 @@ object RoutesManager {
 
         // Mostrarla
         _mainStage.show()
+    }
+
+    // Ventana (AcercaDe): Será ventana nueva Modal
+    fun initAcercaDeStage() {
+        logger.debug { "Inicializando AcercaDeStage" }
+
+        // Cargamos el fxml para poder leerlo del resources (es estático)
+        val fxmlLoader = FXMLLoader(getResource(TypeView.ACERCA_DE.pathFxml))
+
+        // Configuración de la escena
+        val scene = Scene(fxmlLoader.load(), 422.0, 106.0)
+        // Es nueva ventana = nueva stage
+        val stage = Stage()
+        stage.title = "Acerca De AEA"
+        stage.isResizable = false
+
+        // Añadir icono desde los recursos
+        val iconStream = getResourceAsStream(logoPath)
+        val icon = Image(iconStream)
+        stage.icons.add(icon)
+
+        // Control de Stages y Escenas
+        stage.scene = scene
+        stage.initOwner(_mainStage)
+        stage.initModality(Modality.WINDOW_MODAL)
+
+        // Mostrarla
+        stage.show()
+    }
+
+    // Ventana de Detalles (Para CREAR y ACTUALIZAR): Será ventana nueva Modal
+    fun initDetailsCita() {
+        logger.debug { "Inicializando Edición de Cita" }
+
+        // Cargamos el fxml para poder leerlo del resources (es estático)
+        val fxmlLoader = FXMLLoader(getResource(TypeView.DETAILS_CITA.pathFxml))
+
+        // Configuración de la escena
+        val scene = Scene(fxmlLoader.load(), 350.0, 400.0)
+        // Es nueva ventana = nueva stage
+        val stage = Stage()
+        stage.title = "Edición de cita"
+        stage.isResizable = false
+
+        // Añadir icono desde los recursos
+        val iconStream = getResourceAsStream(logoPath)
+        val icon = Image(iconStream)
+        stage.icons.add(icon)
+
+        // Control de Stages y Escenas
+        stage.scene = scene
+        stage.initOwner(_mainStage)
+        stage.initModality(Modality.WINDOW_MODAL)
+
+        // Mostrarla
+        stage.show()
     }
 
     /**

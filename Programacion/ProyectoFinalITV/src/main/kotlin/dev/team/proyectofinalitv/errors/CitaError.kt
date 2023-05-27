@@ -8,5 +8,6 @@ sealed class CitaError(val message: String) {
     class UsuarioTrabajadorInvalid(message: String) : CitaError(message)
     class MatriculaVehiculoInvalid(message: String) : CitaError(message)
     class NotFound(message: String) : CitaError(message)
-    class ExportInvalid : CitaError("Exportación fallida")
+    class ExportInvalidJson : CitaError("Exportación fallida de JSON")
+    class ExportInvalidMarkDown : CitaError("Exportación fallida de HTML")
 }
