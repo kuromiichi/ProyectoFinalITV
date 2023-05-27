@@ -163,7 +163,7 @@ class MainViewController : KoinComponent {
     // Botones del formulario
 
     @FXML
-    private lateinit var buttonEditar: Button
+    private lateinit var buttonEditarCita: Button
 
     @FXML
     private lateinit var buttonExportarCitaHtml: Button
@@ -228,7 +228,7 @@ class MainViewController : KoinComponent {
         }
         // Crear cita
         menuCrearCita.setOnAction {
-            TODO()
+            onCrearCitaAction()
         }
         // Exportar todas las cita
         menuExportarCitas.setOnAction {
@@ -265,12 +265,44 @@ class MainViewController : KoinComponent {
         }
 
         // Botones
+        buttonEditarCita.setOnAction {
+            onEditarCitaAction()
+        }
         buttonExportarCitaJson.setOnAction {
             onExportarActionJson()
         }
         buttonExportarCitaHtml.setOnAction {
             onExportarActionMarkDown()
         }
+    }
+
+    /**
+     * Al introducirnos en el menú y decidir crear, al State le indicamos que vamos a crear, si no tenemos
+     * y continuará el proceso de demostrar la ventana de creación de DETAILS.
+     */
+    private fun onCrearCitaAction() {
+        logger.debug { "Creando una cita" }
+
+        citaViewModel.state.value = citaViewModel.state.value.copy(tipoOperacion = CitaViewModel.TipoOperacion.CREAR)
+
+        RouterManager.initDetailsCita()
+    }
+
+    /**
+     * Al pulsar el botón de editar, al State le indicamos que vamos a editar, si no tenemos una cita seleccionada en la
+     * tabla, no se continuará el proceso de demostrar la ventana de edición de DETAILS.
+     */
+    private fun onEditarCitaAction(){
+        logger.debug { "Editando una cita" }
+
+        // Si no tenemos un item seleccionado, no continuamos editando
+        if (tableCitas.selectionModel.selectedItem == null) {
+            return
+        }
+
+        citaViewModel.state.value = citaViewModel.state.value.copy(tipoOperacion = CitaViewModel.TipoOperacion.ACTUALIZAR)
+
+        RouterManager.initDetailsCita()
     }
 
     /**

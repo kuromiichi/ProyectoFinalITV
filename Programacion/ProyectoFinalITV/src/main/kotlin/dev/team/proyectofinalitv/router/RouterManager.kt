@@ -23,10 +23,12 @@ object RouterManager {
         return _activeStage
     }
 
+    private const val logoPath = "image/logo-white.png"
+
     enum class TypeView(val pathFxml: String) {
         MAIN("views/main-view.fxml"),
         ACERCA_DE("views/acerca-view.fxml"),
-        UPDATE_CITA("views/update-cita-view.fxml"),
+        DETAILS_CITA("views/details-cita-view.fxml"),
     }
 
     fun initMainView(stage: Stage) {
@@ -41,7 +43,7 @@ object RouterManager {
         stage.isResizable = false
 
         // Añadir icono desde los recursos
-        val iconStream = getResourceAsStream("image/logo-white.png")
+        val iconStream = getResourceAsStream(logoPath)
         val icon = Image(iconStream)
         stage.icons.add(icon)
 
@@ -54,7 +56,7 @@ object RouterManager {
         _mainStage.show()
     }
 
-    // Será ventana nueva Modal
+    // Ventana (AcercaDe): Será ventana nueva Modal
     fun initAcercaDeStage() {
         logger.debug { "Inicializando AcercaDeStage" }
 
@@ -69,7 +71,35 @@ object RouterManager {
         stage.isResizable = false
 
         // Añadir icono desde los recursos
-        val iconStream = getResourceAsStream("image/logo-white.png")
+        val iconStream = getResourceAsStream(logoPath)
+        val icon = Image(iconStream)
+        stage.icons.add(icon)
+
+        // Control de Stages y Escenas
+        stage.scene = scene
+        stage.initOwner(_mainStage)
+        stage.initModality(Modality.WINDOW_MODAL)
+
+        // Mostrarla
+        stage.show()
+    }
+
+    // Ventana de Detalles (Para CREAR y ACTUALIZAR): Será ventana nueva Modal
+    fun initDetailsCita() {
+        logger.debug { "Inicializando Edición de Cita" }
+
+        // Cargamos el fxml para poder leerlo del resources (es estático)
+        val fxmlLoader = FXMLLoader(getResource(TypeView.DETAILS_CITA.pathFxml))
+
+        // Configuración de la escena
+        val scene = Scene(fxmlLoader.load(), 350.0, 400.0)
+        // Es nueva ventana = nueva stage
+        val stage = Stage()
+        stage.title = "Edición de cita"
+        stage.isResizable = false
+
+        // Añadir icono desde los recursos
+        val iconStream = getResourceAsStream(logoPath)
         val icon = Image(iconStream)
         stage.icons.add(icon)
 

@@ -50,56 +50,6 @@ class CitaViewModel(
      *  @param matricula
      *  @param fecha
      */
-    fun citaFilteredList2(tipo: Vehiculo.TipoVehiculo?, matricula: String?, fecha: LocalDate?): List<Cita?> {
-        logger.debug { "Filtrando lista en función de: $tipo, con la matrícula $matricula y fecha $fecha" }
-
-        val vehiculos = vehiculoRepository.findAll()
-
-        return state.value.citas.filter { cita ->
-            // Filtramos por el tipo del vehículo
-            when (tipo) {
-                Vehiculo.TipoVehiculo.COCHE -> {
-                    val coches = vehiculos.filter { it.tipoVehiculo == tipo }
-                    val matriculasCoche = coches.map { it.matricula }
-                    matriculasCoche.contains(cita.matriculaVehiculo)
-                }
-                Vehiculo.TipoVehiculo.CAMION -> {
-                    val camiones = vehiculos.filter { it.tipoVehiculo == tipo }
-                    val matriculasCamion = camiones.map { it.matricula }
-                    matriculasCamion.contains(cita.matriculaVehiculo)
-                }
-                Vehiculo.TipoVehiculo.FURGONETA -> {
-                    val furgonetas = vehiculos.filter { it.tipoVehiculo == tipo }
-                    val matriculasFurgoneta = furgonetas.map { it.matricula }
-                    matriculasFurgoneta.contains(cita.matriculaVehiculo)
-                }
-                Vehiculo.TipoVehiculo.MOTOCICLETA -> {
-                    val motocicletas: List<Vehiculo> = vehiculos.filter { it.tipoVehiculo == tipo }
-                    val matriculasMotocicleta = motocicletas.map { it.matricula }
-                    matriculasMotocicleta.contains(cita.matriculaVehiculo)
-                }
-                // Cualquier otro valor del filtro nos dará todos los items
-                else -> true
-            }
-        }.filter { cita ->
-            // En caso de darnos una matrícula filtramos por esa matrícula
-            if (matricula != null) {
-                cita.matriculaVehiculo.contains(matricula)
-            } else {
-                // Si es nula nos devuelve todas las citas
-                true
-            }
-        }.filter { cita ->
-            // En caso de darnos una fecha filtramos por esa fecha
-            if (fecha != null) {
-                cita.fechaHora.toLocalDate() == fecha
-            } else {
-                // Si es nula nos devuelve todas las citas
-                true
-            }
-        }
-    }
-
     fun citaFilteredList(tipo: Vehiculo.TipoVehiculo?, matricula: String?, fecha: LocalDate?): List<Cita?> {
         val vehiculos = vehiculoRepository.findAll()
 
