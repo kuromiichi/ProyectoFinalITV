@@ -4,7 +4,6 @@ import com.github.michaelbull.result.Err
 import com.github.michaelbull.result.Ok
 import com.github.michaelbull.result.Result
 import dev.team.proyectofinalitv.controllers.CrearCitaFormulario
-import dev.team.proyectofinalitv.controllers.CrearCitaViewController
 import dev.team.proyectofinalitv.dto.*
 import dev.team.proyectofinalitv.errors.CitaError
 import dev.team.proyectofinalitv.errors.CrearCitaError
@@ -15,16 +14,15 @@ import dev.team.proyectofinalitv.services.storage.CitaStorage
 import javafx.beans.property.SimpleObjectProperty
 import mu.KotlinLogging
 import java.io.File
-import java.lang.reflect.Modifier
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 
 class CitaViewModel(
-    private val propietarioRepositoryMock: CRURepository<Propietario, String>,
-    private val vehiculoRepositoryMock: CRURepository<Vehiculo, String>,
-    private val informeRepositoryMock: CRURepository<Informe, Long>,
-    private val trabajadorRepositoryMock: CRURepository<Trabajador, String>,
+    private val propietarioRepository: CRURepository<Propietario, String>,
+    private val vehiculoRepository: CRURepository<Vehiculo, String>,
+    private val informeRepository: CRURepository<Informe, Long>,
+    private val trabajadorRepository: CRURepository<Trabajador, String>,
     private val citaRepository: CitaRepository,
     private val storage: CitaStorage
 ) {
@@ -64,7 +62,7 @@ class CitaViewModel(
      *  @param fecha
      */
     fun getListCitaFiltered(tipo: Vehiculo.TipoVehiculo?, matricula: String?, fecha: LocalDate?): List<Cita?> {
-        val vehiculos = vehiculoRepositoryMock.findAll()
+        val vehiculos = vehiculoRepository.findAll()
 
         return state.value.citas.filter { cita ->
             // Filtramos por el tipo del vehículo
@@ -79,6 +77,11 @@ class CitaViewModel(
 
             tipoValido && matriculaValida && fechaValida
         }
+    }
+
+    // TODO
+    fun modificarCita(citaFormulario: CrearCitaFormulario): Result<Cita, CrearCitaError> {
+        return Err(CrearCitaError.CitaYaExiste("Cambiar al de modificar"))
     }
 
     /**
@@ -152,10 +155,10 @@ class CitaViewModel(
     fun updateCitaSeleccionada(cita: Cita) {
         logger.debug { "Actualizando cita seleccionada: $cita" }
 
-        val trabajador = trabajadorRepositoryMock.findById(cita.usuarioTrabajador)
-        val vehiculo = vehiculoRepositoryMock.findById(cita.matriculaVehiculo)
-        val informe = informeRepositoryMock.findById(cita.idInforme)
-        val propietario = vehiculo?.let { propietarioRepositoryMock.findById(it.dniPropietario) }
+        val trabajador = trabajadorRepository.findById(cita.usuarioTrabajador)
+        val vehiculo = vehiculoRepository.findById(cita.matriculaVehiculo)
+        val informe = informeRepository.findById(cita.idInforme)
+        val propietario = vehiculo?.let { propietarioRepository.findById(it.dniPropietario) }
 
         var citaSeleccionada = CitaFormulario()
 
@@ -203,10 +206,10 @@ class CitaViewModel(
      * Transformación de una Cita a una CitaDto para exportar
      */
     fun mapperCitaToCitaDtoToExport(citaDb: Cita?): CitaDtoToExport {
-        val trabajadorDeCitaDb = trabajadorRepositoryMock.findById(citaDb!!.usuarioTrabajador)
-        val informeDeCitaDb = informeRepositoryMock.findById(citaDb.idInforme)
-        val vehiculoDeCitaDb = vehiculoRepositoryMock.findById(citaDb.matriculaVehiculo)
-        val propietarioDeCitaDb = vehiculoDeCitaDb?.let { propietarioRepositoryMock.findById(it.dniPropietario) }
+        val trabajadorDeCitaDb = trabajadorRepository.findById(citaDb!!.usuarioTrabajador)
+        val informeDeCitaDb = informeRepository.findById(citaDb.idInforme)
+        val vehiculoDeCitaDb = vehiculoRepository.findById(citaDb.matriculaVehiculo)
+        val propietarioDeCitaDb = vehiculoDeCitaDb?.let { propietarioRepository.findById(it.dniPropietario) }
 
         val citaDto = CitaDto(
             citaId = citaDb.id,

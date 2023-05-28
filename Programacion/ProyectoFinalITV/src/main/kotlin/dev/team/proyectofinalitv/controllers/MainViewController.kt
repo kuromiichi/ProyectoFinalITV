@@ -358,6 +358,8 @@ class MainViewController : KoinComponent {
 
         // Si no tenemos un item seleccionado, no continuamos editando
         if (tableCitas.selectionModel.selectedItem == null) {
+            logger.debug { "Cita no seleccionada" }
+
             return
         }
 

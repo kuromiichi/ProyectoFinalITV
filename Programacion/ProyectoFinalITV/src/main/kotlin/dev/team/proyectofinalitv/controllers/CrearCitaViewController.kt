@@ -26,7 +26,6 @@ class CrearCitaViewController : KoinComponent {
 
     private val logger = KotlinLogging.logger {}
 
-
     private val citaViewModel: CitaViewModel by inject()
 
     @FXML
@@ -186,7 +185,7 @@ class CrearCitaViewController : KoinComponent {
     }
 
     private fun limpiarFormulario() {
-        dateCita.value = null
+        dateCita.value = LocalDate.now()
         comboCitaHora.value = null
         comboCitaTrabajador.value = null
         textPropietarioDni.text = ""
@@ -197,8 +196,8 @@ class CrearCitaViewController : KoinComponent {
         textVehiculoMatricula.text = ""
         textVehiculoMarca.text = ""
         textVehiculoModelo.text = ""
-        dateVehiculoMatriculacion.value = null
-        dateVehiculoRevision.value = null
+        dateVehiculoMatriculacion.value = LocalDate.now()
+        dateVehiculoRevision.value = LocalDate.now()
         comboVehiculoMotor.value = null
         comboVehiculoTipo.value = null
     }

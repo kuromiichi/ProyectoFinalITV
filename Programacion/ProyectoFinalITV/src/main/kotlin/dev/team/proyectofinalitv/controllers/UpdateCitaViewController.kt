@@ -1,16 +1,19 @@
 package dev.team.proyectofinalitv.controllers
 
+import com.github.michaelbull.result.andThen
+import com.github.michaelbull.result.onFailure
+import com.github.michaelbull.result.onSuccess
 import dev.team.proyectofinalitv.models.Vehiculo
+import dev.team.proyectofinalitv.validators.validate
 import dev.team.proyectofinalitv.viewmodels.CitaViewModel
 import javafx.collections.FXCollections
 import javafx.fxml.FXML
-import javafx.scene.control.Button
-import javafx.scene.control.ComboBox
-import javafx.scene.control.DatePicker
-import javafx.scene.control.TextField
+import javafx.scene.control.*
+import javafx.stage.Stage
 import mu.KotlinLogging
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import java.time.LocalDate
 import java.time.LocalTime
 
 class UpdateCitaViewController: KoinComponent {
@@ -176,6 +179,53 @@ class UpdateCitaViewController: KoinComponent {
     private fun actualizarCita(){
         logger.debug { "Actualizar cita" }
 
+        //TODO("Campo de apellidos falta")
+
+        val cita = CrearCitaFormulario(
+            datePickerCitaFecha.value?.toString() ?: "",
+            comboCitaHora.value ?: "",
+        comboTrabajador.value ?: "",
+            textPropietarioDni.text,
+            textPropietarioNombre.text,
+"Cambiar" ,
+            textPropietarioCorreo.text,
+            textPropietarioTelefono.text,
+            textVehiculoMatricula.text,
+            textVehiculoMarca.text,
+            textVehiculoModelo.text,
+            datePickerMatriculacion.value?.toString() ?: "",
+            datePickerRevision.value?.toString() ?: "",
+            comboMotor.value ?: "",
+            comboVehiculo.value ?: ""
+        )
+
+        cita.validate().andThen { citaViewModel.modificarCita(it) }
+            .onSuccess { nuevaCita ->
+                logger.debug { "Cita creada correctamente" }
+
+                val citas = citaViewModel.state.value.citas.toMutableList()
+                citas.add(nuevaCita)
+                citaViewModel.state.value = citaViewModel.state.value.copy(citas = citas)
+
+                showAlertOperacion(
+                    Alert.AlertType.INFORMATION,
+                    title = "Cita actualizar",
+                    header = "Cita actualizada y almacenada correctamente",
+                    mensaje = "Se ha actualizar en el sistema"
+                )
+
+                val stage = buttonGuardarCita.scene.window as Stage
+                stage.close()
+            }.onFailure { error ->
+                logger.debug { "Error al actualizar la cita ${error.message}" }
+
+                showAlertOperacion(
+                    Alert.AlertType.ERROR,
+                    title = "Error al actualizar la cita",
+                    header = "Se ha producido un error al actualizar la cita",
+                    mensaje = "Se ha producido un error al actualizar en el sistema: \n${error.message}"
+                )
+            }
     }
 
     /**
@@ -239,7 +289,20 @@ class UpdateCitaViewController: KoinComponent {
         textVehiculoModelo.text = ""
         textInformeFrenado.text = ""
         textInformeContaminacion.text = ""
-        datePickerMatriculacion.value = null
-        datePickerRevision.value = null
+        datePickerMatriculacion.value = LocalDate.now()
+        datePickerRevision.value = LocalDate.now()
+    }
+
+    private fun showAlertOperacion(
+        alerta: Alert.AlertType = Alert.AlertType.CONFIRMATION,
+        title: String = "",
+        header: String = "",
+        mensaje: String = "",
+    ) {
+        Alert(alerta).apply {
+            this.title = title
+            this.headerText = header
+            this.contentText = mensaje
+        }.showAndWait()
     }
 }

@@ -419,16 +419,4 @@ class CitaViewModelTest {
         // Verificar los resultados
         assertTrue(Ok(Unit) == result)
     }
-
-    @Test
-    fun setTipoOperacion() {
-        val tipo = CitaViewModel.TipoOperacion.ACTUALIZAR // Tipo de operación a establecer
-
-        // Ejecutar el método que se va a probar
-        viewModel.setTipoOperacion(tipo)
-
-        // Verificar el estado actualizado
-        val newState = viewModel.state.value
-        assertEquals(tipo, newState.tipoOperacion)
-    }
 }
