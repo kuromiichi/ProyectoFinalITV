@@ -1,7 +1,7 @@
 package dev.team.proyectofinalitv
 
 import dev.team.proyectofinalitv.di.koinModule
-import dev.team.proyectofinalitv.router.RouterManager
+import dev.team.proyectofinalitv.router.RoutesManager
 import javafx.application.Application
 import javafx.stage.Stage
 import org.koin.core.context.startKoin
@@ -15,7 +15,7 @@ class AppMain : Application() {
         }
 
         // Carga de la ventana principal
-        RouterManager.apply { app = this@AppMain }
+        RoutesManager.apply { app = this@AppMain }
             .run { initMainView(stage) }
     }
 }

@@ -3,7 +3,7 @@ package dev.team.proyectofinalitv.models
 import java.time.LocalDateTime
 
 data class Cita(
-    val id: Long,
+    val id: Long = 0L,
     val estado: String,
     val fechaHora: LocalDateTime,
     val idInforme: Long,

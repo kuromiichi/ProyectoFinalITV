@@ -10,7 +10,7 @@ import mu.KotlinLogging
 import java.io.InputStream
 import java.net.URL
 
-object RouterManager {
+object RoutesManager {
 
     private val logger = KotlinLogging.logger {}
 
@@ -27,8 +27,9 @@ object RouterManager {
 
     enum class TypeView(val pathFxml: String) {
         MAIN("views/main-view.fxml"),
+        CREAR_CITA("views/crear-cita-view.fxml"),
         ACERCA_DE("views/acerca-view.fxml"),
-        DETAILS_CITA("views/details-cita-view.fxml"),
+        UPDATE_CITA("views/modificar-cita-view.fxml"),
     }
 
     fun initMainView(stage: Stage) {
@@ -84,18 +85,46 @@ object RouterManager {
         stage.show()
     }
 
-    // Ventana de Detalles (Para CREAR y ACTUALIZAR): Será ventana nueva Modal
-    fun initDetailsCita() {
+    // Ventana de edición: ventana nueva Modal
+    fun initEditarCita() {
         logger.debug { "Inicializando Edición de Cita" }
 
         // Cargamos el fxml para poder leerlo del resources (es estático)
-        val fxmlLoader = FXMLLoader(getResource(TypeView.DETAILS_CITA.pathFxml))
+        val fxmlLoader = FXMLLoader(getResource(TypeView.UPDATE_CITA.pathFxml))
 
         // Configuración de la escena
-        val scene = Scene(fxmlLoader.load(), 350.0, 400.0)
+        val scene = Scene(fxmlLoader.load(), 520.0, 620.0)
         // Es nueva ventana = nueva stage
         val stage = Stage()
         stage.title = "Edición de cita"
+        stage.isResizable = false
+
+        // Añadir icono desde los recursos
+        val iconStream = getResourceAsStream(logoPath)
+        val icon = Image(iconStream)
+        stage.icons.add(icon)
+
+        // Control de Stages y Escenas
+        stage.scene = scene
+        stage.initOwner(_mainStage)
+        stage.initModality(Modality.WINDOW_MODAL)
+
+        // Mostrarla
+        stage.show()
+    }
+
+    // Ventana de creación de cita: ventana modal
+    fun initCrearCita() {
+        logger.debug { "Inicializando Creación de Cita" }
+
+        // Cargamos el fxml para poder leerlo del resources (es estático)
+        val fxmlLoader = FXMLLoader(getResource(TypeView.CREAR_CITA.pathFxml))
+
+        // Configuración de la escena
+        val scene = Scene(fxmlLoader.load(), 520.0, 620.0)
+        // Es nueva ventana = nueva stage
+        val stage = Stage()
+        stage.title = "Creación de cita"
         stage.isResizable = false
 
         // Añadir icono desde los recursos

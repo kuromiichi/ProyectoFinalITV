@@ -1,8 +1,13 @@
 package dev.team.proyectofinalitv.viewmodels
 
+import com.github.michaelbull.result.Err
+import com.github.michaelbull.result.Ok
 import com.github.michaelbull.result.Result
+import dev.team.proyectofinalitv.controllers.CrearCitaFormulario
+import dev.team.proyectofinalitv.controllers.CrearCitaViewController
 import dev.team.proyectofinalitv.dto.*
 import dev.team.proyectofinalitv.errors.CitaError
+import dev.team.proyectofinalitv.errors.CrearCitaError
 import dev.team.proyectofinalitv.models.*
 import dev.team.proyectofinalitv.repositories.*
 import dev.team.proyectofinalitv.repositories.base.CRURepository
@@ -10,7 +15,9 @@ import dev.team.proyectofinalitv.services.storage.CitaStorage
 import javafx.beans.property.SimpleObjectProperty
 import mu.KotlinLogging
 import java.io.File
+import java.lang.reflect.Modifier
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.LocalTime
 
 class CitaViewModel(
@@ -23,8 +30,14 @@ class CitaViewModel(
 ) {
     private val logger = KotlinLogging.logger {}
 
-    // Gestión del estado de la vista
+    // Gestión del estado de la vista principal
     val state = SimpleObjectProperty(CitaState())
+
+    // Gestión del estado de la vista de creación
+    val crearState = SimpleObjectProperty(CrearCitaState())
+
+    // Gestión del estado de la vista de edición
+    val modificarState = SimpleObjectProperty(ModificarCitaState())
 
     init {
         initialUpdateState()
@@ -66,6 +79,69 @@ class CitaViewModel(
 
             tipoValido && matriculaValida && fechaValida
         }
+    }
+
+    /**
+     *  Guardar en orden respecto a Integridad Referencial, previamente deben estar validados todos los campos
+     *  @param propietario datos del propietario
+     *  @param vehiculo datos del vehículo
+     *  @param cita datos de la cita
+     *  @return la cita si se ha guardado correctamente, o un error si la cita ya existe en el sistema
+     */
+    fun saveCita(citaFormulario: CrearCitaFormulario): Result<Cita, CrearCitaError> {
+        logger.debug { "Guardando nueva cita" }
+        val cita = Cita(
+            estado = "Pendiente",
+            fechaHora = LocalDateTime.of(
+                LocalDate.parse(citaFormulario.fecha),
+                LocalTime.parse(citaFormulario.hora)
+            ),
+            idInforme = informeRepository.findAll().maxOf { it.id } + 1,
+            usuarioTrabajador = citaFormulario.trabajador.substringAfter("(").substringBefore(")"),
+            matriculaVehiculo = citaFormulario.vehiculoMatricula
+        )
+        val propietario = Propietario(
+            dni = citaFormulario.propietarioDni,
+            nombre = citaFormulario.propietarioNombre,
+            apellidos = citaFormulario.propietarioApellidos,
+            correo = citaFormulario.propietarioCorreo,
+            telefono = citaFormulario.propietarioTelefono
+        )
+        val vehiculo = Vehiculo(
+            matricula = citaFormulario.vehiculoMatricula,
+            marca = citaFormulario.vehiculoMarca,
+            modelo = citaFormulario.vehiculoModelo,
+            fechaMatriculacion = LocalDate.parse(citaFormulario.vehiculoMatriculacion),
+            fechaRevision = LocalDate.parse(citaFormulario.vehiculoRevision),
+            tipoMotor = Vehiculo.TipoMotor.valueOf(citaFormulario.vehiculoMotor.uppercase()),
+            tipoVehiculo = Vehiculo.TipoVehiculo.valueOf(citaFormulario.vehiculoTipo.uppercase()),
+            dniPropietario = citaFormulario.propietarioDni
+        )
+
+        if (checkExistingCita(cita))
+            return Err(CrearCitaError.CitaYaExiste("Ya existe una cita para ese vehículo en la fecha y hora seleccionadas"))
+        when (propietarioRepository.findById(propietario.dni)) {
+            null -> propietarioRepository.save(propietario)
+            else -> propietarioRepository.update(propietario)
+        }
+        when (vehiculoRepository.findById(vehiculo.matricula)) {
+            null -> vehiculoRepository.save(vehiculo)
+            else -> vehiculoRepository.update(vehiculo)
+        }
+        informeRepository.save(Informe(1, 0.0, 0.0, false, false, false))
+        val nuevaCita = citaRepository.save(cita)
+        return Ok(nuevaCita)
+    }
+
+    /**
+     * Comprueba si existe una cita con la misma fecha y hora y matrícula de vehículo
+     * @param cita datos de la cita
+     * @return true si existe, false si no existe
+     */
+    private fun checkExistingCita(cita: Cita): Boolean {
+        return citaRepository.findAll().find {
+            it.fechaHora == cita.fechaHora && it.matriculaVehiculo == cita.matriculaVehiculo
+        } != null
     }
 
     /**
@@ -119,7 +195,7 @@ class CitaViewModel(
      * Creación de todas las citas que tengamos en la base de datos a CitaDto
      * @return todas las citas transformadas
      */
-    fun mapperListCitaDtoToExport(): List<CitaDtoToExport>{
+    fun mapperListCitaDtoToExport(): List<CitaDtoToExport> {
         return citaRepository.findAll().map { mapperCitaToCitaDtoToExport(it) }
     }
 
@@ -169,7 +245,7 @@ class CitaViewModel(
             vehiculoTipoVehiculo = vehiculoDeCitaDb.tipoVehiculo.toString()
         )
 
-        return CitaDtoToExport(citaDto,trabajadorDto,informeDto,propietarioDto,vehiculoDto)
+        return CitaDtoToExport(citaDto, trabajadorDto, informeDto, propietarioDto, vehiculoDto)
     }
 
     /**
@@ -212,29 +288,94 @@ class CitaViewModel(
         return storage.exportToMarkdown(file, citaDtoToExport)
     }
 
-    enum class TipoOperacion { CREAR, ACTUALIZAR }
+    /**
+     * Comprobación de las horas disponibles para una fecha determinada
+     * @param fecha la fecha que se quiere comprobar
+     * @return las horas disponibles para esa fecha en forma de lista de String
+     */
+    fun getHorasDisponibles(fecha: LocalDate): List<String> {
+        val horasPosibles = mutableListOf(
+            LocalTime.parse("09:00"),
+            LocalTime.parse("09:30"),
+            LocalTime.parse("10:00"),
+            LocalTime.parse("10:30"),
+            LocalTime.parse("11:00"),
+            LocalTime.parse("11:30"),
+            LocalTime.parse("12:00"),
+            LocalTime.parse("12:30"),
+            LocalTime.parse("13:00"),
+            LocalTime.parse("13:30"),
+            LocalTime.parse("14:00"),
+            LocalTime.parse("14:30"),
+            LocalTime.parse("15:00"),
+            LocalTime.parse("15:30"),
+            LocalTime.parse("16:00"),
+            LocalTime.parse("16:30"),
+            LocalTime.parse("17:00"),
+            LocalTime.parse("17:30"),
+            LocalTime.parse("18:00"),
+            LocalTime.parse("18:30"),
+            LocalTime.parse("19:00"),
+            LocalTime.parse("19:30")
+        )
+        val citasEnFecha = citaRepository.findAll().filter { it.fechaHora.toLocalDate() == fecha }
+        val horasDisponibles = mutableListOf<String>()
+        horasPosibles.asSequence().forEach { hora ->
+            if (citasEnFecha.count { it.fechaHora.toLocalTime() == hora } < 8) {
+                horasDisponibles.add(hora.toString())
+            }
+        }
+
+        return horasPosibles.map { it.toString() }
+    }
 
     /**
-     * En función del tipo de operación filtraremos si se CREA o se ACTUALIZA en el controlador
-     * @param tipo ENUM del tipo de operación que realizaremos
+     * Comprobación de los trabajadores disponibles para una fecha y hora determinada
+     * @param fecha la fecha que se quiere comprobar
+     * @param hora la hora que se quiere comprobar
+     * @return los trabajadores disponibles para esa fecha y hora en forma de lista de String
      */
-    fun setTipoOperacion(tipo: TipoOperacion) {
-        logger.debug { "Modificando tipo de operación a: ${tipo.name}" }
-        state.value = state.value.copy(tipoOperacion = tipo)
+    fun getTrabajadoresDisponibles(fecha: LocalDate, hora: LocalTime): List<String> {
+        val trabajadoresPosibles = trabajadorRepository.findAll().toMutableList()
+        val citasEnFecha = citaRepository.findAll().filter { it.fechaHora == LocalDateTime.of(fecha, hora) }
+        val trabajadoresDisponibles = mutableListOf<String>()
+        trabajadoresPosibles.asSequence().forEach { trabajador ->
+            if (citasEnFecha.count { it.usuarioTrabajador == trabajador.usuario } < 4) {
+                trabajadoresDisponibles.add("${trabajador.nombre} (${trabajador.usuario})")
+            }
+        }
+
+        return trabajadoresDisponibles
     }
+
+    /**
+     * Devuelve toda la lista de los trabajadores
+     */
+    fun findAllTrabajadores() = trabajadorRepository.findAll()
 
     data class CitaState(
         val citas: List<Cita> = listOf(),
         val citaSeleccionada: CitaFormulario = CitaFormulario(),
-        val tipoOperacion: TipoOperacion = TipoOperacion.CREAR,
         // El tipo de vehículo en el filtro nunca cambiará
-        val tipoVehiculoFilter: List<String> = listOf(
-            Vehiculo.TipoVehiculo.ALL.toString(),
-            Vehiculo.TipoVehiculo.COCHE.toString(),
-            Vehiculo.TipoVehiculo.FURGONETA.toString(),
-            Vehiculo.TipoVehiculo.CAMION.toString(),
-            Vehiculo.TipoVehiculo.MOTOCICLETA.toString()
-        )
+        val tipoVehiculoFilter: List<String> = Vehiculo.TipoVehiculo.values().map { it.toString() },
+        // Para el comboBox
+    )
+
+    // Estamos duplicando la clase en realidad no? Con CrearCitaState
+    data class ModificarCitaState(
+        val horasDisponibles: List<String> = listOf(),
+        val trabajadoresDisponibles: List<String> = listOf(),
+        val fechaSeleccionada: String = "",
+        val horaSeleccionada: String = "",
+        val trabajadorSeleccionado: String = ""
+    )
+
+    data class CrearCitaState(
+        val horasDisponibles: List<String> = listOf(),
+        val trabajadoresDisponibles: List<String> = listOf(),
+        val fechaSeleccionada: String = "",
+        val horaSeleccionada: String = "",
+        val trabajadorSeleccionado: String = ""
     )
 
     data class CitaFormulario(

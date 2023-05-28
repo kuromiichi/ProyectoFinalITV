@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="628.0" prefWidth="600.0" spacing="10.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dev.team.proyectofinalitv.controllers.CrearCitaViewController">
+   <children>
+      <Label text="Crear cita">
+         <font>
+            <Font size="20.0" />
+         </font>
+         <padding>
+            <Insets top="10.0" />
+         </padding>
+      </Label>
+      <Separator prefWidth="200.0" />
+      <GridPane hgap="20.0">
+        <columnConstraints>
+          <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="284.0" minWidth="10.0" prefWidth="244.66672261555988" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="456.6666793823242" minWidth="10.0" prefWidth="335.99994405110675" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label text="Dia de la cita:" />
+            <Label text="Hora de la cita:" GridPane.rowIndex="1" />
+            <Label text="Trabajador/a:" GridPane.rowIndex="2" />
+            <DatePicker fx:id="dateCita" prefHeight="26.0" prefWidth="200.0" GridPane.columnIndex="1" />
+            <ComboBox fx:id="comboCitaHora" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <ComboBox fx:id="comboCitaTrabajador" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+         </children>
+      </GridPane>
+      <Separator prefWidth="200.0" />
+      <GridPane hgap="20.0">
+         <columnConstraints>
+            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="349.00000508626306" minWidth="10.0" prefWidth="243.66670735677084" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="507.00000762939453" minWidth="10.0" prefWidth="335.6666259765625" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+            <Label text="DNI del propietario:" />
+            <Label text="Nombre:" GridPane.rowIndex="1" />
+            <Label text="Apellidos:" GridPane.rowIndex="2" />
+            <TextField fx:id="textPropietarioNombre" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextField fx:id="textPropietarioApellidos" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Label text="Correo:" GridPane.rowIndex="3" />
+            <Label text="Telefono:" GridPane.rowIndex="4" />
+            <TextField fx:id="textPropietarioCorreo" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <TextField fx:id="textPropietarioTelefono" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <TextField fx:id="textPropietarioDni" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="200.0" GridPane.columnIndex="1" />
+         </children>
+      </GridPane>
+      <Separator prefWidth="200.0" />
+      <GridPane hgap="20.0">
+         <columnConstraints>
+            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="349.00000508626306" minWidth="10.0" prefWidth="243.66670735677084" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="507.00000762939453" minWidth="10.0" prefWidth="335.6666259765625" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+            <Label text="Matricula del vehiculo:" />
+            <Label text="Marca:" GridPane.rowIndex="1" />
+            <Label text="Modelo:" GridPane.rowIndex="2" />
+            <TextField fx:id="textVehiculoMarca" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextField fx:id="textVehiculoModelo" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Label text="Fecha de matriculacion:" GridPane.rowIndex="3" />
+            <Label text="Fecha de ultima revision:" GridPane.rowIndex="4" />
+            <TextField fx:id="textVehiculoMatricula" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="200.0" GridPane.columnIndex="1" />
+            <Label text="Tipo de motor:" GridPane.rowIndex="5" />
+            <Label text="Tipo de vehiculo:" GridPane.rowIndex="6" />
+            <ComboBox fx:id="comboVehiculoMotor" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <ComboBox fx:id="comboVehiculoTipo" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+            <DatePicker fx:id="dateVehiculoMatriculacion" prefHeight="26.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <DatePicker fx:id="dateVehiculoRevision" prefHeight="26.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+         </children>
+      </GridPane>
+      <Separator prefWidth="200.0" />
+      <HBox alignment="TOP_CENTER" prefHeight="33.0" prefWidth="600.0" spacing="30.0">
+         <children>
+            <Button fx:id="buttonGuardar" mnemonicParsing="false" text="Guardar">
+               <graphic>
+                  <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../icons/save.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Button fx:id="buttonLimpiar" mnemonicParsing="false" text="Limpiar">
+               <graphic>
+                  <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../icons/clean.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+         </children>
+      </HBox>
+   </children>
+</VBox>
