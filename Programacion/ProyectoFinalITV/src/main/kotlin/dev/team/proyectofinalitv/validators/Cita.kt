@@ -44,10 +44,14 @@ fun CitaViewModel.CrearModificarCitaFormulario.validate(): Result<CitaViewModel.
             CitaError.MatriculacionInvalida("La fecha de matriculación no puede ser posterior a la actual")
         )
     if (vehiculoRevision.isEmpty())
-        return Err(CitaError.RevisionInvalida("La fecha de revisión no puede estar vacía"))
+        return Err(CitaError.RevisionInvalida("La fecha de última revisión no puede estar vacía"))
     if (LocalDate.parse(vehiculoRevision).isAfter(LocalDate.now()))
         return Err(
             CitaError.RevisionInvalida("La fecha de última revisión no puede ser posterior a la actual")
+        )
+    if (LocalDate.parse(vehiculoRevision).isBefore(LocalDate.parse(vehiculoMatriculacion)))
+        return Err(
+            CrearCitaError.RevisionInvalida("La fecha de última revisión no puede ser anterior a la matriculación")
         )
     if (vehiculoMotor.isEmpty())
         return Err(CitaError.MotorInvalido("El tipo de motor no puede estar vacío"))
