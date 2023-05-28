@@ -4,7 +4,6 @@ import com.github.michaelbull.result.andThen
 import com.github.michaelbull.result.onFailure
 import com.github.michaelbull.result.onSuccess
 import dev.team.proyectofinalitv.models.Vehiculo
-import dev.team.proyectofinalitv.router.RoutesManager
 import dev.team.proyectofinalitv.validators.validate
 import dev.team.proyectofinalitv.viewmodels.CitaViewModel
 import javafx.collections.FXCollections
@@ -91,7 +90,7 @@ class CrearCitaViewController : KoinComponent {
         logger.debug { "Inicializando bindings" }
 
         // ComboBoxes
-        comboCitaHora.items = FXCollections.observableArrayList(citaViewModel.crearState.value.horasDisponibles)
+        comboCitaHora.items = FXCollections.observableArrayList(citaViewModel.crearModificarState.value.horasDisponibles)
         comboCitaHora.selectionModel.selectFirst()
 
         comboVehiculoMotor.items =
@@ -104,16 +103,16 @@ class CrearCitaViewController : KoinComponent {
         comboVehiculoTipo.value = null
 
         comboCitaTrabajador.items =
-            FXCollections.observableArrayList(citaViewModel.crearState.value.trabajadoresDisponibles)
+            FXCollections.observableArrayList(citaViewModel.crearModificarState.value.trabajadoresDisponibles)
         comboCitaTrabajador.selectionModel.selectFirst()
 
-        citaViewModel.crearState.addListener { _, oldState, newState ->
+        citaViewModel.crearModificarState.addListener { _, oldState, newState ->
             updateComboHoras(oldState, newState)
             updateComboTrabajadores(oldState, newState)
         }
     }
 
-    private fun updateComboHoras(oldState: CitaViewModel.CrearCitaState, newState: CitaViewModel.CrearCitaState) {
+    private fun updateComboHoras(oldState: CitaViewModel.CrearModificarCitaState, newState: CitaViewModel.CrearModificarCitaState) {
         logger.debug { "Actualizando comboBox horas" }
 
         if (newState.horasDisponibles != oldState.horasDisponibles) {
@@ -122,13 +121,13 @@ class CrearCitaViewController : KoinComponent {
     }
 
     private fun updateComboTrabajadores(
-        oldState: CitaViewModel.CrearCitaState, newState: CitaViewModel.CrearCitaState
+        oldState: CitaViewModel.CrearModificarCitaState, newState: CitaViewModel.CrearModificarCitaState
     ) {
         logger.debug { "Actualizando comboBox trabajadores" }
 
         if (oldState.trabajadoresDisponibles != newState.trabajadoresDisponibles) {
             comboCitaTrabajador.items =
-                FXCollections.observableArrayList(citaViewModel.crearState.value.trabajadoresDisponibles)
+                FXCollections.observableArrayList(citaViewModel.crearModificarState.value.trabajadoresDisponibles)
         }
     }
 
@@ -159,7 +158,7 @@ class CrearCitaViewController : KoinComponent {
     private fun onFechaSeleccionada() {
         logger.debug { "Fecha seleccionada" }
 
-        citaViewModel.crearState.value = citaViewModel.crearState.value.copy(
+        citaViewModel.crearModificarState.value = citaViewModel.crearModificarState.value.copy(
             horasDisponibles = citaViewModel.getHorasDisponibles(dateCita.value)
         )
         comboCitaHora.value = null
@@ -174,7 +173,7 @@ class CrearCitaViewController : KoinComponent {
         logger.debug { "Hora seleccionada" }
 
         if (comboCitaHora.value != null) {
-            citaViewModel.crearState.value = citaViewModel.crearState.value.copy(
+            citaViewModel.crearModificarState.value = citaViewModel.crearModificarState.value.copy(
                 trabajadoresDisponibles = citaViewModel.getTrabajadoresDisponibles(
                     dateCita.value,
                     LocalTime.parse(comboCitaHora.value)
@@ -208,7 +207,8 @@ class CrearCitaViewController : KoinComponent {
     private fun guardarCita() {
         logger.debug { "Guardando cita" }
 
-        val cita = CrearCitaFormulario(
+        val cita = CitaViewModel.CrearModificarCitaFormulario(
+            citaViewModel.state.value.citaSeleccionada.idCita,
             dateCita.value?.toString() ?: "",
             comboCitaHora.value ?: "",
             comboCitaTrabajador.value ?: "",
@@ -223,7 +223,13 @@ class CrearCitaViewController : KoinComponent {
             dateVehiculoMatriculacion.value?.toString() ?: "",
             dateVehiculoRevision.value?.toString() ?: "",
             comboVehiculoMotor.value ?: "",
-            comboVehiculoTipo.value ?: ""
+            comboVehiculoTipo.value ?: "",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
         )
 
         cita.validate().andThen { citaViewModel.saveCita(it) }
@@ -269,21 +275,3 @@ class CrearCitaViewController : KoinComponent {
         }.showAndWait()
     }
 }
-
-class CrearCitaFormulario(
-    val fecha: String,
-    val hora: String,
-    val trabajador: String,
-    val propietarioDni: String,
-    val propietarioNombre: String,
-    val propietarioApellidos: String,
-    val propietarioCorreo: String,
-    val propietarioTelefono: String,
-    val vehiculoMatricula: String,
-    val vehiculoMarca: String,
-    val vehiculoModelo: String,
-    val vehiculoMatriculacion: String,
-    val vehiculoRevision: String,
-    val vehiculoMotor: String,
-    val vehiculoTipo: String
-)

@@ -54,6 +54,9 @@ class UpdateCitaViewController: KoinComponent {
     @FXML
     private lateinit var textInformeContaminacion: TextField
 
+    @FXML
+    private lateinit var textInformeId: Label
+
     // DatePicker
 
     @FXML
@@ -117,22 +120,24 @@ class UpdateCitaViewController: KoinComponent {
         comboLuces.items = FXCollections.observableArrayList(valoresInforme)
         comboResultadoFinal.items = FXCollections.observableArrayList(valoresInforme)
 
-        comboCitaHora.items = FXCollections.observableArrayList(citaViewModel.crearState.value.horasDisponibles)
+        comboCitaHora.items =
+            FXCollections.observableArrayList(citaViewModel.crearModificarState.value.horasDisponibles)
         comboCitaHora.selectionModel.selectFirst()
 
-        comboTrabajador.items = FXCollections.observableArrayList(citaViewModel.crearState.value.trabajadoresDisponibles)
+        comboTrabajador.items =
+            FXCollections.observableArrayList(citaViewModel.crearModificarState.value.trabajadoresDisponibles)
         comboTrabajador.selectionModel.selectFirst()
 
-        comboVehiculo.items =
-            FXCollections.observableArrayList(Vehiculo.TipoMotor.values().map { it.toString().lowercase() })
-        comboVehiculo.value = null
-
         comboMotor.items =
-            FXCollections.observableArrayList(Vehiculo.TipoVehiculo.values().dropLast(1)
-                .map { it.toString().lowercase() })
+            FXCollections.observableArrayList(Vehiculo.TipoMotor.values().map { it.toString().lowercase() })
         comboMotor.value = null
 
-        citaViewModel.modificarState.addListener { _, oldState, newState ->
+        comboVehiculo.items =
+            FXCollections.observableArrayList(Vehiculo.TipoVehiculo.values().dropLast(1)
+                .map { it.toString().lowercase() })
+        comboVehiculo.value = null
+
+        citaViewModel.crearModificarState.addListener { _, oldState, newState ->
             updateComboHoras(oldState, newState)
             updateComboTrabajadores(oldState, newState)
         }
@@ -141,7 +146,7 @@ class UpdateCitaViewController: KoinComponent {
         val citaSelecionnada = citaViewModel.state.value.citaSeleccionada
         textCitaId.text = citaSelecionnada.idCita
         textPropietarioDni.text = citaSelecionnada.dniPropietario
-        textPropietarioNombre.text = citaSelecionnada.nombrePropietario
+        textPropietarioNombre.text = citaSelecionnada.nombrePropietario + " " + citaSelecionnada.apellidosPropietario
         textPropietarioTelefono.text = citaSelecionnada.telefonoPropietario
         textPropietarioCorreo.text = citaSelecionnada.correoPropietario
         textVehiculoMatricula.text = citaSelecionnada.matriculaVehiculo
@@ -151,6 +156,18 @@ class UpdateCitaViewController: KoinComponent {
         textInformeContaminacion.text = citaSelecionnada.contaminacionInforme.toString()
         datePickerMatriculacion.value = citaSelecionnada.fechaMatriculacionVehiculo
         datePickerRevision.value = citaSelecionnada.fechaRevisionVehiculo
+        comboCitaEstado.value = citaSelecionnada.estadoCita
+        datePickerCitaFecha.value = citaSelecionnada.fechaCita
+        comboCitaHora.value = citaSelecionnada.horaCita.toString()
+        comboTrabajador.value = citaSelecionnada.nombreTrabajador + "(" + citaSelecionnada.usuarioTrabajador + ")"
+        comboMotor.value = citaSelecionnada.tipoMotorVehiculo
+        comboVehiculo.value = citaSelecionnada.tipoVehiculo
+        // Informe
+        comboCitaEstado.value = if (citaSelecionnada.isAptoInforme) "Apto" else "No apto"
+        comboLuces.value = if (citaSelecionnada.lucesInforme) "Apto" else "No apto"
+        comboInterior.value = if (citaSelecionnada.interiorInforme) "Apto" else "No apto"
+        comboResultadoFinal.value = if (citaSelecionnada.isAptoInforme) "Apto" else "No apto"
+        textInformeId.text = citaSelecionnada.idInforme
     }
 
     private fun initEvents() {
@@ -179,15 +196,31 @@ class UpdateCitaViewController: KoinComponent {
     private fun actualizarCita(){
         logger.debug { "Actualizar cita" }
 
-        //TODO("Campo de apellidos falta")
+        val partes = textPropietarioNombre.text.split(" ")
 
-        val cita = CrearCitaFormulario(
+        if (textPropietarioNombre.text.isNullOrEmpty()) {
+            logger.debug { "Error al actualizar la cita" }
+
+            showAlertOperacion(
+                Alert.AlertType.ERROR,
+                title = "Error al actualizar la cita",
+                header = "Se ha producido un error al actualizar la cita",
+                mensaje = "Se ha producido un error al actualizar en el sistema"
+            )
+            return
+        }
+
+        val nombre = partes[0]
+        val apellido = partes[1]
+
+        val cita = CitaViewModel.CrearModificarCitaFormulario(
+            citaViewModel.state.value.citaSeleccionada.idCita,
             datePickerCitaFecha.value?.toString() ?: "",
             comboCitaHora.value ?: "",
-        comboTrabajador.value ?: "",
+            comboTrabajador.value ?: "",
             textPropietarioDni.text,
-            textPropietarioNombre.text,
-"Cambiar" ,
+            nombre,
+            apellido,
             textPropietarioCorreo.text,
             textPropietarioTelefono.text,
             textVehiculoMatricula.text,
@@ -196,12 +229,18 @@ class UpdateCitaViewController: KoinComponent {
             datePickerMatriculacion.value?.toString() ?: "",
             datePickerRevision.value?.toString() ?: "",
             comboMotor.value ?: "",
-            comboVehiculo.value ?: ""
+            comboVehiculo.value ?: "",
+            citaViewModel.state.value.citaSeleccionada.idInforme,
+            textInformeFrenado.text,
+            textInformeContaminacion.text,
+            comboInterior.value ?: "",
+            comboLuces.value ?: "",
+            comboResultadoFinal.value ?: ""
         )
 
         cita.validate().andThen { citaViewModel.modificarCita(it) }
             .onSuccess { nuevaCita ->
-                logger.debug { "Cita creada correctamente" }
+                logger.debug { "Cita actualizada correctamente" }
 
                 val citas = citaViewModel.state.value.citas.toMutableList()
                 citas.add(nuevaCita)
@@ -235,7 +274,7 @@ class UpdateCitaViewController: KoinComponent {
     private fun onFechaSeleccionada() {
         logger.debug { "Fecha seleccionada" }
 
-        citaViewModel.crearState.value = citaViewModel.crearState.value.copy(
+        citaViewModel.crearModificarState.value = citaViewModel.crearModificarState.value.copy(
             horasDisponibles = citaViewModel.getHorasDisponibles(datePickerCitaFecha.value)
         )
         comboCitaHora.value = null
@@ -250,7 +289,7 @@ class UpdateCitaViewController: KoinComponent {
         logger.debug { "Hora seleccionada" }
 
         if (comboCitaHora.value != null) {
-            citaViewModel.crearState.value = citaViewModel.crearState.value.copy(
+            citaViewModel.crearModificarState.value = citaViewModel.crearModificarState.value.copy(
                 trabajadoresDisponibles = citaViewModel.getTrabajadoresDisponibles(
                     datePickerCitaFecha.value,
                     LocalTime.parse(comboCitaHora.value)
@@ -260,7 +299,7 @@ class UpdateCitaViewController: KoinComponent {
         comboTrabajador.value = null
     }
 
-    private fun updateComboHoras(oldState: CitaViewModel.ModificarCitaState, newState: CitaViewModel.ModificarCitaState) {
+    private fun updateComboHoras(oldState: CitaViewModel.CrearModificarCitaState, newState: CitaViewModel.CrearModificarCitaState) {
         logger.debug { "Actualizando comboBox horas" }
 
         if (newState.horasDisponibles != oldState.horasDisponibles) {
@@ -269,13 +308,13 @@ class UpdateCitaViewController: KoinComponent {
     }
 
     private fun updateComboTrabajadores(
-        oldState: CitaViewModel.ModificarCitaState, newState: CitaViewModel.ModificarCitaState
+        oldState: CitaViewModel.CrearModificarCitaState, newState: CitaViewModel.CrearModificarCitaState,
     ) {
         logger.debug { "Actualizando comboBox trabajadores" }
 
         if (oldState.trabajadoresDisponibles != newState.trabajadoresDisponibles) {
             comboTrabajador.items =
-                FXCollections.observableArrayList(citaViewModel.crearState.value.trabajadoresDisponibles)
+                FXCollections.observableArrayList(citaViewModel.crearModificarState.value.trabajadoresDisponibles)
         }
     }
 
