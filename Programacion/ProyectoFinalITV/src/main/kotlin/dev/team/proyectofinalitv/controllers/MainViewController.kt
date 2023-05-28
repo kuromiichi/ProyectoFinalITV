@@ -316,7 +316,7 @@ class MainViewController : KoinComponent {
         val fechaSeleccionada = datePickerFilter.value
 
         println(fechaSeleccionada)
-        val citasFiltradas = citaViewModel.citaFilteredList(tipoSeleccionado, matricula, fechaSeleccionada)
+        val citasFiltradas = citaViewModel.getListCitaFiltered(tipoSeleccionado, matricula, fechaSeleccionada)
 
         tableCitas.items = FXCollections.observableList(citasFiltradas)
     }

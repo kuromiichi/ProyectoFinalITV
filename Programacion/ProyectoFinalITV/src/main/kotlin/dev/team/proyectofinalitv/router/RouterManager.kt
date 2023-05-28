@@ -64,7 +64,7 @@ object RouterManager {
         val fxmlLoader = FXMLLoader(getResource(TypeView.ACERCA_DE.pathFxml))
 
         // Configuración de la escena
-        val scene = Scene(fxmlLoader.load(), 422.0, 106.0)
+        val scene = Scene(fxmlLoader.load(), 492.0, 328.0)
         // Es nueva ventana = nueva stage
         val stage = Stage()
         stage.title = "Acerca De AEA"

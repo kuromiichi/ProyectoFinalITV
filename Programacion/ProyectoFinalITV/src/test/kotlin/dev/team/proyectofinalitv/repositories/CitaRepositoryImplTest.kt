@@ -62,7 +62,7 @@ class CitaRepositoryImplTest {
         vehiculoRepository.save(vehiculo)
 
         // Necesitamos siempre primero un informe para hacer referencia de id_informe
-        val informe = informeRepository.save( Informe(-1, 1.2, 1.2, LocalDate.now(), true, true, true))
+        val informe = informeRepository.save( Informe(-1, 1.2, 1.2, true, true, true))
 
         dataToTest.add(
             Cita(-1, "Apto", LocalDateTime.now(), informe.id,"j_sanchez",vehiculo.matricula)
