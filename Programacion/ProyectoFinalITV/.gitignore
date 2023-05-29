@@ -11,6 +11,8 @@
 .idea/**/usage.statistics.xml
 .idea/**/dictionaries
 .idea/**/shelf
+.idea/sonarlint
+entornos
 
 # AWS User-specific
 .idea/**/aws.xml
@@ -159,6 +161,3 @@ gradle-app.setting
 *.hprof
 
 # End of https://www.toptal.com/developers/gitignore/api/intellij,gradle,maven
-
-# Carpeta data
-data/

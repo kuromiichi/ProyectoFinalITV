@@ -81,9 +81,10 @@ class CitaViewModel(
      */
     fun modificarCita(citaFormulario: CrearModificarCitaFormulario): Result<Cita, CitaError> {
         logger.debug { "Actualizando cita" }
+
         val cita = Cita(
             id = citaFormulario.idCita.toLong(),
-            estado = "Pendiente",
+            estado = citaFormulario.informeIsApto!!,
             fechaHora = LocalDateTime.of(
                 LocalDate.parse(citaFormulario.fecha),
                 LocalTime.parse(citaFormulario.hora)
@@ -119,10 +120,9 @@ class CitaViewModel(
         )
 
         // Comprobamos que exista la cita para poder modificar los datos
-        if (!checkExistingCita2(cita)) {
+        if (!checkExistingCitaToUpdate(cita)) {
             return Err(CitaError.CitaNoExiste("La cita no existe, no se puede actualizar"))
         }
-
         if (propietarioRepository.findById(propietario.dni)!!.dni == propietario.dni) {
             propietarioRepository.update(propietario)
         }
@@ -134,7 +134,6 @@ class CitaViewModel(
         }
 
         val citaModificada = citaRepository.update(cita)
-
         return Ok(citaModificada)
     }
 
@@ -175,7 +174,7 @@ class CitaViewModel(
             dniPropietario = citaFormulario.propietarioDni
         )
 
-        if (checkExistingCita(cita))
+        if (checkExistingCitaToSave(cita))
             return Err(CitaError.CitaYaExiste("Ya existe una cita para ese vehículo en la fecha y hora seleccionadas"))
         when (propietarioRepository.findById(propietario.dni)) {
             null -> propietarioRepository.save(propietario)
@@ -195,13 +194,18 @@ class CitaViewModel(
      * @param cita datos de la cita
      * @return true si existe, false si no existe
      */
-    private fun checkExistingCita(cita: Cita): Boolean {
+    private fun checkExistingCitaToSave(cita: Cita): Boolean {
         return citaRepository.findAll().find {
             it.fechaHora == cita.fechaHora && it.matriculaVehiculo == cita.matriculaVehiculo
         } != null
     }
 
-    private fun checkExistingCita2(cita: Cita): Boolean {
+    /**
+     * Comprueba si existe una cita mediante su ID
+     * @param cita datos de la cita
+     * @return true si existe, false si no existe
+     */
+    private fun checkExistingCitaToUpdate(cita: Cita): Boolean {
         return citaRepository.findById(cita.id)!!.id == cita.id
     }
 
@@ -420,7 +424,6 @@ class CitaViewModel(
         val citaSeleccionada: CitaFormulario = CitaFormulario(),
         // El tipo de vehículo en el filtro nunca cambiará
         val tipoVehiculoFilter: List<String> = Vehiculo.TipoVehiculo.values().map { it.toString() },
-        // Para el comboBox
     )
 
     data class CrearModificarCitaState(
