@@ -3,11 +3,8 @@ package dev.team.proyectofinalitv.viewmodels
 import com.github.michaelbull.result.Err
 import com.github.michaelbull.result.Ok
 import com.github.michaelbull.result.Result
-import dev.team.proyectofinalitv.controllers.CrearCitaFormulario
-import dev.team.proyectofinalitv.controllers.CrearCitaViewController
 import dev.team.proyectofinalitv.dto.*
 import dev.team.proyectofinalitv.errors.CitaError
-import dev.team.proyectofinalitv.errors.CrearCitaError
 import dev.team.proyectofinalitv.models.*
 import dev.team.proyectofinalitv.repositories.*
 import dev.team.proyectofinalitv.repositories.base.CRURepository
@@ -15,7 +12,6 @@ import dev.team.proyectofinalitv.services.storage.CitaStorage
 import javafx.beans.property.SimpleObjectProperty
 import mu.KotlinLogging
 import java.io.File
-import java.lang.reflect.Modifier
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -33,11 +29,9 @@ class CitaViewModel(
     // Gestión del estado de la vista principal
     val state = SimpleObjectProperty(CitaState())
 
-    // Gestión del estado de la vista de creación
-    val crearState = SimpleObjectProperty(CrearCitaState())
+    // Gestión del estado de la vista de creación y edición
+    val crearModificarState = SimpleObjectProperty(CrearModificarCitaState())
 
-    // Gestión del estado de la vista de edición
-    val modificarState = SimpleObjectProperty(ModificarCitaState())
 
     init {
         initialUpdateState()
@@ -63,7 +57,7 @@ class CitaViewModel(
      *  @param matricula
      *  @param fecha
      */
-    fun citaFilteredList(tipo: Vehiculo.TipoVehiculo?, matricula: String?, fecha: LocalDate?): List<Cita?> {
+    fun getListCitaFiltered(tipo: Vehiculo.TipoVehiculo?, matricula: String?, fecha: LocalDate?): List<Cita?> {
         val vehiculos = vehiculoRepository.findAll()
 
         return state.value.citas.filter { cita ->
@@ -72,7 +66,7 @@ class CitaViewModel(
             val tipoValido = tipo == null || tipo == Vehiculo.TipoVehiculo.ALL || vehiculo?.tipoVehiculo == tipo
 
             // Filtramos por la matrícula del vehículo
-            val matriculaValida = matricula.isNullOrBlank() || cita.matriculaVehiculo.contains(matricula)
+            val matriculaValida = matricula.isNullOrBlank() || cita.matriculaVehiculo.equals(matricula, ignoreCase = true)
 
             // Filtramos por la fecha de la cita
             val fechaValida = fecha == null || cita.fechaHora.toLocalDate() == fecha || fecha.toString().isBlank()
@@ -82,13 +76,76 @@ class CitaViewModel(
     }
 
     /**
+     *  Modificar y guardar en orden respecto a Integridad Referencial,
+     *  previamente deben estar validados todos los campos
+     */
+    fun modificarCita(citaFormulario: CrearModificarCitaFormulario): Result<Cita, CitaError> {
+        logger.debug { "Actualizando cita" }
+        val cita = Cita(
+            id = citaFormulario.idCita.toLong(),
+            estado = "Pendiente",
+            fechaHora = LocalDateTime.of(
+                LocalDate.parse(citaFormulario.fecha),
+                LocalTime.parse(citaFormulario.hora)
+            ),
+            idInforme = informeRepository.findAll().maxOf { it.id } + 1,
+            usuarioTrabajador = citaFormulario.trabajador.substringAfter("(").substringBefore(")"),
+            matriculaVehiculo = citaFormulario.vehiculoMatricula
+        )
+        val propietario = Propietario(
+            dni = citaFormulario.propietarioDni,
+            nombre = citaFormulario.propietarioNombre,
+            apellidos = citaFormulario.propietarioApellidos,
+            correo = citaFormulario.propietarioCorreo,
+            telefono = citaFormulario.propietarioTelefono
+        )
+        val vehiculo = Vehiculo(
+            matricula = citaFormulario.vehiculoMatricula,
+            marca = citaFormulario.vehiculoMarca,
+            modelo = citaFormulario.vehiculoModelo,
+            fechaMatriculacion = LocalDate.parse(citaFormulario.vehiculoMatriculacion),
+            fechaRevision = LocalDate.parse(citaFormulario.vehiculoRevision),
+            tipoMotor = Vehiculo.TipoMotor.valueOf(citaFormulario.vehiculoMotor.uppercase()),
+            tipoVehiculo = Vehiculo.TipoVehiculo.valueOf(citaFormulario.vehiculoTipo.uppercase()),
+            dniPropietario = citaFormulario.propietarioDni
+        )
+        val informe = Informe(
+            citaFormulario.informeId!!.toLong(),
+            citaFormulario.informeFrenado!!.toDouble(),
+            citaFormulario.informeContaminacion!!.toDouble(),
+            citaFormulario.informeInterior == "Apto",
+            citaFormulario.informeLuces == "Apto",
+            citaFormulario.informeIsApto == "Apto"
+        )
+
+        // Comprobamos que exista la cita para poder modificar los datos
+        if (!checkExistingCita2(cita)) {
+            return Err(CitaError.CitaNoExiste("La cita no existe, no se puede actualizar"))
+        }
+
+        if (propietarioRepository.findById(propietario.dni)!!.dni == propietario.dni) {
+            propietarioRepository.update(propietario)
+        }
+        if (vehiculoRepository.findById(vehiculo.matricula)!!.matricula == vehiculo.matricula) {
+            vehiculoRepository.update(vehiculo)
+        }
+        if (informeRepository.findById(informe.id)!!.id == informe.id) {
+            informeRepository.update(informe)
+        }
+
+        val citaModificada = citaRepository.update(cita)
+
+        return Ok(citaModificada)
+    }
+
+    /**
      *  Guardar en orden respecto a Integridad Referencial, previamente deben estar validados todos los campos
      *  @param propietario datos del propietario
      *  @param vehiculo datos del vehículo
      *  @param cita datos de la cita
      *  @return la cita si se ha guardado correctamente, o un error si la cita ya existe en el sistema
      */
-    fun saveCita(citaFormulario: CrearCitaFormulario): Result<Cita, CrearCitaError> {
+    fun saveCita(citaFormulario: CrearModificarCitaFormulario): Result<Cita, CitaError> {
         logger.debug { "Guardando nueva cita" }
         val cita = Cita(
             estado = "Pendiente",
@@ -119,7 +176,7 @@ class CitaViewModel(
         )
 
         if (checkExistingCita(cita))
-            return Err(CrearCitaError.CitaYaExiste("Ya existe una cita para ese vehículo en la fecha y hora seleccionadas"))
+            return Err(CitaError.CitaYaExiste("Ya existe una cita para ese vehículo en la fecha y hora seleccionadas"))
         when (propietarioRepository.findById(propietario.dni)) {
             null -> propietarioRepository.save(propietario)
             else -> propietarioRepository.update(propietario)
@@ -142,6 +199,10 @@ class CitaViewModel(
         return citaRepository.findAll().find {
             it.fechaHora == cita.fechaHora && it.matriculaVehiculo == cita.matriculaVehiculo
         } != null
+    }
+
+    private fun checkExistingCita2(cita: Cita): Boolean {
+        return citaRepository.findById(cita.id)!!.id == cita.id
     }
 
     /**
@@ -202,7 +263,7 @@ class CitaViewModel(
     /**
      * Transformación de una Cita a una CitaDto para exportar
      */
-    private fun mapperCitaToCitaDtoToExport(citaDb: Cita?): CitaDtoToExport {
+    fun mapperCitaToCitaDtoToExport(citaDb: Cita?): CitaDtoToExport {
         val trabajadorDeCitaDb = trabajadorRepository.findById(citaDb!!.usuarioTrabajador)
         val informeDeCitaDb = informeRepository.findById(citaDb.idInforme)
         val vehiculoDeCitaDb = vehiculoRepository.findById(citaDb.matriculaVehiculo)
@@ -361,16 +422,7 @@ class CitaViewModel(
         // Para el comboBox
     )
 
-    // Estamos duplicando la clase en realidad no? Con CrearCitaState
-    data class ModificarCitaState(
-        val horasDisponibles: List<String> = listOf(),
-        val trabajadoresDisponibles: List<String> = listOf(),
-        val fechaSeleccionada: String = "",
-        val horaSeleccionada: String = "",
-        val trabajadorSeleccionado: String = ""
-    )
-
-    data class CrearCitaState(
+    data class CrearModificarCitaState(
         val horasDisponibles: List<String> = listOf(),
         val trabajadoresDisponibles: List<String> = listOf(),
         val fechaSeleccionada: String = "",
@@ -383,6 +435,7 @@ class CitaViewModel(
         val estadoCita: String = "",
         val fechaCita: LocalDate = LocalDate.now(),
         val horaCita: LocalTime = LocalTime.now(),
+        val usuarioTrabajador: String = "",
         val nombreTrabajador: String = "",
         val correoTrabajador: String = "",
         val telefonoTrabajador: String = "",
@@ -399,10 +452,36 @@ class CitaViewModel(
         val fechaRevisionVehiculo: LocalDate = LocalDate.now(),
         val tipoMotorVehiculo: String = "",
         val tipoVehiculo: String = "",
+        val idInforme: String = "",
         val frenadoInforme: Double = 0.0,
         val contaminacionInforme: Double = 0.0,
         val interiorInforme: Boolean = false,
         val lucesInforme: Boolean = false,
         val isAptoInforme: Boolean = false
+    )
+
+    class CrearModificarCitaFormulario(
+        val idCita: String,
+        val fecha: String,
+        val hora: String,
+        val trabajador: String,
+        val propietarioDni: String,
+        val propietarioNombre: String,
+        val propietarioApellidos: String,
+        val propietarioCorreo: String,
+        val propietarioTelefono: String,
+        val vehiculoMatricula: String,
+        val vehiculoMarca: String,
+        val vehiculoModelo: String,
+        val vehiculoMatriculacion: String,
+        val vehiculoRevision: String,
+        val vehiculoMotor: String,
+        val vehiculoTipo: String,
+        val informeId: String?,
+        val informeFrenado: String?,
+        val informeContaminacion: String?,
+        val informeInterior: String?,
+        val informeLuces: String?,
+        val informeIsApto: String?
     )
 }

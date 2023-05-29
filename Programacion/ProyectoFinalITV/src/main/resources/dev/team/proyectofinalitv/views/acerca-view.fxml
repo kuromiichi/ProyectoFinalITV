@@ -1,31 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="264.0" prefWidth="449.0" xmlns="http://javafx.com/javafx/17.0.2-ea">
-   <top>
-      <AnchorPane prefHeight="128.0" prefWidth="423.0">
+<VBox alignment="CENTER" prefHeight="328.0" prefWidth="492.0" spacing="20.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
+    <!--fx:controller="myfirstapp.monsterjavafx.controllers.AcercaDeViewController"> -->
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+    <BorderPane prefHeight="128.0" prefWidth="416.0">
+        <left>
+            <ImageView fx:id="logo" fitHeight="128.0" fitWidth="145.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
+                <image>
+                    <Image url="@../image/logo.png" />
+                </image>
+            </ImageView>
+        </left>
+        <center>
             <Label prefHeight="17.0" prefWidth="28.0" scaleX="10.0" scaleY="9.0" text="AEA" textFill="#1d96e1" BorderPane.alignment="CENTER" />
-      </AnchorPane>
-   </top>
-   <bottom>
-      <VBox prefHeight="93.0" prefWidth="317.0" style="-fx-background-color: LightBlue;" translateY="51.0" BorderPane.alignment="CENTER">
-         <children>
-            <Label translateX="18.0" translateY="-51.0" />
-            <Separator prefHeight="37.0" prefWidth="450.0" translateY="-18.0" />
-            <Label text="AEA, Asociación Española de Automovilismo" translateX="123.0" translateY="5.0" />
-            <Label text="QUIENES SOMOS:" translateX="18.0" translateY="-12.0" />
-            <Label text="Ángel, Emma y Adrian" translateX="149.0" translateY="-1.0" />
-            <Label text="678297832" translateX="90.0" translateY="7.0" />
-            <Label text="itv.aea@gmail.com" translateX="157.0" translateY="14.0" />
-            <Label text="Paseo de la Ermita 15. Leganés, Madrid. c.p: 28918." translateX="66.0" translateY="20.0" />
-            <Label text="JEFES DE LA EMPRESA:" translateX="18.0" translateY="-71.0" />
-            <Label text="TEĹEFONO:" translateX="18.0" translateY="-64.0" />
-            <Label text="CORREO ELECTRÓNICO:" translateX="18.0" translateY="-56.0" />
-            <Label text="CALLE:" translateX="18.0" translateY="-51.0" />
-            <Separator prefWidth="200.0" translateY="-49.0" />
-         </children>
-      </VBox>
-   </bottom>
-</BorderPane>
+        </center>
+    </BorderPane>
+    <GridPane prefHeight="124.0" prefWidth="457.0" style="-fx-background-color: lightblue;">
+        <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="266.6666666666667" minWidth="10.0" prefWidth="197.33333333333331" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="346.0" minWidth="0.0" prefWidth="312.0" />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+        <children>
+            <Label fx:id="myDataLabel" text="QUIENES SOMOS:" />
+            <Label fx:id="myNameLabel" text="JEFES DE LA EMPRESA:" GridPane.rowIndex="1" />
+            <Label fx:id="myNameDataLabel" text="Emma, Ángel y Adrián" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+         <Label text="AEA Asociación Española de Automovilismo" GridPane.columnIndex="1" />
+         <Label text="TELÉFONO:" GridPane.rowIndex="2" />
+         <Label text="678297831" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+         <Label text="CORREO ELECTRÓNICO:" GridPane.rowIndex="3" />
+         <Label text="itv.aea@gmail.com" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+         <Label text="CALLE:" GridPane.rowIndex="4" />
+         <Label text="Paeo de la Ermita 15. Legaés, Madrid c.p._28916" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+        </children>
+    </GridPane>
+    <Separator prefWidth="200.0" />
+</VBox>

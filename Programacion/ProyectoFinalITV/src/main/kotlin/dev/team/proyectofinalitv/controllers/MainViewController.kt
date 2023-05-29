@@ -358,6 +358,8 @@ class MainViewController : KoinComponent {
 
         // Si no tenemos un item seleccionado, no continuamos editando
         if (tableCitas.selectionModel.selectedItem == null) {
+            logger.debug { "Cita no seleccionada" }
+
             return
         }
 
@@ -375,7 +377,7 @@ class MainViewController : KoinComponent {
         val fechaSeleccionada = datePickerFilter.value
 
         println(fechaSeleccionada)
-        val citasFiltradas = citaViewModel.citaFilteredList(tipoSeleccionado, matricula, fechaSeleccionada)
+        val citasFiltradas = citaViewModel.getListCitaFiltered(tipoSeleccionado, matricula, fechaSeleccionada)
 
         tableCitas.items = FXCollections.observableList(citasFiltradas)
     }

@@ -24,10 +24,12 @@ class InformeRepositoryImplTest {
         // Reiniciamos la Base de datos por si acaso se solapan con datos de otros TEST, para que sean independientes
         dbManager.resetDataBase()
 
-        dataToTest.add(Informe(
-            55,1.2,1.2, LocalDate.now(),true,true,true
+        dataToTest.add(
+            Informe(
+            55,1.2,1.2,true,true,true
         ))
     }
+
     @Test
     fun updateTest() {
         val allInforme = informeRepository.findAll()
