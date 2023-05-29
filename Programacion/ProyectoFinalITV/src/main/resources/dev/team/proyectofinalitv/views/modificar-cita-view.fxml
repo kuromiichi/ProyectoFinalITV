@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox prefHeight="604.0" prefWidth="537.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dev.team.proyectofinalitv.controllers.UpdateCitaViewController">
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="602.0" prefWidth="537.0" style="-fx-background-color: LightBlue;">
+        <Label layoutX="246.0" layoutY="24.0" scaleX="2.0" scaleY="2.0" text="Edición">
+            <font>
+                <Font name="System Bold" size="13.0" />
+            </font>
+        </Label>
+        <Label layoutX="20.0" layoutY="93.0" text="Ficha de la Cita" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="93.0">
+            <font>
+                <Font name="System Bold" size="13.0" />
+            </font>
+        </Label>
+        <GridPane layoutX="25.0" layoutY="181.0" prefHeight="120.0" prefWidth="225.0" translateY="-63.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="291.0">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="212.0" minWidth="10.0" prefWidth="56.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="307.0" minWidth="10.0" prefWidth="154.0" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints maxHeight="30.0" minHeight="0.0" prefHeight="2.0" />
+                <RowConstraints maxHeight="38.0" minHeight="8.0" prefHeight="34.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints />
+            </rowConstraints>
+            <children>
+                <Label text="Id:" GridPane.rowIndex="1" />
+                <Label text="Estado:" GridPane.rowIndex="2" />
+                <Label text="Fecha:" GridPane.rowIndex="3" />
+                <Label text="Hora:" GridPane.rowIndex="4" />
+
+                <TextField fx:id="textCitaId" editable="false" prefHeight="26.0" prefWidth="195.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <ComboBox fx:id="comboCitaEstado" prefHeight="25.0" prefWidth="164.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                <DatePicker fx:id="datePickerCitaFecha" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                <ComboBox fx:id="comboCitaHora" prefHeight="25.0" prefWidth="164.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            </children>
+        </GridPane>
+        <Label layoutX="-7.0" layoutY="-60.0" translateX="27.0" translateY="14.0">
+            <font>
+                <Font name="System Bold" size="13.0" />
+            </font>
+        </Label>
+        <Label layoutX="252.0" layoutY="450.0" text="Trabajador:" translateX="26.0" translateY="15.0">
+            <font>
+                <Font name="System Bold" size="13.0" />
+            </font>
+        </Label>
+        <Separator layoutX="9.0" layoutY="82.0" prefHeight="3.0" prefWidth="155.0" scaleX="6.0" />
+        <Label layoutX="276.0" layoutY="93.0" text="Ficha del propietario">
+            <font>
+                <Font name="System Bold" size="13.0" />
+            </font>
+        </Label>
+        <Separator layoutX="-19.0" layoutY="247.0" prefWidth="200.0" scaleX="5.0" />
+        <GridPane layoutX="21.0" layoutY="284.0" prefHeight="120.0" prefWidth="241.0" translateX="255.0" translateY="-166.0">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="156.79998779296875" minWidth="10.0" prefWidth="99.33333333333331" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="144.0" minWidth="10.0" prefWidth="142.0" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            </rowConstraints>
+            <children>
+                <Label text="Dni:" />
+                <Label text="Nombre:" GridPane.rowIndex="1" />
+                <Label text="Teléfono:" GridPane.rowIndex="2" />
+                <Label text="Correo:" GridPane.rowIndex="3" />
+                <TextField fx:id="textPropietarioDni" prefHeight="26.0" prefWidth="34.0" GridPane.columnIndex="1" />
+                <TextField fx:id="textPropietarioNombre" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <TextField fx:id="textPropietarioTelefono" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                <TextField fx:id="textPropietarioCorreo" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            </children>
+        </GridPane>
+        <Separator layoutX="-43.0" layoutY="470.0" prefWidth="200.0" scaleX="5.0" translateY="47.0" />
+        <Label layoutX="20.0" layoutY="258.0" text="Ficha del vehículo">
+            <font>
+                <Font name="System Bold" size="13.0" />
+            </font>
+        </Label>
+        <GridPane layoutX="22.0" layoutY="458.0" prefHeight="211.0" prefWidth="225.0" translateX="2.0" translateY="-169.0">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="151.20001220703125" minWidth="10.0" prefWidth="104.99998728434247" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="122.00001271565753" minWidth="10.0" prefWidth="120.00001271565753" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            </rowConstraints>
+            <children>
+                <Label text="Matrícula:" />
+                <Label text="Marca:" GridPane.rowIndex="1" />
+                <Label text="Modelo:" GridPane.rowIndex="2" />
+                <Label text="Matriculación:" GridPane.rowIndex="3" />
+                <Label text="Fecha Revision:" GridPane.rowIndex="4" />
+                <Label text="Tipo Motor:" GridPane.rowIndex="5" />
+                <Label text="Tipo Vehículo:" GridPane.rowIndex="6" />
+                <TextField fx:id="textVehiculoMatricula" prefHeight="26.0" prefWidth="23.0" GridPane.columnIndex="1" />
+                <TextField fx:id="textVehiculoMarca" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <TextField fx:id="textVehiculoModelo" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                <ComboBox fx:id="comboMotor" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                <ComboBox fx:id="comboVehiculo" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                <DatePicker fx:id="datePickerMatriculacion" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                <DatePicker fx:id="datePickerRevision" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            </children>
+        </GridPane>
+        <Label layoutX="276.0" layoutY="258.0" text="Informe final">
+            <font>
+                <Font name="System Bold" size="13.0" />
+            </font>
+        </Label>
+        <GridPane layoutX="30.0" layoutY="704.0" prefHeight="150.0" prefWidth="232.0" translateX="251.0" translateY="-415.0">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="145.5999755859375" minWidth="10.0" prefWidth="92.33333333333333" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="149.33333333333331" minWidth="10.0" prefWidth="139.33333333333331" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            </rowConstraints>
+            <children>
+                <Label text="Frenado:" />
+                <Label text="Contaminación:" GridPane.rowIndex="1" />
+                <Label text="Interior:" GridPane.rowIndex="2" />
+                <Label text="Luces:" GridPane.rowIndex="3" />
+                <Label text="Resultado:" GridPane.rowIndex="4" />
+                <TextField fx:id="textInformeFrenado" GridPane.columnIndex="1" />
+                <TextField fx:id="textInformeContaminacion" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <ComboBox fx:id="comboInterior" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                <ComboBox fx:id="comboLuces" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                <ComboBox fx:id="comboResultadoFinal" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            </children>
+        </GridPane>
+        <HBox alignment="CENTER" layoutX="21.0" layoutY="635.0" prefHeight="46.0" prefWidth="294.0" spacing="30.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="21.0" AnchorPane.rightAnchor="9.0">
+            <children>
+                <Button fx:id="buttonGuardarCita" mnemonicParsing="false" text="Guardar">
+                    <graphic>
+                        <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../icons/save.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <Button fx:id="buttonLimpiar" mnemonicParsing="false" text="Limpiar">
+                    <graphic>
+                        <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../icons/clean.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+            </children>
+            <opaqueInsets>
+                <Insets />
+            </opaqueInsets>
+        </HBox>
+        <Separator layoutX="191.0" layoutY="51.0" prefHeight="3.0" prefWidth="155.0" />
+        <ComboBox fx:id="comboTrabajador" layoutX="371.0" layoutY="462.0" prefHeight="25.0" prefWidth="142.0" />
+      <Label fx:id="textInformeId" layoutX="371.0" layoutY="259.0" text="..." />
+    </AnchorPane>
+</VBox>

@@ -1,0 +1,101 @@
+body {
+  background-image: url('../Images/degradados-wallpapers-2.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+  
+  form {
+    text-align: center;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 10px;
+  }
+  #logo {                 
+    width: 10%;
+  
+    
+  }
+  #QuienesSomos {
+    position: relative;
+    margin-left: 5%;
+    margin-right: 7%;
+  }
+
+  .mini_container_nav{
+    text-align: center;
+  }
+ 
+  .encabezado{
+    justify-content: center;
+  }
+
+  
+  #encabezado_container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  
+  }
+
+  #encabezado_container {
+    background-color: white;
+    position: relative;
+  }
+
+  #encabezado_container #inicio {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+  }
+  body {
+    background-image:url(../Images/degradados-wallpapers-2.jpg);
+  }
+  #ventanaEmergente,
+  #ventanaEmergente2,
+  #ventanaEmergente3 {
+    position: absolute;
+    display: none;
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    padding: 10px;
+  }
+  
+  #ventanaEmergente h4,
+  #ventanaEmergente2 h4,
+  #ventanaEmergente3 h4 {
+    margin-top: 0;
+  }
+  
+  #encabezado_container .encabezado {
+    position: relative;
+  }
+  
+  #encabezado_container .encabezado:hover + #ventanaEmergente,
+  #encabezado_container .encabezado:hover + #ventanaEmergente2,
+  #encabezado_container .encabezado:hover + #ventanaEmergente3
+   {
+    display: block;
+  }
+  #ventanaEmergente3 {
+    width: 20%;
+  }
+  #ventanaEmergente2 {
+    width:20%;
+  }
+  .grid-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Crea 2 columnas iguales */
+    grid-gap: 5em; /* Espacio entre las imágenes */
+    margin-left:5%;
+    margin-right: 5%;
+  }
+  
+  a:hover{
+    color: rgb(24, 91, 224)
+  }
+  a{
+    color: #000000;
+  }

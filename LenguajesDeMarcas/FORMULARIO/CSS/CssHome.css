@@ -1,0 +1,183 @@
+#cuerpo_container{
+    background-image: url('../Images/Mecanicos-certificados-en-nuestras-marcas.jpg');
+    background-size: cover;
+    background-position: center;
+    text-align: center;
+    }
+
+  #MasInformacion {
+    margin-top: 5%;
+    color: white;
+  text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black;
+  text-align: center;
+  }
+
+  #reserva {
+    color: white;
+    text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black;
+    background-color: rgba(107, 94, 176, 0.5);
+    display: inline-block;
+    margin-top: 4%
+  }
+  
+#texto {
+  color: white;
+  text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black;
+}
+
+#input_cita {
+  width: 300px; /* Anchura del campo de entrada */
+  height: 40px; /* Altura del campo de entrada */
+  font-size: 16px; /* Tamaño de fuente del campo de entrada */
+}
+
+#inicio {
+  width: 200px; /* Anchura del botón */
+  height: 40px; /* Altura del botón */
+  font-size: 18px; /* Tamaño de fuente del botón */
+  margin-bottom: 15%;
+}
+#Informacion_container {
+  background-color: #192A56; /* Fondo azul oscuro */
+  padding: 20px; /* Añade un espacio de relleno alrededor del contenido */
+ /* Color de texto blanco para mayor contraste */
+}
+
+.container {
+  text-align: center;
+}
+
+.enlaces-horizontal {
+  display: inline-flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.enlaces-horizontal a {
+  margin: 0 10px;
+}
+
+.direccion {
+  text-align: center;
+}
+
+#BannerInferior{
+  background-color: white;
+}
+
+#logo_abajo{
+  width: 10%;
+  display: block;
+  margin: 0 auto;
+}
+#input_cita_container {
+  margin-top: 4%;
+}
+#input_cita {
+  margin-right: 2%;
+}
+
+
+.imagenes_container{
+  margin-top:3%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  }
+#texto_contenedor {
+  text-align: center;
+  margin-top: 10px;
+  /*background-color: white;*/
+  padding: 10px;
+}
+#texto_contenedor{
+  color: white
+}
+/*cOMUN*/
+#logo {                 
+    width: 10%;
+  
+    
+  }
+  #QuienesSomos {
+    position: relative;
+    margin-left: 5%;
+    margin-right: 7%;
+  }
+
+  .mini_container_nav{
+    text-align: center;
+  }
+ 
+  .encabezado{
+    justify-content: center;
+  }
+
+  
+  #encabezado_container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  
+  }
+
+  #encabezado_container {
+    background-color: white;
+    position: relative;
+  }
+
+  #encabezado_container #inicio {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+  }
+  body {
+    background-image:url(../Images/degradados-wallpapers-2.jpg);
+  }
+  #ventanaEmergente,
+  #ventanaEmergente2,
+  #ventanaEmergente3 {
+    position: absolute;
+    display: none;
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    padding: 10px;
+  }
+  
+  #ventanaEmergente h4,
+  #ventanaEmergente2 h4,
+  #ventanaEmergente3 h4 {
+    margin-top: 0;
+  }
+  
+  #encabezado_container .encabezado {
+    position: relative;
+  }
+  
+  #encabezado_container .encabezado:hover + #ventanaEmergente,
+  #encabezado_container .encabezado:hover + #ventanaEmergente2,
+  #encabezado_container .encabezado:hover + #ventanaEmergente3
+   {
+    display: block;
+  }
+  #ventanaEmergente3 {
+    width: 20%;
+  }
+  #ventanaEmergente2 {
+    width:20%;
+  }
+  .grid-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Crea 2 columnas iguales */
+    grid-gap: 5em; /* Espacio entre las imágenes */
+    margin-left:5%;
+    margin-right: 5%;
+  }
+  
+  a:hover{
+    color: rgb(24, 91, 224)
+  }
+  a{
+    color: #000000;
+  }
