@@ -113,12 +113,12 @@ class UpdateCitaViewController: KoinComponent {
         logger.debug { "Inicializando bindings" }
 
         // ComboBoxes
-        val valoresInforme = listOf("Apto", "No apto")
-        val valoresCitaEstado = valoresInforme + "Pendiente"
+        val valoresInformeAptitud = listOf("Apto", "No apto")
+        val valoresCitaEstado = valoresInformeAptitud + "Pendiente"
         comboCitaEstado.items = FXCollections.observableArrayList(valoresCitaEstado)
-        comboInterior.items = FXCollections.observableArrayList(valoresInforme)
-        comboLuces.items = FXCollections.observableArrayList(valoresInforme)
-        comboResultadoFinal.items = FXCollections.observableArrayList(valoresInforme)
+        comboInterior.items = FXCollections.observableArrayList(valoresInformeAptitud)
+        comboLuces.items = FXCollections.observableArrayList(valoresInformeAptitud)
+        comboResultadoFinal.items = FXCollections.observableArrayList(valoresInformeAptitud)
 
         comboCitaHora.items =
             FXCollections.observableArrayList(citaViewModel.crearModificarState.value.horasDisponibles)
@@ -143,31 +143,32 @@ class UpdateCitaViewController: KoinComponent {
         }
 
         // Valores de la cita inicial
-        val citaSelecionnada = citaViewModel.state.value.citaSeleccionada
-        textCitaId.text = citaSelecionnada.idCita
-        textPropietarioDni.text = citaSelecionnada.dniPropietario
-        textPropietarioNombre.text = citaSelecionnada.nombrePropietario + " " + citaSelecionnada.apellidosPropietario
-        textPropietarioTelefono.text = citaSelecionnada.telefonoPropietario
-        textPropietarioCorreo.text = citaSelecionnada.correoPropietario
-        textVehiculoMatricula.text = citaSelecionnada.matriculaVehiculo
-        textVehiculoMarca.text = citaSelecionnada.marcaVehiculo
-        textVehiculoModelo.text = citaSelecionnada.modeloVehiculo
-        textInformeFrenado.text = citaSelecionnada.frenadoInforme.toString()
-        textInformeContaminacion.text = citaSelecionnada.contaminacionInforme.toString()
-        datePickerMatriculacion.value = citaSelecionnada.fechaMatriculacionVehiculo
-        datePickerRevision.value = citaSelecionnada.fechaRevisionVehiculo
-        comboCitaEstado.value = citaSelecionnada.estadoCita
-        datePickerCitaFecha.value = citaSelecionnada.fechaCita
-        comboCitaHora.value = citaSelecionnada.horaCita.toString()
-        comboTrabajador.value = citaSelecionnada.nombreTrabajador + "(" + citaSelecionnada.usuarioTrabajador + ")"
-        comboMotor.value = citaSelecionnada.tipoMotorVehiculo
-        comboVehiculo.value = citaSelecionnada.tipoVehiculo
+        val citaSelecionada = citaViewModel.state.value.citaSeleccionada
+
+        textCitaId.text = citaSelecionada.idCita
+        textPropietarioDni.text = citaSelecionada.dniPropietario
+        textPropietarioNombre.text = citaSelecionada.nombrePropietario + " " + citaSelecionada.apellidosPropietario
+        textPropietarioTelefono.text = citaSelecionada.telefonoPropietario
+        textPropietarioCorreo.text = citaSelecionada.correoPropietario
+        textVehiculoMatricula.text = citaSelecionada.matriculaVehiculo
+        textVehiculoMarca.text = citaSelecionada.marcaVehiculo
+        textVehiculoModelo.text = citaSelecionada.modeloVehiculo
+        textInformeFrenado.text = citaSelecionada.frenadoInforme.toString()
+        textInformeContaminacion.text = citaSelecionada.contaminacionInforme.toString()
+        datePickerMatriculacion.value = citaSelecionada.fechaMatriculacionVehiculo
+        datePickerRevision.value = citaSelecionada.fechaRevisionVehiculo
+        comboCitaEstado.value = citaSelecionada.estadoCita
+        datePickerCitaFecha.value = citaSelecionada.fechaCita
+        comboCitaHora.value = citaSelecionada.horaCita.toString()
+        comboTrabajador.value = citaSelecionada.nombreTrabajador + "(" + citaSelecionada.usuarioTrabajador + ")"
+        comboMotor.value = citaSelecionada.tipoMotorVehiculo
+        comboVehiculo.value = citaSelecionada.tipoVehiculo
         // Informe
-        comboCitaEstado.value = if (citaSelecionnada.isAptoInforme) "Apto" else "No apto"
-        comboLuces.value = if (citaSelecionnada.lucesInforme) "Apto" else "No apto"
-        comboInterior.value = if (citaSelecionnada.interiorInforme) "Apto" else "No apto"
-        comboResultadoFinal.value = if (citaSelecionnada.isAptoInforme) "Apto" else "No apto"
-        textInformeId.text = citaSelecionnada.idInforme
+        comboCitaEstado.value = if (citaSelecionada.isAptoInforme) valoresInformeAptitud[0] else valoresInformeAptitud[1]
+        comboLuces.value = if (citaSelecionada.lucesInforme) valoresInformeAptitud[0] else valoresInformeAptitud[1]
+        comboInterior.value = if (citaSelecionada.interiorInforme) valoresInformeAptitud[0] else valoresInformeAptitud[1]
+        comboResultadoFinal.value = if (citaSelecionada.isAptoInforme) valoresInformeAptitud[0] else valoresInformeAptitud[1]
+        textInformeId.text = citaSelecionada.idInforme
     }
 
     private fun initEvents() {
@@ -199,11 +200,12 @@ class UpdateCitaViewController: KoinComponent {
         val partes = textPropietarioNombre.text.split(" ")
 
         if (textPropietarioNombre.text.isNullOrEmpty()) {
-            logger.debug { "Error al actualizar la cita" }
+            val errorText = "Error al actualizar la cita"
+            logger.debug { errorText }
 
             showAlertOperacion(
                 Alert.AlertType.ERROR,
-                title = "Error al actualizar la cita",
+                title = errorText,
                 header = "Se ha producido un error al actualizar la cita",
                 mensaje = "Se ha producido un error al actualizar en el sistema"
             )
@@ -212,6 +214,8 @@ class UpdateCitaViewController: KoinComponent {
 
         val nombre = partes[0]
         val apellido = partes[1]
+
+        logger.debug { (citaViewModel.state.value.citaSeleccionada.idInforme) }
 
         val cita = CitaViewModel.CrearModificarCitaFormulario(
             citaViewModel.state.value.citaSeleccionada.idCita,

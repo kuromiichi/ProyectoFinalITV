@@ -319,7 +319,7 @@ class MainViewController : KoinComponent {
             newValue?.let { onFilterDataTable() }
         }
 
-        // Cuando el usuario quiera borrar
+        // Cuando el usuario quiera borrar la fecha
         datePickerFilter.editor.textProperty().addListener { _, _, newValue ->
             if (newValue.isNullOrBlank()) {
                 datePickerFilter.value = null
