@@ -78,36 +78,8 @@ private fun validatePropietario(cita: CitaViewModel.CrearModificarCitaFormulario
     if (!cita.propietarioCorreo.matches(correoRegex)) return "correoInvalido"
     if (cita.propietarioTelefono.isEmpty()) return "telefonoVacio"
     val telefonoRegex = Regex("[+]?[0-9]{9,11}")
-    if (!propietarioTelefono.matches(telefonoRegex))
-        return Err(CitaError.TelefonoInvalido("El teléfono no es válido"))
-    if (vehiculoMatricula.isEmpty())
-        return Err(CitaError.MatriculaInvalida("La matrícula no puede estar vacía"))
-    val matriculaRegex = Regex("[0-9]{4}-[A-Z]{3}")
-    if (!vehiculoMatricula.matches(matriculaRegex))
-        return Err(CitaError.MatriculaInvalida("La matrícula no es válida"))
-    if (vehiculoMarca.isEmpty()) return Err(CitaError.MarcaInvalida("La marca no puede estar vacía"))
-    if (vehiculoModelo.isEmpty()) return Err(CitaError.ModeloInvalido("El modelo no puede estar vacío"))
-    if (vehiculoMatriculacion.isEmpty())
-        return Err(CitaError.MatriculacionInvalida("La fecha de matriculación no puede estar vacía"))
-    if (LocalDate.parse(vehiculoMatriculacion).isAfter(LocalDate.now()))
-        return Err(
-            CitaError.MatriculacionInvalida("La fecha de matriculación no puede ser posterior a la actual")
-        )
-    if (vehiculoRevision.isEmpty())
-        return Err(CitaError.RevisionInvalida("La fecha de última revisión no puede estar vacía"))
-    if (LocalDate.parse(vehiculoRevision).isAfter(LocalDate.now()))
-        return Err(
-            CitaError.RevisionInvalida("La fecha de última revisión no puede ser posterior a la actual")
-        )
-    if (LocalDate.parse(vehiculoRevision).isBefore(LocalDate.parse(vehiculoMatriculacion)))
-        return Err(
-            CitaError.RevisionInvalida("La fecha de última revisión no puede ser anterior a la matriculación")
-        )
-    if (vehiculoMotor.isEmpty())
-        return Err(CitaError.MotorInvalido("El tipo de motor no puede estar vacío"))
-    if (vehiculoTipo.isEmpty())
-        return Err(CitaError.TipoInvalido("El tipo de vehículo no puede estar vacío"))
-    return Ok(this)
+    if (!cita.propietarioTelefono.matches(telefonoRegex)) return "telefonoInvalido"
+    return "ok"
 }
 
 private fun validateVehiculo(cita: CitaViewModel.CrearModificarCitaFormulario): String {
