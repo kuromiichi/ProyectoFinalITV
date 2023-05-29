@@ -88,7 +88,7 @@ class CitaViewModel(
                 LocalDate.parse(citaFormulario.fecha),
                 LocalTime.parse(citaFormulario.hora)
             ),
-            idInforme = informeRepository.findAll().maxOf { it.id } + 1,
+            idInforme = citaFormulario.idCita.toLong(),
             usuarioTrabajador = citaFormulario.trabajador.substringAfter("(").substringBefore(")"),
             matriculaVehiculo = citaFormulario.vehiculoMatricula
         )
@@ -242,6 +242,7 @@ class CitaViewModel(
                 fechaRevisionVehiculo = vehiculo.fechaRevision,
                 tipoMotorVehiculo = vehiculo.tipoMotor.name.lowercase(),
                 tipoVehiculo = vehiculo.tipoVehiculo.name.lowercase(),
+                idInforme = informe.id.toString(),
                 frenadoInforme = informe.frenado,
                 contaminacionInforme = informe.contaminacion,
                 interiorInforme = informe.interior,
