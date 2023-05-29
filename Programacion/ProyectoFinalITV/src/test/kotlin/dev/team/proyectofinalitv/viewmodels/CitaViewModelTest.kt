@@ -94,29 +94,6 @@ class CitaViewModelTest {
     }
 
     @Test
-    fun testGetListCitaFiltered() {
-        // Datos de prueba de los filtros que querremos buscar
-/*        val tipoVehiculoParaBuscar = Vehiculo.TipoVehiculo.COCHE
-        val matriculaParaBuscar = "ABC"
-        val fechaParaBuscar = LocalDate.of(2023, 5, 1)
-
-        // Mock de la lista de vehículos
-        whenever(vehiculoRepositoryMock.findAll()).thenReturn(listVehiculosTest)
-
-        // Estado de prueba y agregamos al State las cita:
-        viewModel.state.value = viewModel.state.value.copy(citas = listCitaTest)
-
-        // Llamada a la función de prueba
-        val result = viewModel.getListCitaFiltered(tipoVehiculoParaBuscar, matriculaParaBuscar, fechaParaBuscar)
-
-        // Establezco el estado actual con la lista de citas
-        viewModel.state.value = viewModel.state.value.copy(citas = listCitaTest)
-
-        assertEquals(1, result.size)
-        assertEquals(listVehiculosTest[0].matricula, result[0]!!.matriculaVehiculo)*/
-    }
-
-    @Test
     fun updateCitaSeleccionada() {
         // Crear una cita de ejemplo
         val cita = Cita(1, "Apto", LocalDateTime.now(), 55, "a_maroto", "ABC")

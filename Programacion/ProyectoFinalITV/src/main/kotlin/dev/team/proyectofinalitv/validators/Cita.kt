@@ -51,7 +51,7 @@ fun CitaViewModel.CrearModificarCitaFormulario.validate(): Result<CitaViewModel.
         )
     if (LocalDate.parse(vehiculoRevision).isBefore(LocalDate.parse(vehiculoMatriculacion)))
         return Err(
-            CrearCitaError.RevisionInvalida("La fecha de última revisión no puede ser anterior a la matriculación")
+            CitaError.RevisionInvalida("La fecha de última revisión no puede ser anterior a la matriculación")
         )
     if (vehiculoMotor.isEmpty())
         return Err(CitaError.MotorInvalido("El tipo de motor no puede estar vacío"))

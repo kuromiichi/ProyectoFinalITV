@@ -197,8 +197,6 @@ class UpdateCitaViewController: KoinComponent {
     private fun actualizarCita(){
         logger.debug { "Actualizar cita" }
 
-        val partes = textPropietarioNombre.text.split(" ")
-
         if (textPropietarioNombre.text.isNullOrEmpty()) {
             val errorText = "Error al actualizar la cita"
             logger.debug { errorText }
@@ -212,10 +210,9 @@ class UpdateCitaViewController: KoinComponent {
             return
         }
 
+        val partes = textPropietarioNombre.text.split(" ")
         val nombre = partes[0]
         val apellido = partes[1]
-
-        logger.debug { (citaViewModel.state.value.citaSeleccionada.idInforme) }
 
         val cita = CitaViewModel.CrearModificarCitaFormulario(
             citaViewModel.state.value.citaSeleccionada.idCita,
@@ -247,12 +244,19 @@ class UpdateCitaViewController: KoinComponent {
                 logger.debug { "Cita actualizada correctamente" }
 
                 val citas = citaViewModel.state.value.citas.toMutableList()
+
+                // Elimino la cita del State para no duplicar
+                citas.removeIf { it.id == nuevaCita.id }
+
+                // Agregar la nueva cita a la lista
                 citas.add(nuevaCita)
+
+                // Actualizamos el State de citaViewModel con la nueva lista de citas
                 citaViewModel.state.value = citaViewModel.state.value.copy(citas = citas)
 
                 showAlertOperacion(
                     Alert.AlertType.INFORMATION,
-                    title = "Cita actualizar",
+                    title = "Cita actualizada",
                     header = "Cita actualizada y almacenada correctamente",
                     mensaje = "Se ha actualizar en el sistema"
                 )
