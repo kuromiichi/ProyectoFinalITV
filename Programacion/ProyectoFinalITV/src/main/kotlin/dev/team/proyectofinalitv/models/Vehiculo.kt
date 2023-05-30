@@ -11,7 +11,7 @@ data class Vehiculo(
     val tipoMotor: TipoMotor,
     val tipoVehiculo: TipoVehiculo,
     val dniPropietario: String
-){
+) {
     enum class TipoMotor {
         GASOLINA,
         DIESEL,
@@ -20,10 +20,10 @@ data class Vehiculo(
     }
 
     enum class TipoVehiculo {
+        ALL,
         COCHE,
         FURGONETA,
         CAMION,
-        MOTOCICLETA,
-        ALL
+        MOTOCICLETA
     }
 }

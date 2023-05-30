@@ -133,7 +133,7 @@ class UpdateCitaViewController: KoinComponent {
         comboMotor.value = null
 
         comboVehiculo.items =
-            FXCollections.observableArrayList(Vehiculo.TipoVehiculo.values().dropLast(1)
+            FXCollections.observableArrayList(Vehiculo.TipoVehiculo.values().drop(1)
                 .map { it.toString().lowercase() })
         comboVehiculo.value = null
 

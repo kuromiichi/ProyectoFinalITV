@@ -98,7 +98,7 @@ class CrearCitaViewController : KoinComponent {
         comboVehiculoMotor.value = null
 
         comboVehiculoTipo.items =
-            FXCollections.observableArrayList(Vehiculo.TipoVehiculo.values().dropLast(1)
+            FXCollections.observableArrayList(Vehiculo.TipoVehiculo.values().drop(1)
                 .map { it.toString().lowercase() })
         comboVehiculoTipo.value = null
 
