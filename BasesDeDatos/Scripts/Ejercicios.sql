@@ -95,6 +95,7 @@ BEGIN
         usuario_trabajador VARCHAR(50),
         matricula_vehiculo VARCHAR(15)
     );
-    INSERT INTO HistoricoCitas (estado, fecha_hora, id_informe, usuario_trabajador, matricula_vehiculo);
-END $$
+    INSERT INTO HistoricoCitas (estado, fecha_hora, id_informe, usuario_trabajador, matricula_vehiculo)
+    VALUES (OLD.estado, OLD.fecha_hora, OLD.id_informe, OLD.usuario_trabajador, OLD.matricula_vehiculo);
+END $$;
 DELIMITER ;
